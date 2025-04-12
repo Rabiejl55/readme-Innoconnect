@@ -1,32 +1,26 @@
 # readme-Innoconnect
- InnoConnect est une plateforme intelligente qui facilite la mise en relation entre les innovateurs et les investisseurs .
-  1st commit
+ # InnoConnect
 
+## Description du Projet
+InnoConnect est une plateforme web qui permet aux innovateurs de soumettre leurs projets et aux investisseurs de les financer. Grâce à l'intelligence artificielle et au développement durable, la plateforme favorise la collaboration et l'émergence d'idées innovantes.
 
-InnoConnect
+## Table des Matières
+- [Installation](#installation)
+- [Utilisation](#utilisation)
+- [Contribution](#contribution)
+- [Licence](#licence)
 
-Description
-
-InnoConnect est une plateforme innovante qui met en relation des innovateurs, des investisseurs et des mentors pour faciliter le développement et le financement de projets à fort impact.
-
-Table des Matières
-
-Installation
-
-Utilisation
-
-Contributions
-
-Licence
-
+## Installation
 Installation
 
 1. Cloner le repository :
 
-git clone https://github.com/utilisateur/innoconnect.git
+
+git clone https://github.com/Rabiejl55/readme-Innoconnect.git
 cd innoconnect
 
 2. Configuration avec WAMP/XAMPP :
+
 
 Placez le projet dans le dossier www (WAMP) ou htdocs (XAMPP).
 
@@ -34,75 +28,114 @@ Démarrez Apache et MySQL depuis l'interface de WAMP/XAMPP.
 
 Accédez au projet via : http://localhost/innoconnect
 
-3. Installation de PHP :
+3. Création de la base de données :
 
-Windows (via XAMPP ou WAMP)
+Importez le fichier SQL fourni (innoconnect.sql) dans phpMyAdmin.
 
-Aucune installation supplémentaire n'est nécessaire.
+Assurez-vous que les informations de connexion à la base de données sont correctes dans config.php.
 
-macOS :
+## Utilisation
+Installation de PHP
 
+Pour utiliser InnoConnect, vous devez avoir PHP installé sur votre machine.
+
+1. Téléchargez PHP à partir du site officiel : PHP - Téléchargement.
+
+2. Installez PHP selon votre système d'exploitation :
+
+Windows : Utilisez XAMPP ou WampServer.
+
+macOS : Installez avec Homebrew :
 brew install php
 
-Linux (Ubuntu) :
-
+Linux : Installez via le gestionnaire de paquets (exemple Ubuntu) :
 sudo apt update
 sudo apt install php
 
-4. Vérifier l'installation de PHP :
-
+3. Vérifiez l'installation de PHP :
 php -v
 
-Utilisation
+Fonctionnalités principales :
 
-Une fois le serveur configuré :
+* Innovateur :
 
-Ouvrez votre navigateur et accédez à http://localhost/innoconnect
+Créer et soumettre un projet.
 
-Inscrivez-vous en tant qu’innovateur, investisseur ou mentor.
+Gérer ses projets existants (modifier, supprimer).
 
-Explorez et participez aux projets collaboratifs.
+Interagir avec d'autres utilisateurs dans l'espace collaboratif.
 
-Contributions
+* Investisseur :
 
-Nous remercions tous les contributeurs de InnoConnect !
+Parcourir les projets soumis.
 
-Contributeurs :
+Investir dans des projets.
 
-Utilisateur1 - Ajout du module de messagerie.
+Suivre ses transactions financières.
 
-Utilisateur2 - Intégration du système de feedback.
+* Administrateur :
 
-Utilisateur3 - Amélioration de la documentation.
+Valider les comptes des utilisateurs.
 
-Comment contribuer ?
+Superviser et gérer les interactions et transactions sur la plateforme.
 
-Forkez le projet sur GitHub.
+### Connexion / Inscription
 
-Clonez votre fork :
+1. Pour vous inscrire, cliquez sur "S'inscrire" en haut à droite de la page d'accueil et renseignez :
 
-git clone https://github.com/votre-utilisateur/innoconnect.git
-cd innoconnect
+- Nom
 
-Créez une branche pour vos modifications :
+- Prénom
 
-git checkout -b nouvelle-fonctionnalite
+- Adresse e-mail
 
-Faites vos changements et committez-les :
+- Mot de passe
 
-git commit -m "Ajout de la nouvelle fonctionnalité"
+- Confirmation du mot de passe
 
-Poussez votre branche :
+2. Connectez-vous avec votre adresse e-mail et votre mot de passe.
 
-git push origin nouvelle-fonctionnalite
+3. Accédez à votre profil pour gérer vos informations.
 
-Créez une Pull Request sur GitHub.
+### Déconnexion
 
-Licence
+Cliquez sur le bouton "Déconnexion" dans le menu pour quitter votre session en toute sécurité.
 
-Ce projet est sous la licence MIT. Consultez le fichier LICENSE pour plus de détails.
+## Contribution
+Nous remercions tous ceux qui ont contribué à ce projet !
+### Contributeurs
 
-Détails sur la licence MIT :
+Les personnes suivantes ont participé au développement d'InnoConnect :
+- [Utilisateur1](https://github.com/faryoula11) - Gestion des utilisateurs (Inscription, connexion, gestion des rôles, sécurité des comptes).
+- [Utilisateur2](https://github.com/Rabiejl55) - Espace collaboratif (Interaction en temps réel, forums de discussion, partage d'idées).
+- [Utilisateur3](https://github.com/chakroun-nermine) - Transactions financières (Paiements sécurisés, suivi des investissements).
+- [Utilisateur4](https://github.com/Moha200344) - Gestion des projets (Création, modification, suppression, catégorisation des projets).
+- [Utilisateur5](https://github.com/molkaezzine) - Gestion des interactions (Modération des échanges, système de feedback).
 
-La licence MIT permet une utilisation, une modification et une distribution libre du code tout en conservant la mention de l'auteur original.
 
+Si vous souhaitez contribuer, suivez les étapes ci-dessous pour faire un *fork*, créer une nouvelle branche et soumettre une *pull request*.
+
+### Comment contribuer ?
+
+1. *Fork le projet* : Allez sur la page GitHub du projet et cliquez sur le bouton *Fork* dans le coin supérieur droit pour créer une copie du projet dans votre propre compte GitHub.
+   
+2. *Clonez votre fork* : Clonez le fork sur votre machine locale :
+   ```bash
+   git clone https://github.com/Rabiejl55/readme-Innoconnect.git
+   cd InnoConnect
+3. *Créer une nouvelle branche* : 
+   git checkout -b nouvelle-fonctionnalite
+
+4. *Faire vos modifications et commiter* : 
+   git commit -m "Ajout d'une nouvelle fonctionnalité"
+
+5. *Pusher votre branche* :
+   git push -u origin nouvelle-fonctionnalite
+
+6. *Soumettre une pull request* : Allez sur votre fork GitHub et cliquez
+sur le bouton *New pull request*. Sélectionnez la branche que vous avez
+créée et soumettez votre pull request.
+
+### Licence
+Ce projet est sous la licence *MIT*. 
+Pour plus de détails, consultez le fichier[MIT](https://choosealicense.com/licenses/mit/).
