@@ -1,0 +1,518 @@
+/* Reset des styles par défaut pour une base propre */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Style global du body avec un fond dégradé violet */
+body {
+    background: linear-gradient(to right, #5B21B6, #A78BFA); /* Dégradé violet */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Loader global */
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    display: none;
+}
+
+.loader::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 4px solid #A78BFA;
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* En-tête pour le frontoffice */
+header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+header .logo {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #fff;
+}
+
+header .logo img {
+    width: 50px;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover,
+header nav ul li a.active {
+    color: #A78BFA; /* Violet clair */
+}
+
+header nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #A78BFA;
+    bottom: -5px;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+header nav ul li a:hover::after,
+header nav ul li a.active::after {
+    width: 100%;
+}
+
+/* Conteneur principal du formulaire (pour register.php et login.php) */
+/* Conteneur principal du formulaire (pour register.php et login.php) */
+.register-container {
+    background: rgba(255, 255, 255, 0.1); /* Fond blanc semi-transparent */
+    backdrop-filter: blur(10px); /* Effet de flou pour un look moderne */
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); /* Ombre douce */
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 1s ease-out forwards; /* Animation d’entrée */
+    margin: 100px auto 20px; /* Marge en haut pour éviter le chevauchement avec la navbar */
+}
+
+/* Animation d’entrée pour le formulaire */
+@keyframes slideIn {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Titre du formulaire (pour register.php et login.php) */
+.register-container h2 {
+    color: #fff;
+    text-align: center;
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Slogan sous le titre */
+.register-container .slogan {
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    font-size: 1em;
+    margin-bottom: 30px;
+}
+
+/* Style des champs du formulaire (pour register.php et login.php) */
+.form-group {
+    position: relative;
+    margin-bottom: 25px; /* Espacement entre les champs */
+}
+
+/* Labels pour les champs */
+.form-group label {
+    color: #fff;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Style des inputs et select (pour register.php et login.php) */
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px 12px 40px; /* Espace pour l’icône */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)); /* Dégradé subtil */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Bordure subtile */
+    border-radius: 10px;
+    color: #fff; /* Texte blanc */
+    font-size: 1em;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre interne */
+}
+
+/* Placeholder stylé */
+.form-group input::placeholder,
+.form-group select:invalid {
+    color: rgba(255, 255, 255, 0.5); /* Placeholder blanc semi-transparent */
+    font-style: italic;
+}
+
+/* Effet au survol */
+.form-group input:hover,
+.form-group select:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    border-color: #A78BFA; /* Bordure violet clair */
+}
+
+/* Effet au focus */
+.form-group input:focus,
+.form-group select:focus {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    border-color: #A78BFA;
+    box-shadow: 0 0 10px rgba(167, 139, 250, 0.5); /* Glow violet clair */
+    transform: scale(1.02);
+}
+
+/* Style du select pour enlever la flèche par défaut et ajouter une flèche personnalisée */
+.form-group select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23A78BFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+/* Style pour les icônes dans les champs */
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon input,
+.input-with-icon select {
+    padding-left: 40px;
+}
+
+.input-with-icon i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #A78BFA; /* Icônes violet clair */
+    transition: color 0.3s ease;
+}
+
+.input-with-icon input:focus + i,
+.input-with-icon select:focus + i {
+    color: #fff; /* Icônes blanches au focus */
+}
+
+/* Style pour l'icône "œil" (afficher/masquer mot de passe) */
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #A78BFA;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #fff;
+}
+
+/* Bouton de soumission (pour register.php, login.php, profile.php) */
+.register-container .register-btn,
+.register-container .btn-primary,
+.register-container .btn-danger,
+.profile-section .btn-primary,
+.profile-section .btn-danger {
+    padding: 10px 20px;
+    border: 2px solid #A78BFA; /* Bordure violet clair */
+    border-radius: 10px;
+    background: #fff; /* Fond blanc */
+    color: #5B21B6; /* Texte violet foncé */
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    text-decoration: none; /* Pour les liens comme "Retour" */
+}
+
+.register-container .btn-primary,
+.profile-section .btn-primary {
+    background: #fff; /* Fond blanc */
+    color: #5B21B6; /* Texte violet foncé */
+    border: 2px solid #A78BFA; /* Bordure violet clair */
+}
+
+.register-container .btn-danger,
+.profile-section .btn-danger {
+    background: #fff;
+    color: #FF4D4D; /* Texte rouge */
+    border: 2px solid #FF4D4D; /* Bordure rouge */
+}
+
+/* Effet au survol des boutons */
+.register-container .register-btn:hover,
+.register-container .btn-primary:hover,
+.profile-section .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(167, 139, 250, 0.5); /* Glow violet clair */
+    background: #A78BFA; /* Fond violet clair */
+    color: #fff; /* Texte blanc */
+}
+
+.register-container .btn-danger:hover,
+.profile-section .btn-danger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
+    background: #FF4D4D;
+    color: #fff;
+}
+
+/* Effet au clic des boutons */
+.register-container .register-btn:active,
+.register-container .btn-primary:active,
+.register-container .btn-danger:active,
+.profile-section .btn-primary:active,
+.profile-section .btn-danger:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation de chargement sur le bouton */
+.register-container .register-btn.loading,
+.register-container .btn-primary.loading,
+.register-container .btn-danger.loading,
+.profile-section .btn-primary.loading,
+.profile-section .btn-danger.loading {
+    position: relative;
+    color: transparent;
+}
+
+.register-container .register-btn.loading::after,
+.register-container .btn-primary.loading::after,
+.register-container .btn-danger.loading::after,
+.profile-section .btn-primary.loading::after,
+.profile-section .btn-danger.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Message d’erreur */
+.error-message {
+    color: #FF6B6B;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    background: rgba(255, 77, 77, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Message de succès */
+.success {
+    color: #34D399;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1em;
+    background: rgba(0, 255, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Style pour les liens (ex. "Déjà un compte ?") */
+.register-container p,
+.profile-section p {
+    text-align: center;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.register-container p a,
+.profile-section p a {
+    color: #A78BFA; /* Violet clair */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-container p a:hover,
+.profile-section p a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Styles pour profile.php */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.profile-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-section h2 {
+    color: #fff;
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.profile-section .slogan {
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    font-size: 1em;
+    margin-bottom: 30px;
+}
+
+/* Bouton de bascule du thème */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle i {
+    color: #fff;
+    font-size: 1.2em;
+}
+
+.theme-toggle:hover {
+    background: rgba(167, 139, 250, 0.3); /* Violet clair */
+}
+
+/* Mode sombre */
+body.dark-mode {
+    background: linear-gradient(135deg, #1E0A3C, #3B1A6D); /* Dégradé plus sombre */
+}
+
+body.dark-mode .register-container,
+body.dark-mode .profile-section,
+body.dark-mode header {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+body.dark-mode header nav ul li a,
+body.dark-mode .register-container p,
+body.dark-mode .profile-section p,
+body.dark-mode .register-container .slogan,
+body.dark-mode .profile-section .slogan,
+body.dark-mode .form-group label {
+    color: #E2E8F0;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    color: #E2E8F0;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group select:focus {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+
+/* Pied de page */
+footer {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+    margin-top: auto;
+}
+
+footer p {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .register-container,
+    .profile-section {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

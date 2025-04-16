@@ -1,0 +1,215 @@
+/* Reset des styles par défaut pour une base propre */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Style global du body avec un fond dégradé similaire à InnoConnect */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6B48FF 0%, #A259FF 100%); /* Dégradé violet */
+    overflow: hidden;
+}
+
+/* Conteneur principal du formulaire */
+.register-container {
+    background: rgba(255, 255, 255, 0.1); /* Fond blanc semi-transparent */
+    backdrop-filter: blur(10px); /* Effet de flou pour un look moderne */
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 1s ease-out forwards; /* Animation d’entrée */
+}
+
+/* Animation d’entrée pour le formulaire */
+@keyframes slideIn {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Titre du formulaire */
+.register-container h2 {
+    color: #fff;
+    text-align: center;
+    font-size: 2.2em;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Style des champs du formulaire */
+.form-group {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+/* Style des inputs */
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1em;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-group input,
+.form-group select {
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.form-group input:focus,
+.form-group select:focus {
+    transform: scale(1.01);
+}
+/* Placeholder stylé */
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}
+
+/* Effet au focus */
+.form-group input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 10px rgba(162, 89, 255, 0.5); /* Glow violet */
+    transform: scale(1.02);
+}
+
+/* Label animé */
+.form-group label {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1em;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Animation du label quand l’input est rempli ou focus */
+.form-group input:focus ~ label,
+.form-group input:not(:placeholder-shown) ~ label {
+    top: -10px;
+    left: 10px;
+    font-size: 0.8em;
+    color: #A259FF;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0 5px;
+    border-radius: 5px;
+}
+
+/* Bouton de soumission */
+.register-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #A259FF, #6B48FF); /* Dégradé violet */
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Effet au survol du bouton */
+.register-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(162, 89, 255, 0.5);
+    background: linear-gradient(90deg, #6B48FF, #A259FF); /* Inversion du dégradé */
+}
+
+/* Effet au clic du bouton */
+.register-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Style pour les liens (ex. "Déjà un compte ?") */
+.register-container p {
+    text-align: center;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.register-container p a {
+    color: #A259FF;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-container p a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 500px) {
+    .register-container {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .register-container h2 {
+        font-size: 1.8em;
+    }
+}
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon input {
+    padding-left: 40px;
+}
+
+.input-with-icon i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+.register-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.register-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
