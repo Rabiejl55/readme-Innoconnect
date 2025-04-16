@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Starter Page - Techie Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+  
+  <style>
+      body {
+          background-color: #f8f9fa;
+          font-family: 'Arial', sans-serif;
+      }
+      .header {
+          background-color: #6f42c1; /* Couleur violet */
+      }
+      .header .navmenu ul li a {
+          color: white; /* Couleur du texte de la navbar */
+      }
+      .btn-custom {
+          background-color: #6f42c1; /* Couleur violet pour les boutons */
+          color: white;
+      }
+      .btn-custom:hover {
+          background-color: #5a32a1; /* Couleur violet plus foncé au survol */
+      }
+      .main {
+          padding: 60px 0; /* Espacement pour le contenu principal */
+      }
+  </style>
+</head>
+
+<body class="starter-page-page">
+  
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+        <a href="index.html" class="logo d-flex align-items-center me-auto">
+            <img  src="../assets/img/innoconnect.jpg" alt="InnoConnect Logo" class="img-fluid" style="max-height: 45px;">
+            <h1 class="sitename">InnoConnect</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+            
+                <li><a href="#about">About</a></li>
+                <li><a href="http://localhost/espace_comm/espace%20communotaire/config/index.html#services">Services</a></li>
+                <li><a href="#team">Team</a></li>
+                <li class="dropdown">
+                    <a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <ul>
+                        <li><a href="#">Dropdown 1</a></li>
+                        <li class="dropdown">
+                            <a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                            <ul>
+                                <li><a href="#">Deep Dropdown 1</a></li>
+                                <li><a href="#">Deep Dropdown 2</a></li>
+                                <li><a href="#">Deep Dropdown 3</a></li>
+                                <li><a href="#">Deep Dropdown 4</a></li>
+                                <li><a href="#">Deep Dropdown 5</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Dropdown 2</a></li>
+                        <li><a href="#">Dropdown 3</a></li>
+                        <li><a href="#">Dropdown 4</a></li>
+                    </ul>
+                </li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+        <a class="btn-getstarted" href="#about">Get Started</a>
+
+    </div>
+</header>
+
+  <main class="main">
+    <div class="container mt-5 text-center">
+        <br>
+      <h2>Welcome to our collaborative space</h2>
+      <p>Please choose an option below :</p>
+      <div class="d-flex justify-content-center mt-4">
+        <a href="http://localhost/espace_comm/espace%20communotaire/view/forumview.php" class="btn btn-custom mx-2"> Forum</a>
+        <a href="http://localhost/espace_comm/espace%20communotaire/view/contractview.php" class="btn btn-secondary mx-2">Contrats</a>
+      </div>
+    </div>
+    <br>
+    <br>
+    <section id="partners" class="partners section text-center">
+      <div class="container">
+          <h2>Our partners</h2>
+          <br>
+          <div class="row gy-4 justify-content-center">
+            <div class="col-md-3 d-flex justify-content-center align-items-center">
+                <a href="https://linstant-m.tn/" target="_blank">
+                <img src="../assets/img/linstant.png" class="img-fluid partner-img smaller" alt="Partenaire 1">
+            </a>
+            </div>
+            <div class="col-md-3 d-flex justify-content-center align-items-center">
+                <a href="https://smartinvest.eu/fr/" target="_blank">
+                <img src="../assets/img/smart_invest.png" class="img-fluid partner-img smaller" alt="Partenaire 2">
+            </a>
+            </div>
+            <div class="col-md-3 d-flex justify-content-center align-items-center">
+                <a href="https://innovastec.com/" target="_blank">
+                <img src="https://th.bing.com/th/id/OIP.R3hsewkwDmDeC8vfiedVsQHaCc?w=4385&h=1448&rs=1&pid=ImgDetMain" class="img-fluid partner-img" alt="Partenaire 3">
+                 </a>
+            </div>
+            <div class="col-md-3 d-flex justify-content-center align-items-center">
+                <a href="https://techcorp.com.ni/tech-corp/" target="_blank">
+                <img src="https://th.bing.com/th/id/OIP.OTUxRNeiePRdZds7W8snDwHaB0?rs=1&pid=ImgDetMain" class="img-fluid partner-img" alt="Partenaire 4">
+            </a>
+            </div>
+        </div>
+      </div>
+  </section>
+  
+  <style>
+    .partner-img {
+        max-width: 200px; /* Taille maximale uniforme pour toutes les images */
+        height: auto;     /* Maintient les proportions */
+        object-fit: contain; /* S'assure que l'image reste entière et bien proportionnée */
+        transition: transform 0.3s ease; /* Animation subtile au survol */
+    }
+
+    .partner-img.smaller {
+        max-width: 150px; /* Taille réduite pour les deux premières images */
+    }
+
+    .partner-img:hover {
+        transform: scale(1.05); /* Effet de zoom léger au survol */
+    }
+
+    /* Ajustement pour petits écrans */
+    @media (max-width: 768px) {
+        .partner-img {
+            max-width: 150px; /* Réduction générale sur mobile */
+        }
+        .partner-img.smaller {
+            max-width: 120px; /* Réduction proportionnelle pour les deux premières */
+        }
+    }
+  </style>
+  
+  <br>
+  <section id="social-media" class="social-media section" align="center">
+    <div class="container text-center">
+        <h2>Follow us on social networks</h2>
+        <br>
+        <div class="social-links d-flex justify-content-center">
+            <a href="#" class="bi bi-facebook" ></a>
+            <a href="#" class="bi bi-twitter"></a>
+            <a href="#" class="bi bi-instagram"></a>
+            <a href="#" class="bi bi-linkedin"></a>
+        </div>
+    </div>
+</section>
+  </main>
+
+  <footer id="footer" class="footer">
+    <div class="container text-center">
+      <p>&copy; Copyright <strong>Innoconnect</strong> All Rights Reserved</p>
+      <p>Designed by <a href="https://innoconnect.com/">InnoConnect</a></p>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
