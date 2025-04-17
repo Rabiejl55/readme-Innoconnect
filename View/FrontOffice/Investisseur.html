@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InnoConnect</title>
+    <style>
+      /* Reset et styles de base */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Roboto", sans-serif;
+        color: #333;
+        background-color: white;
+        line-height: 1.6;
+      }
+
+      /* Header violet */
+      .header {
+        background: linear-gradient(135deg, #6f42c1, #6610f2);
+        padding: 15px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .logo {
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      .btn-getstarted {
+        background: white;
+        color: #4a6cf7;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      .btn-getstarted:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Contenu principal */
+      .main {
+        margin-top: 70px;
+        padding: 20px;
+        background-color: white;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Page Title */
+      .page-title {
+        background-color: ;
+        padding: 20px 0;
+      }
+      .page-title h1 {
+        color: white;
+        font-size: 2rem;
+      }
+      .breadcrumbs ol {
+        display: flex;
+        list-style: none;
+      }
+      .breadcrumbs li:not(:last-child)::after {
+        content: "/";
+        margin: 0 10px;
+        color: white;
+      }
+      .breadcrumbs a {
+        color: whi;
+        text-decoration: none;
+      }
+      .breadcrumbs a:hover {
+        color: #4a6cf7;
+      }
+
+      /* Bannière Hero */
+      .hero-banner {
+        background: #e3f2fd; /* Changement de couleur ici */
+        color: #333;
+        padding: 60px 40px;
+        border-radius: 12px;
+        text-align: center;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eee;
+      }
+      .hero-banner h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #2c3e50;
+      }
+      .hero-banner p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        color: #094f88;
+      }
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #6f42c1, #6610f2);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+      }
+      .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3);
+      }
+
+      /* Filtres */
+      .filter-container {
+        margin-bottom: 40px;
+      }
+      .filter-box {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px #094f88;
+        border: 1px solid #eee;
+      }
+      .filter-box h3 {
+        margin-bottom: 15px;
+        color: #094f88;
+      }
+      .filter-options {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .filter-options select {
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        min-width: 200px;
+      }
+      .range-filter {
+        flex: 1;
+        min-width: 200px;
+      }
+      .range-filter label {
+        display: block;
+        margin-bottom: 5px;
+        color: #6c757d;
+      }
+      .range-filter input {
+        width: 100%;
+      }
+
+      /* Grille des projets */
+      .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+      }
+      .option-card {
+        background: (#6f42c1, #6610f2);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eee;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .option-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .option-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #2c3e50;
+      }
+      .option-card p {
+        color: #6c757d;
+        margin-bottom: 20px;
+      }
+
+      /* Barre de progression */
+      .progress-container {
+        margin: 15px 0;
+      }
+      .progress-bar {
+        height: 6px;
+        background: (#6f42c1, #6610f2);
+        border-radius: 3px;
+        margin-bottom: 5px;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        color: #6c757d;
+        font-size: 0.9rem;
+      }
+      .roi-badge {
+        color: #6610f2;
+        font-weight: bold;
+        margin: 15px 0;
+      }
+      .view-button {
+        background: #6f42c1;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .view-button:hover {
+        background: #6f42c1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(74, 108, 247, 0.2);
+      }
+
+      /* Footer */
+      .footer {
+        background: linear-gradient(135deg, #6f42c1, #6610f2);
+        color: white;
+        padding: 60px 0 30px;
+      }
+      .footer {
+        background: (#6f42c1, #6610f2);
+        padding: 60px 0 30px;
+        border-top: 1px solid #eee;
+      }
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+      }
+      .footer-about {
+        margin-bottom: 30px;
+      }
+      .footer-about .logo {
+        font-size: 24px;
+        margin-bottom: 15px;
+        display: block;
+        color: white;
+      }
+      .footer-about p {
+        margin-bottom: 20px;
+        color: white;
+      }
+      .footer-links h4 {
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        color: white;
+      }
+      .footer-links ul {
+        list-style: none;
+      }
+      .footer-links li {
+        margin-bottom: 10px;
+      }
+      .footer-links a {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover {
+        color: #4a6cf7;
+      }
+      .social-links {
+        display: flex;
+        gap: 10px;
+      }
+      .social-links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: (#6f42c1, #6610f2);
+        color: white;
+        border-radius: 50%;
+        transition: all 0.3s;
+      }
+      .social-links a:hover {
+        background: (#6f42c1, #6610f2);
+        color: white;
+      }
+      .copyright {
+        text-align: center;
+        padding-top: 30px;
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        color: white;
+        font-size: 0.9rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header {
+          padding: 10px 0;
+        }
+        .logo {
+          font-size: 20px;
+        }
+        .btn-getstarted {
+          padding: 8px 15px;
+          font-size: 14px;
+        }
+        .main {
+          margin-top: 60px;
+          padding: 15px;
+        }
+        .hero-banner {
+          padding: 40px 20px;
+        }
+        .hero-banner h1 {
+          font-size: 2rem;
+        }
+        .filter-options {
+          flex-direction: column;
+        }
+        .filter-options select {
+          width: 100%;
+        }
+        .options-grid {
+          grid-template-columns: 1fr;
+        }
+        .footer-container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header violet avec seulement InnoConnect et Get Started -->
+    <header class="header">
+      <div class="header-container">
+        <a href="index.html" class="logo">InnoConnect</a>
+        <a href="index.html" class="btn-getstarted">Get Started</a>
+      </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="main">
+      <div class="container">
+        <!-- Page Title -->
+        <div class="page-title">
+          <nav class="breadcrumbs">
+            <ol>
+              <li><a href="index.html">Accueil</a></li>
+              <li>Investisseurs</li>
+            </ol>
+          </nav>
+        </div>
+
+        <!-- Bannière Hero -->
+        <section class="hero-banner">
+          <h1>Investissez dans des projets innovants à fort potentiel</h1>
+          <p>
+            En tant qu'<span style="font-weight: bold; color: #190766"
+              >investisseur</span
+            >, découvrez des opportunités soigneusement sélectionnées et
+            alignées avec vos critères d'investissement.
+          </p>
+          <a href="#projects" class="cta-button">Voir les projets</a>
+        </section>
+
+        <!-- Filtres -->
+        <div id="projects" class="filter-container">
+          <h2>Trouvez des projets alignés avec vos critères</h2>
+          <div class="filter-box">
+            <h3>Filtrer les projets</h3>
+            <div class="filter-options">
+              <select>
+                <option>Type d'investissement</option>
+                <option>Equity</option>
+                <option>Prêt</option>
+                <option>Dons avec contreparties</option>
+              </select>
+
+              <div class="range-filter">
+                <label>Montant disponible</label>
+                <input type="range" min="5000" max="500000" step="5000" />
+              </div>
+
+              <select>
+                <option>Secteur</option>
+                <option>GreenTech</option>
+                <option>Santé</option>
+                <option>Intelligence Artificielle</option>
+                <option>FinTech</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Projets Recommandés -->
+          <div class="options-grid">
+            <div class="option-card">
+              <h3>GreenTech X</h3>
+              <p>
+                Solution de recyclage innovante pour les plastiques industriels
+              </p>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 65%; background: #4caf50"
+                  ></div>
+                </div>
+                <div class="progress-info">
+                  <span>65% financé</span>
+                  <span>150K€ / 230K€</span>
+                </div>
+              </div>
+              <div class="roi-badge">ROI estimé: 18-22%</div>
+              <button class="view-button">Voir le projet</button>
+            </div>
+
+            <div class="option-card">
+              <h3>HealthAI</h3>
+              <p>Plateforme de diagnostic médical assisté par IA</p>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 40%; background: #ff9800"
+                  ></div>
+                </div>
+                <div class="progress-info">
+                  <span>40% financé</span>
+                  <span>400K€ / 1M€</span>
+                </div>
+              </div>
+              <div class="roi-badge">ROI estimé: 25-30%</div>
+              <button class="view-button">Voir le projet</button>
+            </div>
+
+            <div class="option-card">
+              <h3>AgriFuture</h3>
+              <p>Technologies d'agriculture verticale et hydroponique</p>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 80%; background: #2196f3"
+                  ></div>
+                </div>
+                <div class="progress-info">
+                  <span>80% financé</span>
+                  <span>80K€ / 100K€</span>
+                </div>
+              </div>
+              <div class="roi-badge">ROI estimé: 15-20%</div>
+              <button class="view-button">Voir le projet</button>
+            </div>
+
+            <div class="option-card">
+              <h3>EduTech Pro</h3>
+              <p>Plateforme d'apprentissage adaptatif avec réalité augmentée</p>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 25%; background: #9c27b0"
+                  ></div>
+                </div>
+                <div class="progress-info">
+                  <span>25% financé</span>
+                  <span>125K€ / 500K€</span>
+                </div>
+              </div>
+              <div class="roi-badge">ROI estimé: 30-35%</div>
+              <button class="view-button">Voir le projet</button>
+            </div>
+
+            <div class="option-card">
+              <h3>CleanEnergy</h3>
+              <p>Stockage d'énergie nouvelle génération</p>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 55%; background: #f44336"
+                  ></div>
+                </div>
+                <div class="progress-info">
+                  <span>55% financé</span>
+                  <span>550K€ / 1M€</span>
+                </div>
+              </div>
+              <div class="roi-badge">ROI estimé: 20-25%</div>
+              <button class="view-button">Voir le projet</button>
+            </div>
+
+            <div class="option-card">
+              <h3>SmartLogistics</h3>
+              <p>Optimisation logistique par intelligence artificielle</p>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 90%; background: #4caf50"
+                  ></div>
+                </div>
+                <div class="progress-info">
+                  <span>90% financé</span>
+                  <span>180K€ / 200K€</span>
+                </div>
+              </div>
+              <div class="roi-badge">ROI estimé: 22-27%</div>
+              <button class="view-button">Voir le projet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-about">
+          <a href="index.html" class="logo">InnoConnect</a>
+          <p>
+            Connecter les innovateurs avec les ressources dont ils ont besoin
+            pour transformer leurs idées en réalité.
+          </p>
+          <div class="social-links">
+            <a href="#"><i>Twitter</i></a>
+            <a href="#"><i>Facebook</i></a>
+            <a href="#"><i>Instagram</i></a>
+            <a href="#"><i>LinkedIn</i></a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Liens utiles</h4>
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="#about">À propos</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#financement">Financement</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Nos services</h4>
+          <ul>
+            <li><a href="#">Conseil en innovation</a></li>
+            <li><a href="#">Accès au financement</a></li>
+            <li><a href="#">Réseau d'experts</a></li>
+            <li><a href="#">Formations</a></li>
+            <li><a href="#">Accompagnement</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-contact">
+          <h4>Contactez-nous</h4>
+          <p>
+            123 Rue de l'Innovation<br />
+            75000 Paris<br />
+            France
+          </p>
+          <p style="margin-top: 10px">
+            <strong>Téléphone:</strong> +33 1 23 45 67 89<br />
+            <strong>Email:</strong> contact@innoconnect.com
+          </p>
+        </div>
+      </div>
+
+      <div class="copyright">
+        <p>
+          © <span>Copyright</span>
+          <strong>InnoConnect</strong>
+          <span>Tous droits réservés</span>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Fonction pour le défilement fluide
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
