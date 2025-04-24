@@ -1,12 +1,6 @@
 <?php
 session_start();
 
-// Restrict to logged-in admins
-if (!isset($_SESSION['id_utilisateur'])) {
-    header("Location: ../../frontOffice/login.php");
-    exit;
-}
-
 require_once '../../config/config.php';
 
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {

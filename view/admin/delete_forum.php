@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-// Restrict access
-if (!isset($_SESSION['id_utilisateur'])) {
-    header('Location: ../../frontOffice/login.php');
-    exit;
-}
 
 require_once '../../config/config.php';
 

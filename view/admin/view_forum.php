@@ -1,12 +1,6 @@
 <?php
 session_start();
 
-// Restrict to logged-in admins
-if (!isset($_SESSION['id_utilisateur'])) {
-    header("Location: ../../frontOffice/login.php");
-    exit;
-}
-
 require_once '../../config/config.php';
 
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
@@ -17,14 +11,14 @@ if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
 $forum_id = $_GET['id'];
 $pdo = config::getConnexion();
 
-// Load approved forums
+// Load approved forums (for legacy compatibility)
 $approved_file = '../../config/approved_forums.json';
 $approved_forums = file_exists($approved_file) ? json_decode(file_get_contents($approved_file), true) : [];
 
 try {
-    // Fetch forum details
+    // Fetch forum details, including status
     $stmt = $pdo->prepare("
-        SELECT f.id, f.titre, f.category, f.date_creation, 
+        SELECT f.id, f.titre, f.category, f.date_creation, f.status,
                COALESCE(u.prenom, '') AS prenom, COALESCE(u.nom, '') AS nom 
         FROM forums f 
         LEFT JOIN utilisateur u ON f.user_id = u.id_utilisateur 
@@ -77,6 +71,7 @@ try {
         .badge { padding: 6px 10px; font-size: 12px; }
         .badge-pending { background-color: #ffc107; color: #212529; }
         .badge-approved { background-color: #28a745; color: #fff; }
+        .badge-rejected { background-color: #dc3545; color: #fff; }
         .btn { transition: all 0.3s ease; }
         .btn:hover { transform: scale(1.05); }
     </style>
@@ -144,19 +139,6 @@ try {
                 </div>
             </nav>
             <div class="container-fluid py-4">
-                <!-- Feedback Messages -->
-                <?php if (isset($_GET['message'])): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <?php echo htmlspecialchars($_GET['message']); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php elseif (isset($_GET['error'])): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <?php echo htmlspecialchars($_GET['error']); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-
                 <div class="row">
                     <div class="col-12">
                         <div class="card mb-4">
@@ -170,22 +152,37 @@ try {
                                     <p><strong>Creator:</strong> <?php echo htmlspecialchars(trim($forum['prenom'] . ' ' . $forum['nom']) ?: 'Anonyme'); ?></p>
                                     <p><strong>Date Created:</strong> <?php echo htmlspecialchars($forum['date_creation'] ?: 'N/A'); ?></p>
                                     <p><strong>Status:</strong> 
-                                        <span class="badge badge-<?php echo in_array($forum['id'], $approved_forums) ? 'approved' : 'pending'; ?>">
-                                            <?php echo in_array($forum['id'], $approved_forums) ? 'Approved' : 'Pending'; ?>
+                                        <span class="badge badge-<?php echo $forum['status'] === 'rejected' ? 'rejected' : ($forum['status'] === 'approved' ? 'approved' : 'pending'); ?>">
+                                            <?php echo htmlspecialchars(ucfirst($forum['status'] ?: 'pending')); ?>
                                         </span>
                                     </p>
                                     <div class="mt-3">
-                                        <?php if (!in_array($forum['id'], $approved_forums)): ?>
+                                        <?php if ($forum['status'] !== 'approved' && $forum['status'] !== 'rejected'): ?>
                                             <a href="approve_forum.php?id=<?php echo htmlspecialchars($forum['id']); ?>" 
-                                               class="btn btn-sm btn-success me-2">
+                                               class="btn btn-sm btn-success me-2" 
+                                               data-toggle="tooltip" 
+                                               data-original-title="Approuver">
                                                 <i class="fas fa-check"></i> Approve
                                             </a>
                                         <?php endif; ?>
+                                        <?php if ($forum['status'] !== 'rejected'): ?>
+                                            <a href="reject_forum.php?id=<?php echo htmlspecialchars($forum['id']); ?>" 
+                                               class="btn btn-sm btn-danger me-2" 
+                                               data-toggle="tooltip" 
+                                               data-original-title="Reject">
+                                                <i class="fas fa-times"></i> Reject
+                                            </a>
+                                        <?php endif; ?>
                                         <a href="delete_forum.php?id=<?php echo htmlspecialchars($forum['id']); ?>" 
-                                           class="btn btn-sm btn-danger me-2">
+                                           class="btn btn-sm btn-danger me-2" 
+                                           data-toggle="tooltip" 
+                                           data-original-title="Delete">
                                             <i class="fas fa-trash"></i> Delete
                                         </a>
-                                        <a href="collaborativespace.php" class="btn btn-sm btn-secondary">
+                                        <a href="collaborativespace.php" 
+                                           class="btn btn-sm btn-secondary" 
+                                           data-toggle="tooltip" 
+                                           data-original-title="Back to Dashboard">
                                             <i class="fas fa-arrow-left"></i> Back to Dashboard
                                         </a>
                                     </div>

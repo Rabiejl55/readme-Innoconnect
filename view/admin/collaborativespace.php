@@ -1,20 +1,14 @@
 <?php
 session_start();
 
-// Restrict access to logged-in users
-if (!isset($_SESSION['id_utilisateur'])) {
-    header("Location: ../../frontOffice/login.php");
-    exit;
-}
-
 // Inclure la connexion à la base de données
-require_once '../../config/config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 // Get the PDO connection
 $pdo = config::getConnexion();
 
 // Load approved forums
-$approved_file = '../../config/approved_forums.json';
+$approved_file = __DIR__ . '/../../config/approved_forums.json';
 $approved_forums = file_exists($approved_file) ? json_decode(file_get_contents($approved_file), true) : [];
 
 // Récupérer les forums actifs
@@ -23,7 +17,7 @@ $discussions = $pdo->query("SELECT * FROM forums")->fetchAll(PDO::FETCH_ASSOC);
 // Récupérer des posts pour la file de modération
 try {
     $query = "
-        SELECT f.id, f.titre, f.category, f.date_creation AS date, COALESCE(u.prenom, '') AS prenom, COALESCE(u.nom, '') AS nom 
+        SELECT f.id, f.titre, f.category, f.date_creation AS date, f.status, COALESCE(u.prenom, '') AS prenom, COALESCE(u.nom, '') AS nom 
         FROM forums f 
         LEFT JOIN utilisateur u ON f.user_id = u.id_utilisateur 
         ORDER BY f.date_creation DESC 
@@ -96,6 +90,7 @@ unset($task);
         .list-group-item:hover { background-color: #f8f9fa; }
         .badge-pending { background-color: #ffc107; color: #212529; }
         .badge-approved { background-color: #28a745; color: #fff; }
+        .badge-rejected { background-color: #dc3545; color: #fff; }
     </style>
 </head>
 <body class="g-sidenav-show bg-gray-100">
@@ -161,19 +156,6 @@ unset($task);
                 </div>
             </nav>
             <div class="container-fluid py-4">
-                <!-- Feedback Messages -->
-                <?php if (isset($_GET['message'])): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <?php echo htmlspecialchars($_GET['message']); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php elseif (isset($_GET['error'])): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <?php echo htmlspecialchars($_GET['error']); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-
                 <div class="row">
                     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                         <div class="card">
@@ -209,26 +191,6 @@ unset($task);
                                     <div class="col-4 text-end">
                                         <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
                                             <i class="ni ni-bell-55 text-lg opacity-10" aria-hidden="true"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                        <div class="card">
-                            <div class="card-body p-3">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <div class="numbers">
-                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Tasks</p>
-                                            <h5 class="font-weight-bolder"><?php echo count($tasks); ?></h5>
-                                            <p class="mb-0">in process</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-4 text-end">
-                                        <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                            <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -278,89 +240,12 @@ unset($task);
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                                        <div class="d-flex align-items-center">
-                                            <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                                                <i class="ni ni-check-bold text-white opacity-10"></i>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <h6 class="mb-1 text-dark text-sm">Tasks</h6>
-                                                <span class="text-xs"><?php echo count($tasks); ?> in progress</span>
-                                            </div>
-                                        </div>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Tâches en Cours -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card mb-4">
-                            <div class="card-header pb-0">
-                                <h6>Current Tasks</h6>
-                                <p class="text-sm">Track and manage active tasks in the collaborative space</p>
-                            </div>
-                            <div class="card-body px-0 pt-0 pb-2">
-                                <div class="table-responsive p-0">
-                                    <table class="table align-items-center mb-0 custom-table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tasks</th>
-                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Responsible</th>
-                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Due Date</th>
-                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Statuts</th>
-                                                <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($tasks as $task): ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <h6 class="mb-0 text-sm"><?php echo htmlspecialchars($task['title']); ?></h6>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0"><?php echo htmlspecialchars($task['responsible']); ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs text-secondary mb-0"><?php echo htmlspecialchars($task['deadline']); ?></p>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge bg-gradient-<?php echo $task['status'] === 'Completed' ? 'success' : 'warning'; ?>">
-                                                            <?php echo htmlspecialchars($task['status']); ?>
-                                                        </span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <?php if ($task['status'] !== 'Completed'): ?>
-                                                            <a href="complete_task.php?id=<?php echo htmlspecialchars($task['id']); ?>" 
-                                                               class="btn btn-sm btn-success" 
-                                                               data-toggle="tooltip" 
-                                                               data-original-title="Marquer comme terminé">
-                                                                <i class="fas fa-check"></i> Terminer
-                                                            </a>
-                                                        <?php else: ?>
-                                                            <span class="text-xs text-muted">Completed</span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <?php if (empty($tasks)): ?>
-                                    <div class="text-center py-4">
-                                        <p class="text-sm text-muted">Aucune tâche en cours pour le moment.</p>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <!-- Contributions Récentes -->
                 <div class="row mt-4">
                     <div class="col-12">
@@ -445,12 +330,12 @@ unset($task);
                                                         <p class="text-xs text-secondary mb-0"><?php echo htmlspecialchars($post['date'] ?: 'N/A'); ?></p>
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-<?php echo in_array($post['id'], $approved_forums) ? 'approved' : 'pending'; ?>">
-                                                            <?php echo in_array($post['id'], $approved_forums) ? 'Approved' : 'Pending'; ?>
+                                                        <span class="badge badge-<?php echo $post['status'] === 'rejected' ? 'rejected' : ($post['status'] === 'approved' ? 'approved' : 'pending'); ?>">
+                                                            <?php echo htmlspecialchars(ucfirst($post['status'] ?: 'pending')); ?>
                                                         </span>
                                                     </td>
                                                     <td class="align-middle text-center">
-                                                        <?php if (!in_array($post['id'], $approved_forums)): ?>
+                                                        <?php if ($post['status'] !== 'approved' && $post['status'] !== 'rejected'): ?>
                                                             <a href="approve_forum.php?id=<?php echo htmlspecialchars($post['id']); ?>" 
                                                                class="btn btn-sm btn-success me-2" 
                                                                data-toggle="tooltip" 
@@ -458,11 +343,11 @@ unset($task);
                                                                 <i class="fas fa-check"></i> Approve
                                                             </a>
                                                         <?php endif; ?>
-                                                        <a href="delete_forum.php?id=<?php echo htmlspecialchars($post['id']); ?>" 
+                                                        <a href="reject_forum.php?id=<?php echo htmlspecialchars($post['id']); ?>" 
                                                            class="btn btn-sm btn-danger me-2" 
                                                            data-toggle="tooltip" 
-                                                           data-original-title="Supprimer">
-                                                            <i class="fas fa-trash"></i> Delete
+                                                           data-original-title="Reject">
+                                                            <i class="fas fa-times"></i> Reject
                                                         </a>
                                                         <a href="view_forum.php?id=<?php echo htmlspecialchars($post['id']); ?>" 
                                                            class="btn btn-sm btn-info" 

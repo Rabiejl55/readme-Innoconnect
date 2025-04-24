@@ -1,18 +1,11 @@
 <?php
 session_start();
-/*
-// Vérification de la session
-if (!isset($_SESSION['id_utilisateur'])) {
-    header("Location: login.php");
-    exit;
-}
-*/
+
 // Inclure la connexion à la base de données
 require_once '../../config/config.php';
 $pdo = config::getConnexion();
 
 $stmt = $pdo->prepare("SELECT prenom, nom FROM utilisateur WHERE id_utilisateur = :id");
-$stmt->execute(['id' => $_SESSION['id_utilisateur']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Si aucun utilisateur n'est trouvé, définir une valeur par défaut
