@@ -326,3 +326,35 @@
 2025-04-28 20:47:59 - Profile updated successfully for user ID: 37
 2025-04-28 20:47:59 - User profile loaded for ID: 37, photo_profil: 37
 2025-04-28 20:47:59 - Attempting to display profile picture: ../../uploads/37
+2025-04-29 12:59:23 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-29 12:59:23 - Attempting to display profile picture: ../../uploads/37
+2025-04-29 13:00:08 - User profile loaded for ID: 35, photo_profil: 35_1745615182.jpg
+2025-04-29 13:00:08 - Attempting to display profile picture: ../../uploads/35_1745615182.jpg
+2025-04-29 13:00:38 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-29 13:00:38 - No photo_profil set for user ID: 24
+2025-04-29 13:03:44 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-29 13:03:44 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-29 13:03:44 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1745924624.jpeg
+2025-04-29 13:03:44 - Updating user with photo_profil: 24_1745924624.jpeg
+2025-04-29 13:03:44 - Photo uploaded and user updated with photo_profil: 24_1745924624.jpeg
+2025-04-29 13:03:44 - Profile updated successfully for user ID: 24
+2025-04-29 13:03:44 - User profile loaded for ID: 24, photo_profil: 24_1745924624.jpeg
+2025-04-29 13:03:44 - Attempting to display profile picture: ../../uploads/24_1745924624.jpeg
+2025-04-29 13:05:15 - Starting registration process
+2025-04-29 13:05:15 - Attempting to add user: nom=aaaa, email=farah@gmail.com
+2025-04-29 13:05:15 - User added successfully with ID: 38
+2025-04-29 13:05:15 - Photo upload started: type=image/jpeg, size=73366 bytes
+2025-04-29 13:05:15 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/38_1745924715.jpeg
+2025-04-29 13:05:15 - Updating user with photo_profil: 38_1745924715.jpeg
+2025-04-29 13:05:15 - Photo uploaded and user updated with photo_profil: 38_1745924715.jpeg
+2025-04-29 13:05:15 - Registration completed successfully
+2025-04-29 13:05:28 - User profile loaded for ID: 38, photo_profil: 38_1745924715.jpeg
+2025-04-29 13:05:28 - Attempting to display profile picture: ../../uploads/38_1745924715.jpeg
+2025-04-29 13:05:37 - User profile loaded for ID: 38, photo_profil: 38_1745924715.jpeg
+2025-04-29 13:05:37 - User account deleted for ID: 38
+2025-04-29 13:06:04 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-29 13:06:04 - Attempting to display profile picture: ../../uploads/37
+2025-04-29 13:06:08 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-29 13:06:08 - User account deleted for ID: 37
+2025-04-29 13:06:38 - User profile loaded for ID: 24, photo_profil: 24_1745924624.jpeg
+2025-04-29 13:06:38 - Attempting to display profile picture: ../../uploads/24_1745924624.jpeg

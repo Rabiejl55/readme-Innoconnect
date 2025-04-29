@@ -119,29 +119,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
         $uploadPath = $uploadDir . $newFileName;
 
         logMessage("Attempting to move uploaded file to: $uploadPath");
-        if (move_uploaded_file($fileTmpName, $uploadPath)) {
-            $photo_profil = '/' . $newFileName;
-            $oldPhotoPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $user['photo_profil'];
-            if ($user['photo_profil'] && file_exists($oldPhotoPath)) {
-                //unlink($oldPhotoPath);
-                logMessage("Deleted old profile picture: " . $user['photo_profil']);
-            }
-            logMessage("Profile photo uploaded successfully: $photo_profil");
-        } else {
+        if (!move_uploaded_file($fileTmpName, $uploadPath)) {
             logMessage("Profile photo upload failed: Unable to move file to $uploadPath");
             header("Location: profile.php?error=Failed to upload photo");
             exit;
         }
-    }
+
+        try {
+            $photo_profil = '' . $newFileName;
+            $db = config::getConnexion();
+            logMessage("Updating user with photo_profil: $photo_profil");
+            $stmt = $db->prepare("UPDATE utilisateur SET photo_profil = :photo_profil WHERE id_utilisateur = :id_utilisateur");
+            $stmt->execute([':photo_profil' => $photo_profil, ':id_utilisateur' => $userId]);
+            logMessage("Photo uploaded and user updated with photo_profil: $photo_profil");
+        } catch (Exception $e) {
+            if ($uploadPath && file_exists($uploadPath)) {
+                unlink($uploadPath);
+            }
+            logMessage("Error updating user with photo: " . $e->getMessage());
+            header("Location: login.php?success=Registration successful! Please login. Note: Failed to save photo due to database error.");
+            exit;
+        }
+        }
+    
 
     // Update profile
-    try {
-        $userC->updateUser($userId, $nom, $prenom, $email, $user['type'], $photo_profil, $date_inscription);
-    } catch (Exception $e) {
-        logMessage("Error updating user: " . $e->getMessage());
-        header("Location: profile.php?error=Error updating profile");
-        exit;
-    }
+    // try {
+    //     $userC->updateUser($userId, $nom, $prenom, $email, $user['type'], $photo_profil, $date_inscription);
+    // } catch (Exception $e) {
+    //     logMessage("Error updating user: " . $e->getMessage());
+    //     header("Location: profile.php?error=Error updating profile");
+    //     exit;
+    // }
 
     // Handle password update if provided
     if (!empty($password)) {
