@@ -33,20 +33,28 @@ class userC {
         }
     }
 
-    public function updateUser($userId, $nom, $prenom, $email, $type, $photo_profil) {
+    public function updateUser($userId, $nom, $prenom, $email, $type, $photo_profil, $date_inscription) {
         try {
-            $stmt = $this->conn->prepare("UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, type = ?, photo_profil = ? WHERE id_utilisateur = ?");
+            // Inclure date_inscription dans la requête SQL
+            $stmt = $this->conn->prepare("UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, type = ?, photo_profil = ?, date_inscription = ? WHERE id_utilisateur = ?");
+            
+            // Lier les valeurs dans le bon ordre
             $stmt->bindValue(1, $nom, PDO::PARAM_STR);
             $stmt->bindValue(2, $prenom, PDO::PARAM_STR);
             $stmt->bindValue(3, $email, PDO::PARAM_STR);
             $stmt->bindValue(4, $type, PDO::PARAM_STR);
-            $stmt->bindValue(5, $userId, PDO::PARAM_INT);
-            $stmt->bindValue(6, $photo_profil, PDO::PARAM_INT);
+            $stmt->bindValue(5, $photo_profil, PDO::PARAM_STR); // photo_profil est une chaîne (chemin du fichier)
+            $stmt->bindValue(6, $date_inscription, PDO::PARAM_STR); // date_inscription est une chaîne (ex: "2025-04-29")
+            $stmt->bindValue(7, $userId, PDO::PARAM_INT); // id_utilisateur est un entier
+    
+            // Exécuter la requête
             $stmt->execute();
-            return true;
+    
+            // Vérifier si une ligne a été mise à jour
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             error_log("Erreur lors de la mise à jour de l'utilisateur : " . $e->getMessage());
-            return false;
+            throw new Exception("Erreur lors de la mise à jour de l'utilisateur : " . $e->getMessage());
         }
     }
 
@@ -68,10 +76,21 @@ class userC {
         $allowedColumns = ['id_utilisateur', 'nom', 'prenom', 'email', 'type', 'date_inscription'];
         $sortColumn = in_array($sortColumn, $allowedColumns) ? $sortColumn : 'id_utilisateur';
         $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
-
-        $sql = "SELECT * FROM utilisateur WHERE nom LIKE :search OR prenom LIKE :search OR email LIKE :search ORDER BY $sortColumn $sortOrder";
+    
+        // Utiliser des paramètres nommés distincts pour chaque champ
+        $sql = "SELECT * FROM utilisateur 
+                WHERE nom LIKE :searchNom OR prenom LIKE :searchPrenom OR email LIKE :searchEmail 
+                ORDER BY $sortColumn $sortOrder";
+        
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['search' => "%$searchTerm%"]);
+        // Lier chaque paramètre séparément
+        $searchTerm = "%$searchTerm%";
+        $stmt->execute([
+            'searchNom' => $searchTerm,    // Pour nom
+            'searchPrenom' => $searchTerm, // Pour prenom
+            'searchEmail' => $searchTerm   // Pour email
+        ]);
+        
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -90,23 +109,30 @@ class userC {
 
     public function ajouterUser($nom, $prenom, $email, $mot_de_passe, $type, $date_inscription, $photo_profil) {
         try {
-            $sql = "INSERT INTO utilisateur (nom, prenom, email, mot_de_passe, type, date_inscription,photo_profil) 
-                    VALUES (:nom, :prenom, :email, :mot_de_passe, :type, :date_inscription, :photo_profil)";
-            $db = config::getConnexion();
-            $stmt = $db->prepare($sql);
-            
-            $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
-            $stmt->bindValue(':prenom', $prenom, PDO::PARAM_STR);
-            $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-            $stmt->bindValue(':mot_de_passe', $mot_de_passe, PDO::PARAM_STR);
-            $stmt->bindValue(':type', $type, PDO::PARAM_STR);
-            $stmt->bindValue(':date_inscription', $date_inscription, PDO::PARAM_STR);
-            $stmt->bindValue(':photo_profil', $photo_profil, PDO::PARAM_STR);
-            
+            // Debug: Log the values being inserted
+            error_log("ajouterUser called with: nom=$nom, prenom=$prenom, email=$email, type=$type, date_inscription=$date_inscription, photo_profil=" . ($photo_profil ?? 'NULL'));
+    
+            $stmt = $this->conn->prepare(
+                "INSERT INTO utilisateur (nom, prenom, email, mot_de_passe, type, date_inscription, photo_profil) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?)"
+            );
+            $stmt->bindValue(1, $nom, PDO::PARAM_STR);
+            $stmt->bindValue(2, $prenom, PDO::PARAM_STR);
+            $stmt->bindValue(3, $email, PDO::PARAM_STR);
+            $stmt->bindValue(4, $mot_de_passe, PDO::PARAM_STR);
+            $stmt->bindValue(5, $type, PDO::PARAM_STR);
+            $stmt->bindValue(6, $date_inscription, PDO::PARAM_STR); // Expects Y-m-d format
+            $stmt->bindValue(7, $photo_profil, $photo_profil === null ? PDO::PARAM_NULL : PDO::PARAM_STR); // Handle NULL explicitly
+    
             $stmt->execute();
-            return true;
-        } catch (Exception $e) {
-            throw new Exception('Error adding user: ' . $e->getMessage());
+            
+            // Debug: Log success
+            $newUserId = $this->conn->lastInsertId();
+            error_log("User added successfully with ID: $newUserId");
+            return $newUserId;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de l'ajout de l'utilisateur : " . $e->getMessage());
+            throw new Exception("Erreur lors de l'ajout de l'utilisateur : " . $e->getMessage());
         }
     }
 

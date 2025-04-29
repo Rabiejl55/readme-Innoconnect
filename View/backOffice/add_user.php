@@ -28,6 +28,7 @@ if (!$user) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate required fields
     if (empty($_POST['nom']) || empty($_POST['prenom']) || empty($_POST['email']) || empty($_POST['mot_de_passe']) || empty($_POST['type']) || empty($_POST['date_inscription'])) {
         header("Location: add_user.php?error=All fields are required");
         exit;
@@ -36,31 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom']);
     $prenom = trim($_POST['prenom']);
     $email = trim($_POST['email']);
-    $mot_de_passe = password_hash(trim($_POST['mot_de_passe']), PASSWORD_DEFAULT); // Hash the password
+    $mot_de_passe = trim($_POST['mot_de_passe']);
     $type = $_POST['type'];
     $date_inscription = $_POST['date_inscription'];
 
-    // Handle photo upload
-    $photo = null;
-    if (!empty($_FILES['photo']['name'])) {
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/';
-        $photoName = uniqid() . '-' . basename($_FILES['photo']['name']);
-        $photoPath = $uploadDir . $photoName;
+    // Server-side validation for nom and prenom
+    if (!preg_match('/^[a-zA-Z\s]+$/', $nom)) {
+        header("Location: add_user.php?error=Last name must contain only letters");
+        exit;
+    }
 
-        // Validate file type and size
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $maxSize = 5 * 1024 * 1024; // 5MB
-        if (in_array($_FILES['photo']['type'], $allowedTypes) && $_FILES['photo']['size'] <= $maxSize) {
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $photoPath)) {
-                $photo = '/ProjetInnoconnect/uploads/' . $photoName;
-            } else {
-                header("Location: add_user.php?error=Failed to upload photo");
-                exit;
-            }
-        } else {
-            header("Location: add_user.php?error=Invalid photo format or size");
-            exit;
-        }
+    if (!preg_match('/^[a-zA-Z\s]+$/', $prenom)) {
+        header("Location: add_user.php?error=First name must contain only letters");
+        exit;
     }
 
     // Validate email
@@ -69,10 +58,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Validate password strength
+    $password_strength = 0;
+    if (strlen($mot_de_passe) >= 8) $password_strength++;
+    if (preg_match('/[A-Z]/', $mot_de_passe)) $password_strength++;
+    if (preg_match('/[0-9]/', $mot_de_passe)) $password_strength++;
+    if (preg_match('/[^A-Za-z0-9]/', $mot_de_passe)) $password_strength++;
+
+    if ($password_strength <= 2) {
+        header("Location: add_user.php?error=Password is too weak. It must be at least 8 characters long and include uppercase, numbers, and special characters.");
+        exit;
+    }
+
+    // Hash the password
+    $mot_de_passe = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+
     // Validate user type
     $validTypes = ['administrateur', 'investisseur', 'innovateur'];
     if (!in_array($type, $validTypes)) {
         header("Location: add_user.php?error=Invalid user type");
+        exit;
+    }
+
+    // Validate date format (JJ/MM/AAAA)
+    if (!preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $date_inscription)) {
+        header("Location: add_user.php?error=Invalid date format (use JJ/MM/AAAA)");
+        exit;
+    }
+
+    // Convert date to Y-m-d for database storage
+    $dateParts = explode('/', $date_inscription);
+    $dateFormatted = $dateParts[2] . '-' . $dateParts[1] . '-' . $dateParts[0]; // Y-m-d
+    $dateObj = DateTime::createFromFormat('Y-m-d', $dateFormatted);
+    if (!$dateObj || $dateObj->format('Y-m-d') !== $dateFormatted) {
+        header("Location: add_user.php?error=Invalid date");
         exit;
     }
 
@@ -83,18 +102,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Handle photo upload (optional)
+    $photo = null;
+    $photoError = null;
+    if (!empty($_FILES['photo']['name'])) {
+        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/';
+        $photoName = uniqid() . '-' . basename($_FILES['photo']['name']);
+        $photoPath = $uploadDir . $photoName;
+
+        // Ensure the upload directory exists
+        if (!file_exists($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
+                $photoError = "Failed to create upload directory";
+            }
+        }
+
+        // Check if the directory is writable
+        if (!$photoError && !is_writable($uploadDir)) {
+            $photoError = "Upload directory is not writable";
+        }
+
+        // Validate file type and size
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $maxSize = 5 * 1024 * 1024; // 5MB
+        if (!$photoError && (in_array($_FILES['photo']['type'], $allowedTypes) && $_FILES['photo']['size'] <= $maxSize)) {
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $photoPath)) {
+                $photo = '/ProjetInnoconnect/uploads/' . $photoName;
+                // Debug: Confirm the photo path
+                error_log("Photo uploaded successfully: $photo");
+            }
+            else {
+                $photoError = "Failed to upload photo";
+            }
+        } else {
+            $photoError = "Invalid photo format or size (JPEG, PNG, GIF, max 5MB)";
+        }
+    }
+
+    // Debug: Log the photo value before insertion
+    error_log("Photo value before insertion: " . ($photo ?? 'NULL'));
+
+    // Proceed with adding the user
     try {
-        // Add the user and get the new user's ID
-        $newUserId = $userC->ajouterUser($nom, $prenom, $email, $mot_de_passe, $type, $date_inscription, $photo);
+        $newUserId = $userC->ajouterUser($nom, $prenom, $email, $mot_de_passe, $type, $dateFormatted, $photo);
         if ($newUserId) {
-            header("Location: listeUser.php?success=User added successfully&highlight=$newUserId");
+            $successMessage = "User added successfully" . ($photoError ? " (but photo upload failed: $photoError)" : "");
+            header("Location: listeUser.php?success=" . urlencode($successMessage) . "&highlight=$newUserId");
         } else {
             header("Location: listeUser.php?success=User added successfully");
         }
         exit;
     } catch (Exception $e) {
         error_log("Error adding user: " . $e->getMessage());
-        header("Location: add_user.php?error=Error adding user");
+        $errorMessage = "Error adding user: " . htmlspecialchars($e->getMessage());
+        if ($photoError) {
+            $errorMessage .= " (also, photo upload failed: $photoError)";
+        }
+        header("Location: add_user.php?error=" . urlencode($errorMessage));
         exit;
     }
 }
@@ -111,6 +175,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
     <link id="pagestyle" href="../../assets2/css/argon-dashboard.css" rel="stylesheet" />
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         * {
             margin: 0;
@@ -129,7 +195,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             min-height: 100vh;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: 260px;
             background: linear-gradient(180deg, #1a2c42 0%, #2a3e5a 100%);
@@ -192,7 +257,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1.2em;
         }
 
-        /* Navbar Styles */
         .navbar {
             position: fixed;
             top: 0;
@@ -298,7 +362,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #f8f9fa;
         }
 
-        /* Main Content Styles */
         .main-content {
             margin-left: 260px;
             margin-top: 70px;
@@ -365,7 +428,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             animation: slideIn 0.5s ease-out;
         }
 
-        /* Form Styles */
         .section form {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -502,7 +564,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #f5c6cb;
         }
 
-        /* Animations */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .strength-message {
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .strength-weak {
+            color: #dc3545;
+        }
+
+        .strength-medium {
+            color: #ffc107;
+        }
+
+        .strength-strong {
+            color: #28a745;
+        }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -514,7 +599,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        /* Dark Mode */
         .dark-mode {
             background-color: #1a2c42;
         }
@@ -553,7 +637,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #adb5bd;
         }
 
-        /* Responsive Design */
+        .dark-mode .flatpickr-calendar {
+            background-color: #2a3e5a;
+            color: #d1d9e6;
+        }
+
+        .dark-mode .flatpickr-day {
+            color: #d1d9e6;
+        }
+
+        .dark-mode .flatpickr-day:hover,
+        .dark-mode .flatpickr-day:focus {
+            background: #4a5db5;
+        }
+
+        .dark-mode .flatpickr-day.selected {
+            background: #5e72e4;
+            border-color: #5e72e4;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 200px;
@@ -630,7 +732,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="g-sidenav-show bg-gray-100">
     <div class="container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
                 <img src="../../innoconnect.jpeg" alt="InnoConnect Logo">
@@ -660,7 +761,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </ul>
         </aside>
 
-        <!-- Navbar -->
         <div class="navbar">
             <div class="breadcrumb">
                 <i class="fas fa-bars navbar-toggler" style="display: none;"></i>
@@ -673,7 +773,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <i class="fas fa-moon theme-toggle"></i>
             </div>
             <div class="user-info">
-                <img src="https://via.placeholder.com/32" alt="User Avatar">
+                <?php
+                $photoPath = !empty($user['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '../../uploads/' . $user['photo_profil'] : '';
+                $photoUrl = !empty($user['photo_profil']) ? '../../uploads/' . htmlspecialchars($user['photo_profil']) : '';
+                if (!empty($photoPath) && file_exists($photoPath)): ?>
+                    <img src="<?php echo $photoUrl; ?>" alt="User Avatar">
+                <?php else: ?>
+                    <img src="https://via.placeholder.com/32" alt="User Avatar">
+                <?php endif; ?>
                 <span><?php echo htmlspecialchars($user['prenom'] . ' ' . $user['nom']); ?></span>
                 <div class="dropdown">
                     <a href="../frontOffice/profile.php">My Profile</a>
@@ -682,7 +789,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
             <div class="page-header">
                 <div>
@@ -701,58 +807,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if (isset($_GET['success'])): ?>
                     <div class="alert alert-success"><?php echo htmlspecialchars($_GET['success']); ?></div>
                 <?php endif; ?>
-                <form method="POST" action="add_user.php" enctype="multipart/form-data">
+                <form id="addUserForm" method="POST" action="add_user.php" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="nom">Last Name</label>
                         <div class="input-wrapper">
                             <i class="fas fa-user"></i>
-                            <input type="text" id="nom" name="nom" required>
+                            <input type="text" id="nom" name="nom">
                         </div>
+                        <div id="nomError" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="prenom">First Name</label>
                         <div class="input-wrapper">
                             <i class="fas fa-user"></i>
-                            <input type="text" id="prenom" name="prenom" required>
+                            <input type="text" id="prenom" name="prenom">
                         </div>
+                        <div id="prenomError" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
                         <div class="input-wrapper">
                             <i class="fas fa-envelope"></i>
-                            <input type="email" id="email" name="email" required>
+                            <input type="text" id="email" name="email">
                         </div>
+                        <div id="emailError" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="mot_de_passe">Password</label>
                         <div class="input-wrapper">
                             <i class="fas fa-lock"></i>
-                            <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                            <input type="password" id="mot_de_passe" name="mot_de_passe" oninput="checkPasswordStrength()">
                         </div>
+                        <div id="passwordError" class="error-message"></div>
+                        <div id="password-strength" class="strength-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="type">User Type</label>
                         <div class="input-wrapper">
                             <i class="fas fa-users"></i>
-                            <select id="type" name="type" required>
+                            <select id="type" name="type">
                                 <option value="administrateur">Administrator</option>
                                 <option value="investisseur">Investor</option>
                                 <option value="innovateur">Innovator</option>
                             </select>
                         </div>
+                        <div id="typeError" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="photo">Profile Photo (Optional)</label>
                         <div class="input-wrapper">
-                            <input type="file" id="photo" name="photo" accept="image/*">
+                            <input type="file" id="photo" name="photo">
                         </div>
+                        <div id="photoError" class="error-message"></div>
+                        <small style="color: #6c757d; font-size: 0.85em;">JPEG, PNG, or GIF. Max 5MB.</small>
                     </div>
                     <div class="form-group full-width">
                         <label for="date_inscription">Registration Date</label>
                         <div class="input-wrapper">
                             <i class="fas fa-calendar-alt"></i>
-                            <input type="date" id="date_inscription" name="date_inscription" required>
+                            <input type="text" id="date_inscription" name="date_inscription" placeholder="JJ/MM/AAAA">
                         </div>
+                        <div id="dateError" class="error-message"></div>
                     </div>
                     <div class="btn-group">
                         <button type="submit" class="btn btn-primary">Add User</button>
@@ -763,14 +878,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="../../assets2/js/core/popper.min.js"></script>
     <script src="../../assets2/js/core/bootstrap.min.js"></script>
     <script src="../../assets2/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="../../assets2/js/plugins/smooth-scrollbar.min.js"></script>
     <script src="../../assets2/js/argon-dashboard.min.js?v=2.1.0"></script>
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Theme Toggle (Light/Dark Mode)
+        // Initialize Flatpickr
+        flatpickr("#date_inscription", {
+            dateFormat: "d/m/Y",
+            maxDate: "today",
+            allowInput: true,
+            onClose: function(selectedDates, dateStr, instance) {
+                validateDate(dateStr);
+            }
+        });
+
         const themeToggle = document.querySelector('.theme-toggle');
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
@@ -778,7 +903,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             themeToggle.classList.toggle('fa-sun');
         });
 
-        // Sidebar Toggle for Mobile
         const sidebar = document.querySelector('.sidebar');
         const navbarToggler = document.querySelector('.navbar-toggler');
         if (navbarToggler) {
@@ -787,9 +911,161 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         }
 
-        // Show sidebar toggler on mobile
         if (window.innerWidth <= 576) {
             document.querySelector('.navbar-toggler').style.display = 'block';
+        }
+
+        document.getElementById('addUserForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let isValid = true;
+            const nom = document.getElementById('nom').value.trim();
+            const prenom = document.getElementById('prenom').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('mot_de_passe').value;
+            const type = document.getElementById('type').value;
+            const photo = document.getElementById('photo').files[0];
+            const dateInscription = document.getElementById('date_inscription').value.trim();
+
+            document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
+
+            if (!nom) {
+                document.getElementById('nomError').textContent = 'Last name is required';
+                document.getElementById('nomError').style.display = 'block';
+                isValid = false;
+            } else if (!/^[a-zA-Z\s]+$/.test(nom)) {
+                document.getElementById('nomError').textContent = 'Last name must contain only letters';
+                document.getElementById('nomError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!prenom) {
+                document.getElementById('prenomError').textContent = 'First name is required';
+                document.getElementById('prenomError').style.display = 'block';
+                isValid = false;
+            } else if (!/^[a-zA-Z\s]+$/.test(prenom)) {
+                document.getElementById('prenomError').textContent = 'First name must contain only letters';
+                document.getElementById('prenomError').style.display = 'block';
+                isValid = false;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email) {
+                document.getElementById('emailError').textContent = 'Email is required';
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                document.getElementById('emailError').textContent = 'Invalid email format';
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+
+            let passwordStrength = 0;
+            if (password.length >= 8) passwordStrength++;
+            if (/[A-Z]/.test(password)) passwordStrength++;
+            if (/[0-9]/.test(password)) passwordStrength++;
+            if (/[^A-Za-z0-9]/.test(password)) passwordStrength++;
+
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            } else if (passwordStrength <= 2) {
+                document.getElementById('passwordError').textContent = 'Password is too weak. It must be at least 8 characters long and include uppercase, numbers, and special characters.';
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+
+            const validTypes = ['administrateur', 'investisseur', 'innovateur'];
+            if (!type || !validTypes.includes(type)) {
+                document.getElementById('typeError').textContent = 'Please select a valid user type';
+                document.getElementById('typeError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (photo) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                const maxSize = 5 * 1024 * 1024;
+                if (!allowedTypes.includes(photo.type)) {
+                    document.getElementById('photoError').textContent = 'Photo must be JPEG, PNG, or GIF';
+                    document.getElementById('photoError').style.display = 'block';
+                    isValid = false;
+                } else if (photo.size > maxSize) {
+                    document.getElementById('photoError').textContent = 'Photo size must not exceed 5MB';
+                    document.getElementById('photoError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+
+            const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (!dateInscription) {
+                document.getElementById('dateError').textContent = 'Registration date is required';
+                document.getElementById('dateError').style.display = 'block';
+                isValid = false;
+            } else if (!dateRegex.test(dateInscription)) {
+                document.getElementById('dateError').textContent = 'Date must be in format JJ/MM/AAAA';
+                document.getElementById('dateError').style.display = 'block';
+                isValid = false;
+            } else {
+                const [day, month, year] = dateInscription.split('/').map(Number);
+                const date = new Date(year, month - 1, day);
+                if (date.getDate() !== day || date.getMonth() + 1 !== month || date.getFullYear() !== year) {
+                    document.getElementById('dateError').textContent = 'Invalid date';
+                    document.getElementById('dateError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+
+            if (isValid) {
+                this.submit();
+            }
+        });
+
+        function validateDate(dateInscription) {
+            const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (!dateInscription) {
+                document.getElementById('dateError').textContent = 'Registration date is required';
+                document.getElementById('dateError').style.display = 'block';
+                return false;
+            } else if (!dateRegex.test(dateInscription)) {
+                document.getElementById('dateError').textContent = 'Date must be in format JJ/MM/AAAA';
+                document.getElementById('dateError').style.display = 'block';
+                return false;
+            } else {
+                const [day, month, year] = dateInscription.split('/').map(Number);
+                const date = new Date(year, month - 1, day);
+                if (date.getDate() !== day || date.getMonth() + 1 !== month || date.getFullYear() !== year) {
+                    document.getElementById('dateError').textContent = 'Invalid date';
+                    document.getElementById('dateError').style.display = 'block';
+                    return false;
+                }
+            }
+            document.getElementById('dateError').style.display = 'none';
+            return true;
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById("mot_de_passe").value;
+            const strengthMessage = document.getElementById("password-strength");
+            let strength = 0;
+
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            if (password.length === 0) {
+                strengthMessage.textContent = "";
+            } else if (strength <= 2) {
+                strengthMessage.textContent = "Weak";
+                strengthMessage.className = "strength-message strength-weak";
+            } else if (strength === 3) {
+                strengthMessage.textContent = "Medium";
+                strengthMessage.className = "strength-message strength-medium";
+            } else {
+                strengthMessage.textContent = "Strong";
+                strengthMessage.className = "strength-message strength-strong";
+            }
         }
     </script>
 </body>

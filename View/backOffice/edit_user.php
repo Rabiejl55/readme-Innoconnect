@@ -40,8 +40,11 @@ if (!$userToEdit) {
     exit;
 }
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$action = isset($_GET['action']) ? $_GET['action'] : '';
+$error = '';
+
+// Handle form submission for updating user details
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'change_photo') {
     $changedFields = [];
     $nom = trim($_POST['nom']);
     $prenom = trim($_POST['prenom']);
@@ -49,41 +52,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = $_POST['type'];
     $date_inscription = $_POST['date_inscription'];
 
-    // Track changed fields
-    if ($nom !== $userToEdit['nom']) $changedFields[] = 'nom';
-    if ($prenom !== $userToEdit['prenom']) $changedFields[] = 'prenom';
-    if ($email !== $userToEdit['email']) $changedFields[] = 'email';
-    if ($type !== $userToEdit['type']) $changedFields[] = 'type';
+    // Server-side validation
+    if (empty($nom) || !preg_match('/^[a-zA-Z\s]+$/', $nom)) {
+        header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Invalid last name");
+        exit;
+    }
 
-    // Validate email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (empty($prenom) || !preg_match('/^[a-zA-Z\s]+$/', $prenom)) {
+        header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Invalid first name");
+        exit;
+    }
+
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Invalid email");
         exit;
     }
 
-    // Validate user type
     $validTypes = ['administrateur', 'investisseur', 'innovateur'];
-    if (!in_array($type, $validTypes)) {
+    if (empty($type) || !in_array($type, $validTypes)) {
         header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Invalid user type");
         exit;
     }
 
-    // Check if email already exists (and belongs to another user)
+    // Validate date format (JJ/MM/AAAA)
+    if (empty($date_inscription) || !preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $date_inscription)) {
+        header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Invalid date format (use JJ/MM/AAAA)");
+        exit;
+    }
+
+    // Convert date to Y-m-d for database storage
+    $dateParts = explode('/', $date_inscription);
+    $dateFormatted = $dateParts[2] . '-' . $dateParts[1] . '-' . $dateParts[0]; // Y-m-d
+    $dateObj = DateTime::createFromFormat('Y-m-d', $dateFormatted);
+    if (!$dateObj || $dateObj->format('Y-m-d') !== $dateFormatted) {
+        header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Invalid date");
+        exit;
+    }
+
+    // Check if email already exists for another user
     $existingUser = $userC->emailExists($email);
     if ($existingUser && $existingUser['id_utilisateur'] != $userToEditId) {
         header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Email already exists");
         exit;
     }
 
+    // Track changed fields
+    if ($nom !== $userToEdit['nom']) $changedFields[] = 'nom';
+    if ($prenom !== $userToEdit['prenom']) $changedFields[] = 'prenom';
+    if ($email !== $userToEdit['email']) $changedFields[] = 'email';
+    if ($type !== $userToEdit['type']) $changedFields[] = 'type';
+    if ($date_inscription !== $userToEdit['date_inscription']) $changedFields[] = 'date_inscription';
+
     try {
-        $userC->updateUser($userToEditId, $nom, $prenom, $email, $type, $date_inscription);
-        $changedFieldsStr = implode(',', $changedFields);
-        header("Location: listeUser.php?success=User updated successfully&highlight=$userToEditId&changed=$changedFieldsStr");
+        // Passer null pour photo_profil car il n'est pas modifié ici
+        $updated = $userC->updateUser($userToEditId, $nom, $prenom, $email, $type, null, $dateFormatted);
+        if ($updated) {
+            $changedFieldsStr = implode(',', $changedFields);
+            header("Location: listeUser.php?success=User updated successfully&highlight=$userToEditId&changed=$changedFieldsStr");
+        } else {
+            header("Location: edit_user.php?id_utilisateur=$userToEditId&error=No changes detected or update failed");
+        }
         exit;
     } catch (Exception $e) {
         error_log("Error updating user: " . $e->getMessage());
-        header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Error updating user");
+        header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Error updating user: " . htmlspecialchars($e->getMessage()));
         exit;
+    }
+}
+
+// Handle profile photo change
+if ($action === 'change_photo' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo_profil'])) {
+    $photo = $_FILES['photo_profil'];
+    $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/uploads/photos/';
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    $maxSize = 5 * 1024 * 1024;
+
+    if (!file_exists($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    if ($photo['error'] === UPLOAD_ERR_OK && in_array($photo['type'], $allowedTypes) && $photo['size'] <= $maxSize) {
+        $extension = pathinfo($photo['name'], PATHINFO_EXTENSION);
+        $filename = uniqid() . '.' . $extension;
+        $destination = $uploadDir . $filename;
+
+        if (!empty($userToEdit['photo_profil'])) {
+            $oldPhotoPath = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/' . $userToEdit['photo_profil'];
+            if (file_exists($oldPhotoPath)) {
+                unlink($oldPhotoPath);
+            }
+        }
+
+        if (move_uploaded_file($photo['tmp_name'], $destination)) {
+            $conn = config::getConnexion();
+            $relativePath = 'uploads/photos/' . $filename;
+            $stmt = $conn->prepare("UPDATE utilisateur SET photo_profil = ? WHERE id_utilisateur = ?");
+            $stmt->execute([$relativePath, $userToEditId]);
+
+            header("Location: listeUser.php?success=Profile photo updated successfully&highlight=$userToEditId");
+            exit;
+        } else {
+            $error = "Failed to upload the photo.";
+        }
+    } else {
+        $error = "Invalid photo format or size. Please upload a JPEG, PNG, or GIF file under 5MB.";
     }
 }
 ?>
@@ -99,6 +171,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
     <link id="pagestyle" href="../../assets2/css/argon-dashboard.css" rel="stylesheet" />
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         * {
             margin: 0;
@@ -117,7 +191,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             min-height: 100vh;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: 260px;
             background: linear-gradient(180deg, #1a2c42 0%, #2a3e5a 100%);
@@ -180,7 +253,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1.2em;
         }
 
-        /* Navbar Styles */
         .navbar {
             position: fixed;
             top: 0;
@@ -286,7 +358,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #f8f9fa;
         }
 
-        /* Main Content Styles */
         .main-content {
             margin-left: 260px;
             margin-top: 70px;
@@ -353,7 +424,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             animation: slideIn 0.5s ease-out;
         }
 
-        /* Form Styles */
         .section form {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -410,7 +480,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .section select {
             appearance: none;
-            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyLjI4MjggNC4yODI4M0w4LjAwMDEgOC41NjU2N0wzLjcxNzQzIDQuMjgyODNIMTIuMjgyOFoiIGZpbGw9IiM1ZTcyZTQiLz4KPC9zdmc+') no-repeat right 15px center;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCA1NiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyLjI4MjggNC4yODI4M0w4LjAwMDEgOC41NjU2N0wzLjcxNzQzIDQuMjgyODNIMTIuMjgyOFoiIGZpbGw9IiM1ZTcyZTQiLz4KPC9zdmc+') no-repeat right 15px center;
             background-size: 12px;
             padding-right: 40px;
         }
@@ -480,7 +550,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #f5c6cb;
         }
 
-        /* Animations */
+        .current-photo img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #e9ecef;
+            margin-bottom: 10px;
+        }
+
+        .current-photo p {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        .section input[type="file"] {
+            padding: 10px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95em;
+            width: 100%;
+            background-color: #f8f9fa;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -492,7 +592,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        /* Dark Mode */
         .dark-mode {
             background-color: #1a2c42;
         }
@@ -531,7 +630,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #adb5bd;
         }
 
-        /* Responsive Design */
+        .dark-mode .flatpickr-calendar {
+            background-color: #2a3e5a;
+            color: #d1d9e6;
+        }
+
+        .dark-mode .flatpickr-day {
+            color: #d1d9e6;
+        }
+
+        .dark-mode .flatpickr-day:hover,
+        .dark-mode .flatpickr-day:focus {
+            background: #4a5db5;
+        }
+
+        .dark-mode .flatpickr-day.selected {
+            background: #5e72e4;
+            border-color: #5e72e4;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 200px;
@@ -608,7 +725,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="g-sidenav-show bg-gray-100">
     <div class="container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
                 <img src="../../innoconnect.jpeg" alt="InnoConnect Logo">
@@ -638,20 +754,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </ul>
         </aside>
 
-        <!-- Navbar -->
         <div class="navbar">
             <div class="breadcrumb">
                 <i class="fas fa-bars navbar-toggler" style="display: none;"></i>
                 <a href="listeUser.php">User Management</a>
                 <i class="fas fa-chevron-right"></i>
-                <span>Edit User</span>
+                <span><?php echo $action === 'change_photo' ? 'Change Profile Photo' : 'Edit User'; ?></span>
             </div>
             <div class="nav-icons">
                 <i class="fas fa-bell"></i>
                 <i class="fas fa-moon theme-toggle"></i>
             </div>
             <div class="user-info">
-                <img src="https://via.placeholder.com/32" alt="User Avatar">
+                <?php
+                $photoPath = !empty($adminUser['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/' . $adminUser['photo_profil'] : '';
+                $photoUrl = !empty($adminUser['photo_profil']) ? '/ProjetInnoconnect/frontOffice/' . htmlspecialchars($adminUser['photo_profil']) : '';
+                if (!empty($photoPath) && file_exists($photoPath)): ?>
+                    <img src="<?php echo $photoUrl; ?>" alt="User Avatar">
+                <?php else: ?>
+                    <img src="https://via.placeholder.com/32" alt="User Avatar">
+                <?php endif; ?>
                 <span><?php echo htmlspecialchars($adminUser['prenom'] . ' ' . $adminUser['nom']); ?></span>
                 <div class="dropdown">
                     <a href="../frontOffice/profile.php">My Profile</a>
@@ -660,12 +782,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
             <div class="page-header">
                 <div>
-                    <h2>Edit User</h2>
-                    <p>Update the details of the user below.</p>
+                    <h2><?php echo $action === 'change_photo' ? 'Change Profile Photo' : 'Edit User'; ?></h2>
+                    <p><?php echo $action === 'change_photo' ? 'Upload a new profile photo for the user.' : 'Update the details of the user below.'; ?></p>
                 </div>
                 <a href="listeUser.php" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Back to Users
@@ -673,69 +794,113 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="section">
-                <?php if (isset($_GET['error'])): ?>
-                    <div class="alert alert-danger"><?php echo htmlspecialchars($_GET['error']); ?></div>
+                <?php if (isset($_GET['error']) || !empty($error)): ?>
+                    <div class="alert alert-danger"><?php echo htmlspecialchars($_GET['error'] ?? $error); ?></div>
                 <?php endif; ?>
                 <?php if (isset($_GET['success'])): ?>
                     <div class="alert alert-success"><?php echo htmlspecialchars($_GET['success']); ?></div>
                 <?php endif; ?>
-                <form method="POST" action="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($userToEditId); ?>">
-                    <div class="form-group">
-                        <label for="nom">Last Name</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($userToEdit['nom']); ?>" required>
+
+                <?php if ($action === 'change_photo'): ?>
+                    <form id="changePhotoForm" method="POST" enctype="multipart/form-data" action="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($userToEditId); ?>&action=change_photo">
+                        <div class="form-group full-width">
+                            <label>Current Photo</label>
+                            <div class="current-photo">
+                                <?php
+                                $photoPath = !empty($userToEdit['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/' . $userToEdit['photo_profil'] : '';
+                                $photoUrl = !empty($userToEdit['photo_profil']) ? '/ProjetInnoconnect/frontOffice/' . htmlspecialchars($userToEdit['photo_profil']) : '';
+                                if (!empty($photoPath) && file_exists($photoPath)): ?>
+                                    <img src="<?php echo $photoUrl; ?>" alt="Current Photo">
+                                <?php else: ?>
+                                    <p>No photo available.</p>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="prenom">First Name</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($userToEdit['prenom']); ?>" required>
+                        <div class="form-group full-width">
+                            <label for="photo_profil">Upload New Photo</label>
+                            <input type="file" id="photo_profil" name="photo_profil">
+                            <div id="photoError" class="error-message"></div>
+                            <small style="color: #6c757d; font-size: 0.85em;">JPEG, PNG, or GIF. Max 5MB.</small>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userToEdit['email']); ?>" required>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary">Upload Photo</button>
+                            <a href="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($userToEditId); ?>" class="btn btn-secondary">Cancel</a>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="type">User Type</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-users"></i>
-                            <select id="type" name="type" required>
-                                <option value="administrateur" <?php echo $userToEdit['type'] === 'administrateur' ? 'selected' : ''; ?>>Administrator</option>
-                                <option value="investisseur" <?php echo $userToEdit['type'] === 'investisseur' ? 'selected' : ''; ?>>Investor</option>
-                                <option value="innovateur" <?php echo $userToEdit['type'] === 'innovateur' ? 'selected' : ''; ?>>Innovator</option>
-                            </select>
+                    </form>
+                <?php else: ?>
+                    <form id="editUserForm" method="POST" action="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($userToEditId); ?>">
+                        <div class="form-group">
+                            <label for="nom">Last Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($userToEdit['nom']); ?>">
+                            </div>
+                            <div id="nomError" class="error-message"></div>
                         </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="date_inscription">Registration Date</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-calendar-alt"></i>
-                            <input type="date" id="date_inscription" name="date_inscription" value="<?php echo htmlspecialchars($userToEdit['date_inscription']); ?>">
+                        <div class="form-group">
+                            <label for="prenom">First Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($userToEdit['prenom']); ?>">
+                            </div>
+                            <div id="prenomError" class="error-message"></div>
                         </div>
-                    </div>
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-primary">Update User</button>
-                        <a href="listeUser.php" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="text" id="email" name="email" value="<?php echo htmlspecialchars($userToEdit['email']); ?>">
+                            </div>
+                            <div id="emailError" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">User Type</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-users"></i>
+                                <select id="type" name="type">
+                                    <option value="administrateur" <?php echo $userToEdit['type'] === 'administrateur' ? 'selected' : ''; ?>>Administrator</option>
+                                    <option value="investisseur" <?php echo $userToEdit['type'] === 'investisseur' ? 'selected' : ''; ?>>Investor</option>
+                                    <option value="innovateur" <?php echo $userToEdit['type'] === 'innovateur' ? 'selected' : ''; ?>>Innovator</option>
+                                </select>
+                            </div>
+                            <div id="typeError" class="error-message"></div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="date_inscription">Registration Date</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="text" id="date_inscription" name="date_inscription" placeholder="JJ/MM/AAAA" value="<?php echo htmlspecialchars($userToEdit['date_inscription']); ?>">
+                            </div>
+                            <div id="dateError" class="error-message"></div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary">Update User</button>
+                            <a href="listeUser.php" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="../../assets2/js/core/popper.min.js"></script>
     <script src="../../assets2/js/core/bootstrap.min.js"></script>
     <script src="../../assets2/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="../../assets2/js/plugins/smooth-scrollbar.min.js"></script>
     <script src="../../assets2/js/argon-dashboard.min.js?v=2.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Theme Toggle (Light/Dark Mode)
+        if (document.getElementById('date_inscription')) {
+            flatpickr("#date_inscription", {
+                dateFormat: "d/m/Y",
+                maxDate: "today",
+                allowInput: true,
+                onClose: function(selectedDates, dateStr, instance) {
+                    validateDate(dateStr);
+                }
+            });
+        }
+
         const themeToggle = document.querySelector('.theme-toggle');
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
@@ -743,7 +908,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             themeToggle.classList.toggle('fa-sun');
         });
 
-        // Sidebar Toggle for Mobile
         const sidebar = document.querySelector('.sidebar');
         const navbarToggler = document.querySelector('.navbar-toggler');
         if (navbarToggler) {
@@ -752,9 +916,142 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         }
 
-        // Show sidebar toggler on mobile
         if (window.innerWidth <= 576) {
             document.querySelector('.navbar-toggler').style.display = 'block';
+        }
+
+        const editUserForm = document.getElementById('editUserForm');
+        if (editUserForm) {
+            editUserForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let isValid = true;
+                const nom = document.getElementById('nom').value.trim();
+                const prenom = document.getElementById('prenom').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const type = document.getElementById('type').value;
+                const dateInscription = document.getElementById('date_inscription').value.trim();
+
+                document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
+
+                if (!nom) {
+                    document.getElementById('nomError').textContent = 'Last name is required';
+                    document.getElementById('nomError').style.display = 'block';
+                    isValid = false;
+                } else if (!/^[a-zA-Z\s]+$/.test(nom)) {
+                    document.getElementById('nomError').textContent = 'Last name must contain only letters';
+                    document.getElementById('nomError').style.display = 'block';
+                    isValid = false;
+                }
+
+                if (!prenom) {
+                    document.getElementById('prenomError').textContent = 'First name is required';
+                    document.getElementById('prenomError').style.display = 'block';
+                    isValid = false;
+                } else if (!/^[a-zA-Z\s]+$/.test(prenom)) {
+                    document.getElementById('prenomError').textContent = 'First name must contain only letters';
+                    document.getElementById('prenomError').style.display = 'block';
+                    isValid = false;
+                }
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email) {
+                    document.getElementById('emailError').textContent = 'Email is required';
+                    document.getElementById('emailError').style.display = 'block';
+                    isValid = false;
+                } else if (!emailRegex.test(email)) {
+                    document.getElementById('emailError').textContent = 'Invalid email format';
+                    document.getElementById('emailError').style.display = 'block';
+                    isValid = false;
+                }
+
+                const validTypes = ['administrateur', 'investisseur', 'innovateur'];
+                if (!type || !validTypes.includes(type)) {
+                    document.getElementById('typeError').textContent = 'Please select a valid user type';
+                    document.getElementById('typeError').style.display = 'block';
+                    isValid = false;
+                }
+
+                const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+                if (!dateInscription) {
+                    document.getElementById('dateError').textContent = 'Registration date is required';
+                    document.getElementById('dateError').style.display = 'block';
+                    isValid = false;
+                } else if (!dateRegex.test(dateInscription)) {
+                    document.getElementById('dateError').textContent = 'Date must be in format JJ/MM/AAAA';
+                    document.getElementById('dateError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    const [day, month, year] = dateInscription.split('/').map(Number);
+                    const date = new Date(year, month - 1, day);
+                    if (date.getDate() !== day || date.getMonth() + 1 !== month || date.getFullYear() !== year) {
+                        document.getElementById('dateError').textContent = 'Invalid date';
+                        document.getElementById('dateError').style.display = 'block';
+                        isValid = false;
+                    }
+                }
+
+                if (isValid) {
+                    this.submit();
+                }
+            });
+        }
+
+        const changePhotoForm = document.getElementById('changePhotoForm');
+        if (changePhotoForm) {
+            changePhotoForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let isValid = true;
+                const photo = document.getElementById('photo_profil').files[0];
+
+                document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
+
+                if (!photo) {
+                    document.getElementById('photoError').textContent = 'Please select a photo';
+                    document.getElementById('photoError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                    const maxSize = 5 * 1024 * 1024;
+                    if (!allowedTypes.includes(photo.type)) {
+                        document.getElementById('photoError').textContent = 'Photo must be JPEG, PNG, or GIF';
+                        document.getElementById('photoError').style.display = 'block';
+                        isValid = false;
+                    } else if (photo.size > maxSize) {
+                        document.getElementById('photoError').textContent = 'Photo size must not exceed 5MB';
+                        document.getElementById('photoError').style.display = 'block';
+                        isValid = false;
+                    }
+                }
+
+                if (isValid) {
+                    this.submit();
+                }
+            });
+        }
+
+        function validateDate(dateInscription) {
+            const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (!dateInscription) {
+                document.getElementById('dateError').textContent = 'Registration date is required';
+                document.getElementById('dateError').style.display = 'block';
+                return false;
+            } else if (!dateRegex.test(dateInscription)) {
+                document.getElementById('dateError').textContent = 'Date must be in format JJ/MM/AAAA';
+                document.getElementById('dateError').style.display = 'block';
+                return false;
+            } else {
+                const [day, month, year] = dateInscription.split('/').map(Number);
+                const date = new Date(year, month - 1, day);
+                if (date.getDate() !== day || date.getMonth() + 1 !== month || date.getFullYear() !== year) {
+                    document.getElementById('dateError').textContent = 'Invalid date';
+                    document.getElementById('dateError').style.display = 'block';
+                    return false;
+                }
+            }
+            document.getElementById('dateError').style.display = 'none';
+            return true;
         }
     </script>
 </body>

@@ -358,3 +358,15 @@
 2025-04-29 13:06:08 - User account deleted for ID: 37
 2025-04-29 13:06:38 - User profile loaded for ID: 24, photo_profil: 24_1745924624.jpeg
 2025-04-29 13:06:38 - Attempting to display profile picture: ../../uploads/24_1745924624.jpeg
+2025-04-29 19:16:17 - Starting registration process
+2025-04-29 19:16:17 - Attempting to add user: nom=hhh, email=h@gmail.com
+2025-04-29 19:16:17 - User added successfully with ID: 40
+2025-04-29 19:16:17 - Photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-29 19:16:17 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/40_1745946977.jpeg
+2025-04-29 19:16:17 - Updating user with photo_profil: 40_1745946977.jpeg
+2025-04-29 19:16:17 - Photo uploaded and user updated with photo_profil: 40_1745946977.jpeg
+2025-04-29 19:16:17 - Registration completed successfully
+2025-04-29 19:16:34 - User profile loaded for ID: 40, photo_profil: 40_1745946977.jpeg
+2025-04-29 19:16:34 - Attempting to display profile picture: ../../uploads/40_1745946977.jpeg
+2025-04-29 19:18:50 - User profile loaded for ID: 24, photo_profil: 24_1745924624.jpeg
+2025-04-29 19:18:50 - Attempting to display profile picture: ../../uploads/24_1745924624.jpeg

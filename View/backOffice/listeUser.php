@@ -1,6 +1,10 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/config.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/Controller/utilisateurC.php';
+
+// Include TCPDF library
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/tcpdf/tcpdf.php';
+
 session_start();
 
 // Check if the user is logged in
@@ -46,6 +50,87 @@ $growthData = $growth['growthData'];
 $labels = $growth['labels'];
 
 $user = $userC->getUserById($userId);
+
+// Handle PDF export
+if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
+  // Create new PDF document
+  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+  // Set document information
+  $pdf->SetCreator(PDF_CREATOR);
+  $pdf->SetAuthor('InnoConnect');
+  $pdf->SetTitle('User List');
+  $pdf->SetSubject('User List Export');
+  $pdf->SetKeywords('Users, InnoConnect, Export');
+
+  // Set default header data
+  $pdf->SetHeaderData('', 0, 'InnoConnect User List', 'Generated on ' . date('Y-m-d H:i:s'));
+
+  // Set header and footer fonts
+  $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+  $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+  // Set default monospaced font
+  $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+  // Set margins
+  $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+  $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+  $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+  // Set auto page breaks
+  $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+  // Set image scale factor
+  $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+  // Add a page
+  $pdf->AddPage();
+
+  // Set font
+  $pdf->SetFont('helvetica', '', 10);
+
+  // Create HTML content for the table
+  $html = '<h1>User List</h1>';
+  $html .= '<table border="1" cellpadding="4" cellspacing="0">';
+  $html .= '<thead>';
+  $html .= '<tr style="background-color:#f8f9fa;">';
+  $html .= '<th><b>ID</b></th>';
+  $html .= '<th><b>Profile Photo</b></th>';
+  $html .= '<th><b>Last Name</b></th>';
+  $html .= '<th><b>First Name</b></th>';
+  $html .= '<th><b>Email</b></th>';
+  $html .= '<th><b>Type</b></th>';
+  $html .= '<th><b>Register Date</b></th>';
+  $html .= '</tr>';
+  $html .= '</thead>';
+  $html .= '<tbody>';
+
+  foreach ($utilisateurs as $utilisateur) {
+      $photoPath = !empty($utilisateur['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/' . $utilisateur['photo_profil'] : '';
+      $photoText = !empty($utilisateur['photo_profil']) ? (file_exists($photoPath) ? '<img src="' . $photoPath . '" width="30" height="30" />' : 'Missing') : 'No Photo';
+
+      $html .= '<tr>';
+      $html .= '<td>' . htmlspecialchars($utilisateur['id_utilisateur']) . '</td>';
+      $html .= '<td>' . $photoText . '</td>';
+      $html .= '<td>' . htmlspecialchars($utilisateur['nom']) . '</td>';
+      $html .= '<td>' . htmlspecialchars($utilisateur['prenom']) . '</td>';
+      $html .= '<td>' . htmlspecialchars($utilisateur['email']) . '</td>';
+      $html .= '<td>' . htmlspecialchars($utilisateur['type']) . '</td>';
+      $html .= '<td>' . htmlspecialchars($utilisateur['date_inscription']) . '</td>';
+      $html .= '</tr>';
+  }
+
+  $html .= '</tbody>';
+  $html .= '</table>';
+
+  // Output the HTML content
+  $pdf->writeHTML($html, true, false, true, false, '');
+
+  // Close and output PDF document
+  $pdf->Output('user_list_' . date('Ymd_His') . '.pdf', 'D');
+  exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -127,6 +212,72 @@ $user = $userC->getUserById($userId);
       font-size: 0.8em;
       vertical-align: middle;
   }
+  /* Style pour la colonne Profile Photo */
+  .photo-column {
+      min-width: 100px; /* Assure que la colonne a une largeur minimale */
+  }
+  .photo-column img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ddd;
+      display: block; /* Assure que l'image est bien visible */
+  }
+  .photo-column span {
+      color: #000; /* Texte plus sombre pour être sûr qu'il est visible */
+      font-size: 0.9em;
+      font-style: italic;
+      display: block; /* Assure que le texte prend toute la place */
+  }
+  .photo-column .missing-photo {
+      color: #dc3545; /* Rouge pour indiquer une erreur */
+      font-size: 0.9em;
+      font-style: italic;
+      display: block;
+  }
+  /* Style pour le bouton Export to PDF */
+  .btn-secondary {
+      background-color: #28a745;
+      color: #fff;
+  }
+  .btn-secondary:hover {
+      background-color: #218838;
+  }
+  .actions-column {
+    min-width: 200px; /* Assure que la colonne est assez large pour les actions */
+    text-align: center;
+}
+.actions-column a {
+    display: inline-block; /* Permet de contrôler la taille et l'espacement */
+    margin: 5px 3px; /* Espacement entre les liens */
+    padding: 5px 8px; /* Padding pour un meilleur aspect */
+    font-size: 0.85em; /* Taille de police plus petite pour une meilleure lisibilité */
+    color: #6c757d; /* Couleur des liens (gris par défaut) */
+    text-decoration: none; /* Supprime le soulignement */
+    border: 1px solid #ddd; /* Bordure subtile autour des liens */
+    border-radius: 4px; /* Coins arrondis */
+    transition: background-color 0.3s, color 0.3s; /* Animation pour le hover */
+}
+.actions-column a:hover {
+    background-color: #f8f9fa; /* Fond clair au survol */
+    color: #007bff; /* Couleur bleue au survol */
+}
+.actions-column a i {
+    margin-right: 3px; /* Espacement entre l'icône et le texte */
+}
+
+/* Style pour les colonnes du tableau */
+.table th, .table td {
+    vertical-align: middle; /* Alignement vertical au centre */
+    text-align: center; /* Alignement horizontal au centre */
+}
+.table th {
+    font-size: 0.9em; /* Taille de police pour les en-têtes */
+}
+.table td {
+    font-size: 0.85em; /* Taille de police pour les cellules */
+}
   </style>
 </head>
 
@@ -365,9 +516,14 @@ $user = $userC->getUserById($userId);
             <div class="card-header pb-0 p-3">
               <div class="d-flex justify-content-between">
                 <h6 class="mb-2">User List<?php echo $searchTerm ? ' (Search: ' . htmlspecialchars($searchTerm) . ')' : ''; ?></h6>
-                <a href="add_user.php" class="btn btn-primary btn-sm mb-0">
-                  <i class="fas fa-user-plus me-1"></i> Add a User
-                </a>
+                <div>
+                  <a href="add_user.php" class="btn btn-primary btn-sm mb-0 me-2">
+                    <i class="fas fa-user-plus me-1"></i> Add a User
+                  </a>
+                  <a href="listeUser.php?export=pdf" class="btn btn-secondary btn-sm mb-0">
+                    <i class="fas fa-file-pdf me-1"></i> Export to PDF
+                  </a>
+                </div>
               </div>
             </div>
             <div class="table-responsive">
@@ -387,6 +543,7 @@ $user = $userC->getUserById($userId);
                             <?php endif; ?>
                         </a>
                       </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Profile Photo</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         <a href="?search=<?php echo urlencode($searchTerm); ?>&sort=nom&order=<?php echo $sortColumn === 'nom' ? $nextOrder : 'asc'; ?>" class="text-secondary">
                             Last Name
@@ -450,6 +607,24 @@ $user = $userC->getUserById($userId);
                             </div>
                           </div>
                         </td>
+                        <td class="photo-column">
+                          <div class="d-flex px-2 py-1">
+                            <?php
+                            // Chemin absolu pour vérifier l'existence du fichier
+                            $photoPath = !empty($utilisateur['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/' . $utilisateur['photo_profil'] : '';
+                            // URL pour afficher l'image dans le navigateur
+                            $photoUrl = !empty($utilisateur['photo_profil']) ? '/ProjetInnoconnect/frontOffice/' . htmlspecialchars($utilisateur['photo_profil']) : '';
+                            // Ajouter un commentaire de débogage
+                            echo "<!-- Debug: photoPath=$photoPath, exists=" . (file_exists($photoPath) ? 'true' : 'false') . ", photoUrl=$photoUrl -->";
+                            if (!empty($photoPath) && file_exists($photoPath)): ?>
+                                <img src="<?php echo $photoUrl; ?>" alt="Profile Photo">
+                            <?php elseif (!empty($utilisateur['photo_profil'])): ?>
+                                <span class="missing-photo">Photo missing</span>
+                            <?php else: ?>
+                                <span>No Photo</span>
+                            <?php endif; ?>
+                          </div>
+                        </td>
                         <td class="nom-column">
                           <div class="d-flex px-2 py-1">
                             <div class="ms-3">
@@ -489,8 +664,16 @@ $user = $userC->getUserById($userId);
                           <a href="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>" class="text-secondary font-weight-bold text-xs me-2">
                             <i class="fas fa-edit me-1"></i> Edit
                           </a>
-                          <a href="delete_user.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>" class="text-secondary font-weight-bold text-xs" onclick="return confirm('Are you sure you want to delete this user?');">
+                          <a href="delete_user.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>" class="text-secondary font-weight-bold text-xs me-2" onclick="return confirm('Are you sure you want to delete this user?');">
                             <i class="fas fa-trash-alt me-1"></i> Delete
+                          </a>
+                          <?php if (!empty($utilisateur['photo_profil'])): ?>
+                            <a href="delete_photo.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>" class="text-secondary font-weight-bold text-xs me-2" onclick="return confirm('Are you sure you want to delete this user\'s profile photo?');">
+                                <i class="fas fa-image me-1"></i> Delete Photo
+                            </a>
+                          <?php endif; ?>
+                          <a href="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>&action=change_photo" class="text-secondary font-weight-bold text-xs">
+                            <i class="fas fa-camera me-1"></i> Change Photo
                           </a>
                         </td>
                       </tr>
