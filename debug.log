@@ -1,0 +1,328 @@
+2025-04-25 22:40:20 - Starting registration process
+2025-04-25 22:44:11 - Starting registration process
+2025-04-25 22:44:11 - Attempting to add user: nom=bassem, email=feryel@gmail.com
+2025-04-25 22:44:11 - User added successfully with ID: 32
+2025-04-25 22:44:11 - File upload failed: Unable to move file
+2025-04-25 22:50:05 - Starting registration process
+2025-04-25 22:50:05 - Attempting to add user: nom=bassem, email=feryel@gmail.com
+2025-04-25 22:50:05 - User added successfully with ID: 33
+2025-04-25 22:57:46 - Starting registration process
+2025-04-25 22:57:46 - Attempting to add user: nom=bassem, email=feryell@gmail.com
+2025-04-25 22:57:46 - User added successfully with ID: 34
+2025-04-25 22:57:46 - Photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-25 22:57:46 - Upload directory does not exist: C:/xampp/htdocs/ProjetInnoconnect/uploads/
+2025-04-25 23:06:22 - Starting registration process
+2025-04-25 23:06:22 - Attempting to add user: nom=bassem, email=faryoula@gmail.com
+2025-04-25 23:06:22 - User added successfully with ID: 35
+2025-04-25 23:06:22 - Photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-25 23:06:22 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/35_1745615182.jpg
+2025-04-25 23:06:22 - Updating user with photo_profil: uploads/35_1745615182.jpg
+2025-04-25 23:06:22 - Photo uploaded and user updated with photo_profil: uploads/35_1745615182.jpg
+2025-04-25 23:06:22 - Registration completed successfully
+2025-04-25 23:17:14 - User not logged in, redirecting to login
+2025-04-25 23:17:30 - User not logged in, redirecting to login
+2025-04-26 10:39:12 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:39:12 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:39:12 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:39:43 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:39:43 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:39:43 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:39:53 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:39:53 - Profile photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-26 10:39:53 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/35_1745656793.jpg
+2025-04-26 10:39:53 - Profile photo uploaded successfully: uploads/35_1745656793.jpg
+2025-04-26 10:39:53 - Profile updated successfully for user ID: 35
+2025-04-26 10:39:53 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:39:53 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:39:53 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:46:22 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:46:22 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:46:22 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:46:22 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:46:38 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:46:38 - Profile photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-26 10:46:38 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/35_1745657198.jpg
+2025-04-26 10:46:38 - Profile photo uploaded successfully: uploads/35_1745657198.jpg
+2025-04-26 10:46:38 - Profile updated successfully for user ID: 35
+2025-04-26 10:46:38 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:46:38 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:46:38 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:46:38 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:47:11 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:47:11 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:47:11 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:47:11 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:55:45 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:55:45 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:55:45 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:55:45 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:55:57 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:55:57 - Profile photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-26 10:55:57 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/35_1745657757.jpg
+2025-04-26 10:55:57 - Profile photo uploaded successfully: uploads/35_1745657757.jpg
+2025-04-26 10:55:57 - Profile updated successfully for user ID: 35
+2025-04-26 10:55:57 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:55:57 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:55:57 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:55:57 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:56:11 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 10:56:11 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 10:56:11 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 10:56:11 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 11:56:58 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 11:56:58 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 11:56:58 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 11:56:58 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 11:56:58 - Image URL not accessible: http://localhost/uploads/35_1745615182.jpg (HTTP Status: HTTP/1.1 404 Not Found)
+2025-04-26 12:07:14 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 12:07:14 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:07:14 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 12:07:14 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:15:18 - DOCUMENT_ROOT: C:/xampp/htdocs
+2025-04-26 12:15:18 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 12:15:18 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:15:18 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 12:15:18 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:15:18 - Testing absolute path: C:\xampp\htdocs\ProjetInnoconnect\uploads\35_1745615182.jpg
+2025-04-26 12:15:18 - File exists at absolute path!
+2025-04-26 12:15:18 - Image URL not accessible: http://localhost/uploads/35_1745615182.jpg (HTTP Status: HTTP/1.1 404 Not Found)
+2025-04-26 12:15:39 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 12:15:39 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:15:39 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 12:15:39 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:20:30 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 12:20:30 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 12:20:40 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 12:20:40 - Profile photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-26 12:20:40 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/35_1745662840.jpg
+2025-04-26 12:20:40 - Profile photo uploaded successfully: uploads/35_1745662840.jpg
+2025-04-26 12:20:40 - Profile updated successfully for user ID: 35
+2025-04-26 12:20:40 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 12:20:40 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 12:20:53 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 12:20:53 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:20:53 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 12:20:53 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:20:59 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 12:20:59 - Checking if profile picture exists: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 12:20:59 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 12:20:59 - File does not exist at: C:\xampp\htdocs\uploads\35_1745615182.jpg
+2025-04-26 13:12:56 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 13:12:56 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 13:13:16 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 13:13:16 - Profile photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-26 13:13:16 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/35_1745665996.jpg
+2025-04-26 13:13:16 - Profile photo uploaded successfully: uploads/35_1745665996.jpg
+2025-04-26 13:13:16 - Profile updated successfully for user ID: 35
+2025-04-26 13:13:16 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-26 13:13:16 - Attempting to display profile picture: http://localhost/uploads/35_1745615182.jpg
+2025-04-26 13:14:12 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-26 13:14:12 - No photo_profil set for user ID: 24
+2025-04-26 15:43:50 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-26 15:43:50 - No photo_profil set for user ID: 24
+2025-04-26 20:53:10 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-26 20:53:10 - No photo_profil set for user ID: 24
+2025-04-26 21:04:41 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-26 21:04:41 - No photo_profil set for user ID: 24
+2025-04-27 13:06:08 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:06:08 - No photo_profil set for user ID: 24
+2025-04-27 13:10:11 - User profile loaded for ID: 30, photo_profil: NULL
+2025-04-27 13:10:11 - No photo_profil set for user ID: 30
+2025-04-27 13:10:20 - User profile loaded for ID: 30, photo_profil: NULL
+2025-04-27 13:10:20 - No photo_profil set for user ID: 30
+2025-04-27 13:35:35 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:35:35 - No photo_profil set for user ID: 24
+2025-04-27 13:45:00 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:45:00 - No photo_profil set for user ID: 24
+2025-04-27 13:47:01 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:47:01 - No photo_profil set for user ID: 24
+2025-04-27 13:47:07 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:47:07 - Profile updated successfully for user ID: 24
+2025-04-27 13:47:07 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:47:07 - No photo_profil set for user ID: 24
+2025-04-27 13:47:15 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:47:15 - No photo_profil set for user ID: 24
+2025-04-27 13:53:06 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:53:06 - No photo_profil set for user ID: 24
+2025-04-27 13:59:08 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:59:08 - No photo_profil set for user ID: 24
+2025-04-27 13:59:18 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:59:18 - No photo_profil set for user ID: 24
+2025-04-27 13:59:44 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:59:44 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 13:59:44 - No photo_profil set for user ID: 24
+2025-04-27 15:51:03 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 15:51:03 - No photo_profil set for user ID: 24
+2025-04-27 15:51:12 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 15:51:12 - No photo_profil set for user ID: 24
+2025-04-27 15:51:43 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 15:51:43 - Profile photo upload started: type=image/jpeg, size=103746 bytes
+2025-04-27 15:51:43 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1745761903.jpeg
+2025-04-27 15:51:43 - Profile photo uploaded successfully: uploads/24_1745761903.jpeg
+2025-04-27 15:51:43 - Profile updated successfully for user ID: 24
+2025-04-27 15:51:43 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 15:51:43 - No photo_profil set for user ID: 24
+2025-04-27 15:51:59 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 15:51:59 - No photo_profil set for user ID: 24
+2025-04-27 22:06:34 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:06:34 - No photo_profil set for user ID: 24
+2025-04-27 22:07:07 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:07:07 - Profile photo upload started: type=image/jpeg, size=103746 bytes
+2025-04-27 22:07:07 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1745784427.jpeg
+2025-04-27 22:07:07 - Profile photo uploaded successfully: uploads/24_1745784427.jpeg
+2025-04-27 22:07:07 - Profile updated successfully for user ID: 24
+2025-04-27 22:07:07 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:07:07 - No photo_profil set for user ID: 24
+2025-04-27 22:15:20 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:15:20 - No photo_profil set for user ID: 24
+2025-04-27 22:15:27 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:15:27 - No photo_profil set for user ID: 24
+2025-04-27 22:16:52 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:16:52 - No photo_profil set for user ID: 24
+2025-04-27 22:18:15 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:18:15 - No photo_profil set for user ID: 24
+2025-04-27 22:18:16 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:18:16 - No photo_profil set for user ID: 24
+2025-04-27 22:18:17 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:18:17 - No photo_profil set for user ID: 24
+2025-04-27 22:21:17 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:21:17 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-27 22:21:17 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1745785277.jpeg
+2025-04-27 22:21:17 - Profile photo uploaded successfully: uploads/24_1745785277.jpeg
+2025-04-27 22:21:17 - Profile updated successfully for user ID: 24
+2025-04-27 22:21:17 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:21:17 - No photo_profil set for user ID: 24
+2025-04-27 22:28:08 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:28:08 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-27 22:28:08 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1745785688.jpeg
+2025-04-27 22:28:08 - Profile photo uploaded successfully: uploads/24_1745785688.jpeg
+2025-04-27 22:28:08 - Profile updated successfully for user ID: 24
+2025-04-27 22:28:08 - User profile loaded for ID: 24, photo_profil: NULL
+2025-04-27 22:28:09 - No photo_profil set for user ID: 24
+2025-04-27 22:29:03 - User profile loaded for ID: 35, photo_profil: uploads/35_1745615182.jpg
+2025-04-27 22:29:03 - Attempting to display profile picture: ../../uploads/uploads/35_1745615182.jpg
+2025-04-27 22:35:10 - User profile loaded for ID: 35, photo_profil: ../../35_1745615182.jpg
+2025-04-27 22:35:10 - Attempting to display profile picture: ../../uploads/../../35_1745615182.jpg
+2025-04-27 22:35:42 - User profile loaded for ID: 35, photo_profil: ../../uploads/35_1745615182.jpg
+2025-04-27 22:35:42 - Attempting to display profile picture: ../../uploads/../../uploads/35_1745615182.jpg
+2025-04-27 22:38:04 - User profile loaded for ID: 35, photo_profil: ProjetInnoconnect/uploads/35_1745615182.jpg
+2025-04-27 22:38:04 - Attempting to display profile picture: ../../uploads/ProjetInnoconnect/uploads/35_1745615182.jpg
+2025-04-27 22:38:49 - User profile loaded for ID: 35, photo_profil: 35_1745615182.jpg
+2025-04-27 22:38:49 - Attempting to display profile picture: ../../uploads/35_1745615182.jpg
+2025-04-27 22:41:28 - Starting registration process
+2025-04-27 22:41:28 - Attempting to add user: nom=userimg, email=user@gmail.com
+2025-04-27 22:41:28 - User added successfully with ID: 37
+2025-04-27 22:41:28 - Photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-27 22:41:28 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/37_1745786488.jpeg
+2025-04-27 22:41:28 - Updating user with photo_profil: uploads/37_1745786488.jpeg
+2025-04-27 22:41:28 - Photo uploaded and user updated with photo_profil: uploads/37_1745786488.jpeg
+2025-04-27 22:41:28 - Registration completed successfully
+2025-04-27 22:45:06 - User profile loaded for ID: 37, photo_profil: uploads/37_1745786488.jpeg
+2025-04-27 22:45:06 - Attempting to display profile picture: ../../uploads/uploads/37_1745786488.jpeg
+2025-04-27 22:45:38 - User profile loaded for ID: 37, photo_profil: uploads/37_1745786488.jpeg
+2025-04-27 22:45:38 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-27 22:45:38 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/37_1745786738.jpeg
+2025-04-27 22:45:38 - Profile photo uploaded successfully: uploads/37_1745786738.jpeg
+2025-04-27 22:45:38 - Profile updated successfully for user ID: 37
+2025-04-27 22:45:38 - User profile loaded for ID: 37, photo_profil: uploads/37_1745786488.jpeg
+2025-04-27 22:45:38 - Attempting to display profile picture: ../../uploads/uploads/37_1745786488.jpeg
+2025-04-27 22:48:22 - User profile loaded for ID: 37, photo_profil: uploads/37_1745786488.jpeg
+2025-04-27 22:48:22 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-27 22:48:22 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/37_1745786902.jpeg
+2025-04-27 22:48:22 - Profile photo uploaded successfully: 37_1745786902.jpeg
+2025-04-27 22:48:22 - Profile updated successfully for user ID: 37
+2025-04-27 22:48:22 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 22:48:22 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 22:54:22 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 22:54:22 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-27 22:54:22 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/37_1745787262.jpeg
+2025-04-27 22:54:22 - Profile photo uploaded successfully: 37_1745787262.jpeg
+2025-04-27 22:54:22 - Profile updated successfully for user ID: 37
+2025-04-27 22:54:22 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 22:54:22 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 22:57:16 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 22:57:16 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-27 22:57:16 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/test37_1745787436.jpeg
+2025-04-27 22:57:16 - Profile photo uploaded successfully: test37_1745787436.jpeg
+2025-04-27 22:57:16 - Profile updated successfully for user ID: 37
+2025-04-27 22:57:17 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 22:57:17 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 22:57:28 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 22:57:28 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:02:18 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:02:18 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-27 23:02:18 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/test37_1745787738.jpeg
+2025-04-27 23:02:18 - Profile photo uploaded successfully: /test37_1745787738.jpeg
+2025-04-27 23:02:18 - Profile updated successfully for user ID: 37
+2025-04-27 23:02:18 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:02:18 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:02:30 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:02:30 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:02:40 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:02:40 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:02:46 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:02:46 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:02:53 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:02:53 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:02:59 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:02:59 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:03:19 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:03:19 - Profile photo upload started: type=image/png, size=41632 bytes
+2025-04-27 23:03:19 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/test37_1745787799.png
+2025-04-27 23:03:19 - Profile photo uploaded successfully: /test37_1745787799.png
+2025-04-27 23:03:19 - Profile updated successfully for user ID: 37
+2025-04-27 23:03:19 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:03:19 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:08:41 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:08:41 - Profile photo upload started: type=image/png, size=41632 bytes
+2025-04-27 23:08:41 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/test37_1745788121.png
+2025-04-27 23:08:41 - Profile photo uploaded successfully: 37
+2025-04-27 23:08:41 - Profile updated successfully for user ID: 37
+2025-04-27 23:08:41 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:08:41 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:11:19 - User profile loaded for ID: 37, photo_profil: 37_1745786488.jpeg
+2025-04-27 23:11:19 - Attempting to display profile picture: ../../uploads/37_1745786488.jpeg
+2025-04-27 23:11:49 - User profile loaded for ID: 37, photo_profil: 37_1745786488.jpeg
+2025-04-27 23:11:49 - Profile photo upload started: type=image/gif, size=10475694 bytes
+2025-04-27 23:11:49 - Profile photo upload failed: File size (10475694 bytes) exceeds 5MB limit
+2025-04-27 23:11:49 - User profile loaded for ID: 37, photo_profil: 37_1745786488.jpeg
+2025-04-27 23:11:49 - Attempting to display profile picture: ../../uploads/37_1745786488.jpeg
+2025-04-27 23:12:22 - User profile loaded for ID: 37, photo_profil: 37_1745786488.jpeg
+2025-04-27 23:12:22 - Profile photo upload started: type=image/png, size=35111 bytes
+2025-04-27 23:12:22 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/test37_1745788342.png
+2025-04-27 23:12:22 - Profile photo uploaded successfully: 37_1745786488.jpeg
+2025-04-27 23:12:22 - Profile updated successfully for user ID: 37
+2025-04-27 23:12:22 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:12:22 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:17:00 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:17:00 - Profile photo upload started: type=image/png, size=35111 bytes
+2025-04-27 23:17:00 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/37_1745788620.png
+2025-04-27 23:17:00 - Profile photo uploaded successfully: /37_1745788620.png
+2025-04-27 23:17:00 - Profile updated successfully for user ID: 37
+2025-04-27 23:17:00 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:17:00 - Attempting to display profile picture: ../../uploads/37
+2025-04-27 23:17:05 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-27 23:17:05 - Attempting to display profile picture: ../../uploads/37
+2025-04-28 20:45:09 - User not logged in, redirecting to login
+2025-04-28 20:45:31 - User profile loaded for ID: 35, photo_profil: 35_1745615182.jpg
+2025-04-28 20:45:31 - Attempting to display profile picture: ../../uploads/35_1745615182.jpg
+2025-04-28 20:45:59 - User profile loaded for ID: 35, photo_profil: 35_1745615182.jpg
+2025-04-28 20:45:59 - Profile photo upload started: type=image/jpeg, size=297733 bytes
+2025-04-28 20:45:59 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/35_1745865959.jpeg
+2025-04-28 20:45:59 - Profile photo uploaded successfully: /35_1745865959.jpeg
+2025-04-28 20:45:59 - Profile updated successfully for user ID: 35
+2025-04-28 20:45:59 - User profile loaded for ID: 35, photo_profil: 35_1745615182.jpg
+2025-04-28 20:45:59 - Attempting to display profile picture: ../../uploads/35_1745615182.jpg
+2025-04-28 20:46:48 - User profile loaded for ID: 35, photo_profil: 35_1745615182.jpg
+2025-04-28 20:46:48 - Attempting to display profile picture: ../../uploads/35_1745615182.jpg
+2025-04-28 20:47:05 - User profile loaded for ID: 35, photo_profil: 35_1745615182.jpg
+2025-04-28 20:47:05 - Attempting to display profile picture: ../../uploads/35_1745615182.jpg
+2025-04-28 20:47:36 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-28 20:47:36 - Attempting to display profile picture: ../../uploads/37
+2025-04-28 20:47:59 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-28 20:47:59 - Profile photo upload started: type=image/png, size=41632 bytes
+2025-04-28 20:47:59 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/37_1745866079.png
+2025-04-28 20:47:59 - Profile photo uploaded successfully: /37_1745866079.png
+2025-04-28 20:47:59 - Profile updated successfully for user ID: 37
+2025-04-28 20:47:59 - User profile loaded for ID: 37, photo_profil: 37
+2025-04-28 20:47:59 - Attempting to display profile picture: ../../uploads/37

@@ -88,7 +88,10 @@ header nav ul li a {
 
 header nav ul li a:hover,
 header nav ul li a.active {
-    color: #A78BFA; /* Violet clair */
+    color: #623396;
+    background: rgba(214, 207, 255, 0.2); 
+    padding: 2px 4px;
+    border-radius: 4px;
 }
 
 header nav ul li a::after {

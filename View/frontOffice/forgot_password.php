@@ -2,30 +2,44 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/config.php';
 session_start();
 
+// Générer un jeton CSRF
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 $conn = config::getConnexion();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-
-    $stmt = $conn->prepare("SELECT id_utilisateur FROM utilisateur WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
-    $stmt->close();
-
-    if ($user) {
-        $code = sprintf("%06d", mt_rand(0, 999999));
-        $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
-
-        $stmt = $conn->prepare("UPDATE utilisateur SET reset_code = ?, reset_expiry = ? WHERE id_utilisateur = ?");
-        $stmt->bind_param("ssi", $code, $expiry, $user['id_utilisateur']);
-        $stmt->execute();
-        $stmt->close();
-
-        $success = "Your reset code is: <strong>$code</strong>. Use this code to reset your password on the next page. <a href='reset_password.php'>Reset now</a>";
+    // Vérifier le jeton CSRF
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $error = "Invalid CSRF token";
     } else {
-        $error = "No account associated with this email.";
+        $email = trim($_POST['email']);
+
+        // Server-side email validation
+        if (empty($email)) {
+            $error = "Email is required";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Invalid email format";
+        } else {
+            // Check if the email exists in the database
+            $stmt = $conn->prepare("SELECT id_utilisateur FROM utilisateur WHERE email = ?");
+            $stmt->execute([$email]); // Pass the parameter directly in execute()
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user) {
+                $code = sprintf("%06d", mt_rand(0, 999999));
+                $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+                // Update the user with the reset code and expiry
+                $stmt = $conn->prepare("UPDATE utilisateur SET reset_code = ?, reset_expiry = ? WHERE id_utilisateur = ?");
+                $stmt->execute([$code, $expiry, $user['id_utilisateur']]);
+
+                $success = "Your reset code is: <strong>$code</strong>. Use this code to reset your password on the next page. <a href='reset_password.php'>Reset now</a>";
+            } else {
+                $error = "No account associated with this email.";
+            }
+        }
     }
 }
 ?>
@@ -65,13 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if (isset($success)): ?>
             <div class="success"><?php echo $success; ?></div>
         <?php else: ?>
-            <form method="POST" onsubmit="showLoader()" autocomplete="off">
+            <form method="POST" onsubmit="if (!validateForm()) return false; showLoader()" autocomplete="off">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <input type="text" style="display:none" name="fake-username">
                 <input type="password" style="display:none" name="fake-password">
                 <div class="form-group input-with-icon">
                     <label for="email">Email</label>
                     <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" name="email" placeholder="Email" required oninput="validateEmail()" autocomplete="off">
+                    <input type="email" id="email" name="email" placeholder="Email" oninput="validateEmail()" autocomplete="off">
                     <span id="email-error" class="error-message" style="display: none;"></span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
@@ -98,6 +113,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 emailError.style.display = "none";
             }
+        }
+
+        function validateForm() {
+            const email = document.getElementById("email").value;
+            const emailError = document.getElementById("email-error");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            let isValid = true;
+
+            if (!emailRegex.test(email)) {
+                emailError.textContent = "Please enter a valid email.";
+                emailError.style.display = "block";
+                isValid = false;
+            } else {
+                emailError.style.display = "none";
+            }
+
+            return isValid;
         }
 
         function showLoader() {

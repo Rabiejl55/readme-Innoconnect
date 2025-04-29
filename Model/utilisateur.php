@@ -8,9 +8,9 @@
       private  $mot_de_passe;
       private  $type;
       private  $date_inscription;
+      private  $photo_profil;
       
-      
-      function __construct($id,$nom,$prenom,$email,$mot_de_passe,$type,$date_inscription){
+      function __construct($id,$nom,$prenom,$email,$mot_de_passe,$type,$date_inscription,$photo_profil){
         $this->id=$id;
          $this->nom=$nom;
          $this->prenom=$prenom;
@@ -18,6 +18,7 @@
          $this->mot_de_passe=$mot_de_passe;
          $this->type=$type;
          $this->date_inscription=$date_inscription;
+         $this->photo_profil=$photo_profil;
       }
       
       public function setNom($nom) { $this->nom = $nom; }
@@ -41,7 +42,8 @@
     public function setId($id) { $this->id_utilisateur = $id; }
     public function getId() { return $this->id_utilisateur; }
   
-
+    public function setPhoto($photo_profil) { $this->photo_profil = $photo_profil; }
+    public function getPhoto() { return $this->photo_profil; }
       
       
    }

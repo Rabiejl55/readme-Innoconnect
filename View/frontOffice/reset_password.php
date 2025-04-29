@@ -70,18 +70,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group input-with-icon">
                     <label for="email">Email</label>
                     <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" name="email" placeholder="Email" required oninput="validateEmail()" autocomplete="off">
+                    <input type="email" id="email" name="email" placeholder="Email"  oninput="validateEmail()" autocomplete="off">
                     <span id="email-error" class="error-message" style="display: none;"></span>
                 </div>
                 <div class="form-group input-with-icon">
                     <label for="code">Reset Code</label>
                     <i class="fas fa-key"></i>
-                    <input type="text" id="code" name="code" placeholder="Reset Code" required autocomplete="off">
+                    <input type="text" id="code" name="code" placeholder="Reset Code"  autocomplete="off">
                 </div>
                 <div class="form-group input-with-icon">
                     <label for="new_password">New Password</label>
                     <i class="fas fa-lock"></i>
-                    <input type="password" id="new_password" name="new_password" placeholder="New Password" required autocomplete="off">
+                    <input type="password" id="new_password" name="new_password" placeholder="New Password" autocomplete="off">
                     <i class="fas fa-eye password-toggle" onclick="togglePassword('new_password')"></i>
                 </div>
                 <div style="display: flex; justify-content: space-between;">

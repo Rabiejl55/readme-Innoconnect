@@ -20,16 +20,30 @@ if ($userType !== 'administrateur') {
     exit;
 }
 
+// Paramètres de tri
+$sortColumn = isset($_GET['sort']) ? $_GET['sort'] : 'id_utilisateur'; // Colonne par défaut
+$sortOrder = isset($_GET['order']) && $_GET['order'] === 'desc' ? 'DESC' : 'ASC'; // Ordre par défaut
+$nextOrder = $sortOrder === 'ASC' ? 'desc' : 'asc'; // Pour alterner l'ordre lors du clic
 
-$utilisateurs = $userC->afficherUser();
+// Liste des colonnes autorisées pour le tri (sécurité)
+$allowedColumns = ['id_utilisateur', 'nom', 'prenom', 'email', 'type', 'date_inscription'];
+if (!in_array($sortColumn, $allowedColumns)) {
+    $sortColumn = 'id_utilisateur'; // Valeur par défaut si la colonne n'est pas autorisée
+}
 
+// Handle search query
+$searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
+if ($searchTerm) {
+    $utilisateurs = $userC->searchUsers($searchTerm, $sortColumn, $sortOrder);
+} else {
+    $utilisateurs = $userC->afficherUser($sortColumn, $sortOrder);
+}
 
 $stats = $userC->getStats();
 $chartData = $userC->getChartData();
 $growth = $userC->getGrowthData();
 $growthData = $growth['growthData'];
 $labels = $growth['labels'];
-
 
 $user = $userC->getUserById($userId);
 ?>
@@ -72,7 +86,48 @@ $user = $userC->getUserById($userId);
     overflow: hidden;
     text-overflow: ellipsis;
   }
-</style>
+  /* Pop-up Notification Styles */
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10000;
+    display: none;
+    font-size: 1em;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  .notification.show {
+    display: block;
+    opacity: 1;
+  }
+  .notification.hide {
+    opacity: 0;
+  }
+  /* Highlight for specific columns */
+  .highlight-column {
+    background-color: #ffeb3b !important; /* Yellow highlight for the specific column */
+    transition: background-color 0.5s ease;
+  }
+  /* Style pour les icônes de tri */
+  th a {
+      color: #6c757d;
+      text-decoration: none;
+  }
+  th a:hover {
+      color: #007bff;
+  }
+  th i.fas {
+      font-size: 0.8em;
+      vertical-align: middle;
+  }
+  </style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -81,15 +136,15 @@ $user = $userC->getUserById($userId);
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="#">
-      <img src="../../innoconnect.jpeg" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
-      <span class="ms-1 font-weight-bold">Innoconnect</span>
+        <img src="../../innoconnect.jpeg" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
+        <span class="ms-1 font-weight-bold">Innoconnect</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0">
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" href="#">
+          <a class="nav-link active" href="listeUser.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-dark text-sm opacity-10"></i>
             </div>
@@ -128,10 +183,14 @@ $user = $userC->getUserById($userId);
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            <div class="input-group">
+            <form method="GET" action="listeUser.php" class="input-group">
               <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" placeholder="Search for a user...">
-            </div>
+              <input type="text" class="form-control" name="search" placeholder="Search for a user..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+              <button type="submit" class="btn btn-primary btn-sm m-0">Search</button>
+            </form>
+            <?php if ($searchTerm): ?>
+              <a href="listeUser.php" class="btn btn-secondary btn-sm m-0 ms-2">Clear</a>
+            <?php endif; ?>
           </div>
           <ul class="navbar-nav justify-content-end">
             <li class="nav-item d-flex align-items-center">
@@ -159,14 +218,16 @@ $user = $userC->getUserById($userId);
       </div>
     </nav>
     <!-- End Navbar -->
+
+    <!-- Pop-up Notification -->
+    <?php if (isset($_GET['success'])): ?>
+      <div class="notification" id="successNotification">
+        <?php echo htmlspecialchars($_GET['success']); ?>
+      </div>
+    <?php endif; ?>
+
     <div class="container-fluid py-4">
-      <!-- Success/Error Messages -->
-      <?php if (isset($_GET['success'])): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <?php echo htmlspecialchars($_GET['success']); ?>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      <?php endif; ?>
+      <!-- Error Messages -->
       <?php if (isset($_GET['error'])): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
           <?php echo htmlspecialchars($_GET['error']); ?>
@@ -303,8 +364,8 @@ $user = $userC->getUserById($userId);
           <div class="card">
             <div class="card-header pb-0 p-3">
               <div class="d-flex justify-content-between">
-                <h6 class="mb-2">User List</h6>
-                <a href="../frontOffice/register.php" class="btn btn-primary btn-sm mb-0">
+                <h6 class="mb-2">User List<?php echo $searchTerm ? ' (Search: ' . htmlspecialchars($searchTerm) . ')' : ''; ?></h6>
+                <a href="add_user.php" class="btn btn-primary btn-sm mb-0">
                   <i class="fas fa-user-plus me-1"></i> Add a User
                 </a>
               </div>
@@ -316,50 +377,112 @@ $user = $userC->getUserById($userId);
                 <table class="table align-items-center">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Last Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">First Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <a href="?search=<?php echo urlencode($searchTerm); ?>&sort=id_utilisateur&order=<?php echo $sortColumn === 'id_utilisateur' ? $nextOrder : 'asc'; ?>" class="text-secondary">
+                            ID
+                            <?php if ($sortColumn === 'id_utilisateur'): ?>
+                                <i class="fas fa-sort-<?php echo $sortOrder === 'ASC' ? 'up' : 'down'; ?> ms-1"></i>
+                            <?php else: ?>
+                                <i class="fas fa-sort ms-1"></i>
+                            <?php endif; ?>
+                        </a>
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <a href="?search=<?php echo urlencode($searchTerm); ?>&sort=nom&order=<?php echo $sortColumn === 'nom' ? $nextOrder : 'asc'; ?>" class="text-secondary">
+                            Last Name
+                            <?php if ($sortColumn === 'nom'): ?>
+                                <i class="fas fa-sort-<?php echo $sortOrder === 'ASC' ? 'up' : 'down'; ?> ms-1"></i>
+                            <?php else: ?>
+                                <i class="fas fa-sort ms-1"></i>
+                            <?php endif; ?>
+                        </a>
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <a href="?search=<?php echo urlencode($searchTerm); ?>&sort=prenom&order=<?php echo $sortColumn === 'prenom' ? $nextOrder : 'asc'; ?>" class="text-secondary">
+                            First Name
+                            <?php if ($sortColumn === 'prenom'): ?>
+                                <i class="fas fa-sort-<?php echo $sortOrder === 'ASC' ? 'up' : 'down'; ?> ms-1"></i>
+                            <?php else: ?>
+                                <i class="fas fa-sort ms-1"></i>
+                            <?php endif; ?>
+                        </a>
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <a href="?search=<?php echo urlencode($searchTerm); ?>&sort=email&order=<?php echo $sortColumn === 'email' ? $nextOrder : 'asc'; ?>" class="text-secondary">
+                            Email
+                            <?php if ($sortColumn === 'email'): ?>
+                                <i class="fas fa-sort-<?php echo $sortOrder === 'ASC' ? 'up' : 'down'; ?> ms-1"></i>
+                            <?php else: ?>
+                                <i class="fas fa-sort ms-1"></i>
+                            <?php endif; ?>
+                        </a>
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <a href="?search=<?php echo urlencode($searchTerm); ?>&sort=type&order=<?php echo $sortColumn === 'type' ? $nextOrder : 'asc'; ?>" class="text-secondary">
+                            Type
+                            <?php if ($sortColumn === 'type'): ?>
+                                <i class="fas fa-sort-<?php echo $sortOrder === 'ASC' ? 'up' : 'down'; ?> ms-1"></i>
+                            <?php else: ?>
+                                <i class="fas fa-sort ms-1"></i>
+                            <?php endif; ?>
+                        </a>
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <a href="?search=<?php echo urlencode($searchTerm); ?>&sort=date_inscription&order=<?php echo $sortColumn === 'date_inscription' ? $nextOrder : 'asc'; ?>" class="text-secondary">
+                            Register Date
+                            <?php if ($sortColumn === 'date_inscription'): ?>
+                                <i class="fas fa-sort-<?php echo $sortOrder === 'ASC' ? 'up' : 'down'; ?> ms-1"></i>
+                            <?php else: ?>
+                                <i class="fas fa-sort ms-1"></i>
+                            <?php endif; ?>
+                        </a>
+                      </th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php foreach ($utilisateurs as $utilisateur): ?>
-                      <tr>
-                        <td>
+                      <tr id="userRow-<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>">
+                        <td class="id-column">
                           <div class="d-flex px-2 py-1">
                             <div class="ms-3">
                               <h6 class="text-sm mb-0"><?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?></h6>
                             </div>
                           </div>
                         </td>
-                        <td>
+                        <td class="nom-column">
                           <div class="d-flex px-2 py-1">
                             <div class="ms-3">
                               <h6 class="text-sm mb-0"><?php echo htmlspecialchars($utilisateur['nom']); ?></h6>
                             </div>
                           </div>
                         </td>
-                        <td>
+                        <td class="prenom-column">
                           <div class="d-flex px-2 py-1">
                             <div class="ms-3">
                               <h6 class="text-sm mb-0"><?php echo htmlspecialchars($utilisateur['prenom']); ?></h6>
                             </div>
                           </div>
                         </td>
-                        <td>
+                        <td class="email-column">
                           <div class="d-flex px-2 py-1">
                             <div class="ms-3">
                               <h6 class="text-sm mb-0"><?php echo htmlspecialchars($utilisateur['email']); ?></h6>
                             </div>
                           </div>
                         </td>
-                        <td>
+                        <td class="type-column">
                           <div class="text-center">
                             <span class="badge badge-sm bg-gradient-<?php echo $utilisateur['type'] === 'administrateur' ? 'success' : ($utilisateur['type'] === 'investisseur' ? 'danger' : 'primary'); ?>">
                               <?php echo htmlspecialchars($utilisateur['type']); ?>
                             </span>
+                          </div>
+                        </td>
+                        <td class="date-inscription-column">
+                          <div class="d-flex px-2 py-1">
+                            <div class="ms-3">
+                              <h6 class="text-sm mb-0"><?php echo htmlspecialchars($utilisateur['date_inscription']); ?></h6>
+                            </div>
                           </div>
                         </td>
                         <td class="align-middle text-center">
@@ -459,8 +582,43 @@ $user = $userC->getUserById($userId);
   <script src="../../assets2/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../../assets2/js/plugins/chartjs.min.js"></script>
   <script>
-    // User Type Distribution Chart
+    // Highlight and Scroll to Edited User and Specific Columns
     document.addEventListener('DOMContentLoaded', function () {
+      <?php if (isset($_GET['highlight'])): ?>
+        const userRow = document.getElementById('userRow-<?php echo htmlspecialchars($_GET['highlight']); ?>');
+        if (userRow) {
+          userRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          userRow.style.backgroundColor = '#e6f3ff'; // Light blue highlight for the row
+          setTimeout(() => {
+            userRow.style.backgroundColor = ''; // Remove row highlight after 3 seconds
+          }, 3000);
+
+          // Highlight specific columns
+          const changedFields = '<?php echo isset($_GET['changed']) ? htmlspecialchars($_GET['changed']) : ''; ?>'.split(',');
+          changedFields.forEach(field => {
+            if (field) {
+              const column = userRow.querySelector(`.${field}-column`);
+              if (column) {
+                column.classList.add('highlight-column');
+                setTimeout(() => {
+                  column.classList.remove('highlight-column'); // Remove column highlight after 3 seconds
+                }, 3000);
+              }
+            }
+          });
+        }
+      <?php endif; ?>
+
+      // Show Success Notification if Present
+      const successNotification = document.getElementById('successNotification');
+      if (successNotification) {
+        successNotification.classList.add('show');
+        setTimeout(() => {
+          successNotification.classList.add('hide');
+        }, 3000); // Hide after 3 seconds
+      }
+
+      // User Type Distribution Chart
       const ctx = document.getElementById('userTypeChart').getContext('2d');
       new Chart(ctx, {
         type: 'doughnut',
@@ -499,82 +657,52 @@ $user = $userC->getUserById($userId);
           datasets: [{
             label: 'Registrations',
             data: <?php echo json_encode($growthData); ?>,
-            fill: true,
-            backgroundColor: gradientStroke,
             borderColor: '#5e72e4',
-            borderWidth: 3,
+            backgroundColor: gradientStroke,
+            fill: true,
+            tension: 0.4,
             pointRadius: 0,
-            tension: 0.4
+            borderWidth: 3
           }]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
           plugins: {
             legend: {
               display: false
+            },
+            tooltip: {
+              backgroundColor: '#1A2C42',
+              titleFont: { size: 12 },
+              bodyFont: { size: 12 },
+              padding: 10,
+              cornerRadius: 4
             }
           },
-          interaction: {
-            intersect: false,
-            mode: 'index',
-          },
           scales: {
-            y: {
-              grid: {
-                drawBorder: false,
-                display: true,
-                drawOnChartArea: true,
-                drawTicks: false,
-                borderDash: [5, 5]
-              },
-              ticks: {
-                display: true,
-                padding: 10,
-                color: '#fbfbfb',
-                font: {
-                  size: 11,
-                  family: "Open Sans",
-                  style: 'normal',
-                  lineHeight: 2
-                },
-              }
-            },
             x: {
               grid: {
-                drawBorder: false,
-                display: false,
-                drawOnChartArea: false,
-                drawTicks: false,
-                borderDash: [5, 5]
+                display: false
               },
               ticks: {
-                display: true,
-                color: '#ccc',
-                padding: 20,
-                font: {
-                  size: 11,
-                  family: "Open Sans",
-                  style: 'normal',
-                  lineHeight: 2
-                },
+                color: '#1A2C42'
               }
             },
-          },
-        },
+            y: {
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                color: '#1A2C42',
+                stepSize: 10
+              }
+            }
+          }
+        }
       });
     });
   </script>
-  <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-  </script>
-  <script src="../../assets2/js/argon-dashboard.min.js?v=2.1.0"></script>
+  <script src="../../assets2/js/argon-dashboard.min.js?v=2.0.4"></script>
 </body>
 
 </html>

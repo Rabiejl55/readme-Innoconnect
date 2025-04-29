@@ -3,8 +3,16 @@ include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/config.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/Controller/utilisateurC.php';
 session_start();
 
+// Log file for debugging
+$logFile = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/debug.log';
+function logMessage($message) {
+    global $logFile;
+    file_put_contents($logFile, date('Y-m-d H:i:s') . " - " . $message . "\n", FILE_APPEND);
+}
+
 // Check if the user is logged in
 if (!isset($_SESSION['id_utilisateur'])) {
+    logMessage("User not logged in, redirecting to login");
     header("Location: login.php");
     exit;
 }
@@ -15,19 +23,168 @@ $userC = new userC();
 $user = $userC->getUserById($userId);
 
 if (!$user) {
+    logMessage("User not found for ID: $userId");
     header("Location: login.php?error=User not found");
     exit;
 }
 
-// Handle the form submission for updating the profile
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $email = $_POST['email'];
+logMessage("User profile loaded for ID: $userId, photo_profil: " . ($user['photo_profil'] ?? 'NULL'));
 
-    $userC->updateUser($userId, $nom, $prenom, $email, $user['type']);
+// Handle the form submission for updating the profile
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
+    $nom = trim($_POST['nom']);
+    $prenom = trim($_POST['prenom']);
+    $email = trim($_POST['email']);
+    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
+    $date_inscription = trim($_POST['date_inscription']);
+
+    // Validate inputs
+    if (empty($nom) || empty($prenom) || empty($email) || empty($date_inscription)) {
+        header("Location: profile.php?error=All fields are required");
+        exit;
+    }
+
+    // Validate email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        header("Location: profile.php?error=Invalid email format");
+        exit;
+    }
+
+    // Option 1: Email changes are disabled (email field is readonly)
+    if ($email !== $user['email']) {
+        header("Location: profile.php?error=Email cannot be changed");
+        exit;
+    }
+
+    /*
+    // Option 2: Limit email changes to once every 30 days
+    if ($email !== $user['email']) {
+        // Check time since last email change
+        if ($user['last_email_change']) {
+            $lastChange = new DateTime($user['last_email_change']);
+            $now = new DateTime();
+            $interval = $lastChange->diff($now);
+            $daysSinceLastChange = $interval->days;
+            if ($daysSinceLastChange < 30) {
+                header("Location: profile.php?error=You can only change your email once every 30 days");
+                exit;
+            }
+        }
+
+        // Check if email already exists (excluding the current user)
+        if ($userC->emailExists($email, $userId)) {
+            header("Location: profile.php?error=Email already exists");
+            exit;
+        }
+    }
+    */
+
+    // Handle photo upload
+    $photo_profil = $user['photo_profil'];
+    if (isset($_FILES['photo_profil']) && $_FILES['photo_profil']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+            logMessage("Created upload directory: $uploadDir");
+        }
+        if (!is_writable($uploadDir)) {
+            logMessage("Upload directory is not writable: $uploadDir");
+            header("Location: profile.php?error=Upload directory is not writable");
+            exit;
+        }
+
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $maxFileSize = 5 * 1024 * 1024; // 5MB
+
+        $fileType = $_FILES['photo_profil']['type'];
+        $fileSize = $_FILES['photo_profil']['size'];
+        $fileTmpName = $_FILES['photo_profil']['tmp_name'];
+
+        logMessage("Profile photo upload started: type=$fileType, size=$fileSize bytes");
+
+        if (!in_array($fileType, $allowedTypes)) {
+            logMessage("Profile photo upload failed: Invalid file type ($fileType)");
+            header("Location: profile.php?error=Invalid file type. Only JPEG, PNG, and GIF are allowed");
+            exit;
+        }
+
+        if ($fileSize > $maxFileSize) {
+            logMessage("Profile photo upload failed: File size ($fileSize bytes) exceeds 5MB limit");
+            header("Location: profile.php?error=File size exceeds 5MB limit");
+            exit;
+        }
+
+        $fileExt = strtolower(pathinfo($_FILES['photo_profil']['name'], PATHINFO_EXTENSION));
+        $newFileName = $userId . '_' . time() . '.' . $fileExt;
+        $uploadPath = $uploadDir . $newFileName;
+
+        logMessage("Attempting to move uploaded file to: $uploadPath");
+        if (move_uploaded_file($fileTmpName, $uploadPath)) {
+            $photo_profil = '/' . $newFileName;
+            $oldPhotoPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $user['photo_profil'];
+            if ($user['photo_profil'] && file_exists($oldPhotoPath)) {
+                //unlink($oldPhotoPath);
+                logMessage("Deleted old profile picture: " . $user['photo_profil']);
+            }
+            logMessage("Profile photo uploaded successfully: $photo_profil");
+        } else {
+            logMessage("Profile photo upload failed: Unable to move file to $uploadPath");
+            header("Location: profile.php?error=Failed to upload photo");
+            exit;
+        }
+    }
+
+    // Update profile
+    try {
+        $userC->updateUser($userId, $nom, $prenom, $email, $user['type'], $photo_profil, $date_inscription);
+    } catch (Exception $e) {
+        logMessage("Error updating user: " . $e->getMessage());
+        header("Location: profile.php?error=Error updating profile");
+        exit;
+    }
+
+    // Handle password update if provided
+    if (!empty($password)) {
+        if (strlen($password) < 8) {
+            header("Location: profile.php?error=Password must be at least 8 characters long");
+            exit;
+        }
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("UPDATE utilisateur SET mot_de_passe = ? WHERE id_utilisateur = ?");
+        $stmt->execute([$hashed_password, $userId]); 
+    }
+
+    /*
+    // Update last_email_change if email was changed (for Option 2)
+    if ($email !== $user['email']) {
+        $stmt = $conn->prepare("UPDATE utilisateur SET last_email_change = NOW() WHERE id_utilisateur = ?");
+        $stmt->execute([$userId]);
+    }
+    */
+
+    logMessage("Profile updated successfully for user ID: $userId");
     header("Location: profile.php?success=Profile updated successfully");
     exit;
+}
+
+// Handle account deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    try {
+        // Delete the user's photo if it exists
+        if ($user['photo_profil'] && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user['photo_profil'])) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $user['photo_profil']);
+            logMessage("Deleted profile picture: " . $user['photo_profil']);
+        }
+        $userC->deleteUser($userId);
+        session_destroy();
+        logMessage("User account deleted for ID: $userId");
+        header("Location: login.php?success=Account deleted successfully");
+        exit;
+    } catch (Exception $e) {
+        logMessage("Error deleting user: " . $e->getMessage());
+        header("Location: profile.php?error=Error deleting account");
+        exit;
+    }
 }
 ?>
 
@@ -39,12 +196,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>My Profile - InnoConnect</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="../../styles.css" rel="stylesheet">
+    <style>
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+            display: block; /* Ensure the image is displayed */
+        }
+        .profile-pic-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #6c757d;
+            border: 2px dashed #007bff;
+        }
+        .debug-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Global Loader -->
     <div class="loader" id="loader"></div>
-
-    <!-- Header -->
     <header>
         <div class="logo">
             <img src="../../innoconnect.jpeg" alt="InnoConnect Logo">
@@ -53,38 +238,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <ul>
                 <li><a href="../../index.html">Home</a></li>
                 <li><a href="profile.php" class="active">My Profile</a></li>
+                <?php if ($_SESSION['user_type'] === 'administrateur'): ?>
+                    <li><a href="../../dashboard.php">Dashboard</a></li>
+                <?php endif; ?>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
     </header>
-
-    <!-- Main Content -->
     <main>
         <section class="profile-section">
-            <h2>My Profile</h2>
-            <p class="slogan">Manage your personal information</p>
+            <h2>Welcome, <?php echo htmlspecialchars($user['prenom'] . ' ' . $user['nom']); ?>!</h2>
+            <p class="slogan">You are logged in as <?php echo htmlspecialchars($user['type']); ?>. Manage your personal information below.</p>
             <?php if (isset($_GET['success'])): ?>
                 <div class="success"><?php echo htmlspecialchars($_GET['success']); ?></div>
             <?php endif; ?>
             <?php if (isset($_GET['error'])): ?>
                 <div class="error-message"><?php echo htmlspecialchars($_GET['error']); ?></div>
             <?php endif; ?>
-            <form method="POST" onsubmit="showLoader()">
+            <div class="profile-pic-container">
+                <?php
+                $imagePath = '';
+                $defaultImage = '../../uploads/default_profile.jpg'; // Chemin relatif
+                $debugMessage = '';
+                if ($user['photo_profil']) {
+                    $imagePath = '../../uploads/' . $user['photo_profil']; // Chemin relatif depuis frontOffice/
+                    logMessage("Attempting to display profile picture: $imagePath");
+                } else {
+                    logMessage("No photo_profil set for user ID: $userId");
+                    $debugMessage = "No profile picture set in the database.";
+                }
+                ?>
+                <img src="<?php echo htmlspecialchars($imagePath ?: $defaultImage); ?>" alt="Profile Picture" class="profile-pic" onerror="console.log('Image failed to load: ' + this.src); this.onerror=null; this.src='<?php echo $defaultImage; ?>'; this.alt='Default Profile Picture';">
+                <?php if ($debugMessage): ?>
+                    <div class="debug-message"><?php echo htmlspecialchars($debugMessage); ?></div>
+                <?php endif; ?>
+            </div>
+            <form method="POST" enctype="multipart/form-data" onsubmit="if (!validateForm()) return false; showLoader()">
+                <div class="form-group input-with-icon">
+                    <label for="photo_profil">Profile Picture</label>
+                    <i class="fas fa-camera"></i>
+                    <input type="file" id="photo_profil" name="photo_profil" accept="image/*" onchange="previewImage(event)">
+                    <img id="photo-preview" style="display: none; width: 100px; height: 100px; margin-top: 10px; border-radius: 50%;">
+                </div>
                 <div class="form-group input-with-icon">
                     <label for="nom">Last Name</label>
                     <i class="fas fa-user"></i>
-                    <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($user['nom']); ?>" required>
+                    <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($user['nom']); ?>" oninput="validateName('nom')">
+                    <span id="nom-error" class="error-message" style="display: none;"></span>
                 </div>
                 <div class="form-group input-with-icon">
                     <label for="prenom">First Name</label>
                     <i class="fas fa-user"></i>
-                    <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($user['prenom']); ?>" required>
+                    <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($user['prenom']); ?>" oninput="validateName('prenom')">
+                    <span id="prenom-error" class="error-message" style="display: none;"></span>
                 </div>
                 <div class="form-group input-with-icon">
                     <label for="email">Email</label>
                     <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required oninput="validateEmail()">
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" readonly>
                     <span id="email-error" class="error-message" style="display: none;"></span>
+                </div>
+                <div class="form-group input-with-icon">
+                    <label for="password">New Password (leave blank to keep current)</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="Enter new password" oninput="validatePassword()">
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('password')"></i>
+                    <span id="password-error" class="error-message" style="display: none;"></span>
+                </div>
+                <div class="form-group input-with-icon">
+                    <label for="date_inscription">Registration Date</label>
+                    <i class="fas fa-calendar-alt"></i>
+                    <input type="date" id="date_inscription" name="date_inscription" value="<?php echo htmlspecialchars($user['date_inscription']); ?>" oninput="validateDate()">
+                    <span id="date_inscription-error" class="error-message" style="display: none;"></span>
                 </div>
                 <div class="form-group input-with-icon">
                     <label for="type">Type</label>
@@ -92,20 +317,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" id="type" value="<?php echo htmlspecialchars($user['type']); ?>" disabled>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
-                    <button type="submit" class="btn-primary">Update</button>
+                    <button type="submit" name="update" class="btn-primary">Update</button>
+                    <button type="submit" name="delete" class="btn-danger" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">Delete Account</button>
                     <a href="profile.php" class="btn-danger">Cancel</a>
                 </div>
             </form>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         <p>© 2025 InnoConnect. All rights reserved.</p>
     </footer>
 
-    <!-- Scripts for validation and loader -->
     <script>
+        function validateName(fieldId) {
+            const field = document.getElementById(fieldId);
+            const value = field.value.trim();
+            const errorElement = document.getElementById(`${fieldId}-error`);
+            const nameRegex = /^[a-zA-Z\s]+$/;
+
+            if (value === "") {
+                errorElement.textContent = fieldId === "nom" ? "Last name is required." : "First name is required.";
+                errorElement.style.display = "block";
+                return false;
+            } else if (!nameRegex.test(value)) {
+                errorElement.textContent = fieldId === "nom" ? "Last name must contain only letters and spaces." : "First name must contain only letters and spaces.";
+                errorElement.style.display = "block";
+                return false;
+            } else {
+                errorElement.style.display = "none";
+                return true;
+            }
+        }
+
         function validateEmail() {
             const email = document.getElementById("email").value;
             const emailError = document.getElementById("email-error");
@@ -115,6 +359,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 emailError.style.display = "block";
             } else {
                 emailError.style.display = "none";
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById("password").value;
+            const passwordError = document.getElementById("password-error");
+            if (password.length > 0 && password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters long.";
+                passwordError.style.display = "block";
+            } else {
+                passwordError.style.display = "none";
+            }
+        }
+
+        function validateDate() {
+            const date = document.getElementById("date_inscription").value;
+            const dateError = document.getElementById("date_inscription-error");
+            if (!date) {
+                dateError.textContent = "Registration date is required.";
+                dateError.style.display = "block";
+            } else {
+                dateError.style.display = "none";
+            }
+        }
+
+        function validateForm() {
+            const nomValid = validateName("nom");
+            const prenomValid = validateName("prenom");
+            validateEmail();
+            validatePassword();
+            validateDate();
+            const emailError = document.getElementById("email-error").style.display === "block";
+            const passwordError = document.getElementById("password-error").style.display === "block";
+            const dateError = document.getElementById("date_inscription-error").style.display === "block";
+            return nomValid && prenomValid && !emailError && !passwordError && !dateError;
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling;
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
+        function previewImage(event) {
+            const preview = document.getElementById('photo-preview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
             }
         }
 
