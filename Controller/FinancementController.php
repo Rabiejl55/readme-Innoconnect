@@ -4,6 +4,7 @@ class FinancementController
 {
     public function addFinancement($financement)
     {
+<<<<<<< HEAD
         // Valider avant d'ajouter
         if (!$financement->validate()) {
             return false; // Échec de validation
@@ -12,16 +13,39 @@ class FinancementController
         $sql = "INSERT INTO financement (montant,typeOperation, titre, date_operation, id_contrat, id_Projet)
             VALUES ( :montant, :typeOperation, :titre, :date_operation, :id_contrat, :id_Projet)";
             
+=======
+
+        $sql = "INSERT INTO financement (montant, typeOperation, titre, date_operation, id_contrat, id_Projet)
+SELECT
+  :montant,
+  :typeOperation,
+  :titre,
+  :date_operation,
+  c.id_contrat,
+  :id_Projet
+FROM contrat c
+WHERE c.id_contrat = :id_contrat;";
+
+>>>>>>> 06b9c94 (second)
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
             $query->execute([
+<<<<<<< HEAD
                 'montant' => $financement->getMontant(),
                 'typeOperation' => $financement->getTypeOperation(),
                 'titre' => $financement->getTitre(),
                 'date_operation' => $financement->getDateOperation(),
                 'id_contrat' => $financement->getIdContrat(),
                 'id_Projet'=> $financement->getIdProjet(),
+=======
+                'montant'        => $financement->getMontant(),
+                'typeOperation'  => $financement->getTypeOperation(),
+                'titre'          => $financement->getTitre(),
+                'date_operation' => $financement->getDateOperation(),
+                'id_contrat'     => $financement->getIdContrat(),
+                'id_Projet'      => $financement->getIdProjet(),
+>>>>>>> 06b9c94 (second)
             ]);
             return true;
         } catch (Exception $e) {
@@ -30,6 +54,7 @@ class FinancementController
         }
     }
 
+<<<<<<< HEAD
     function updateFinancement($financement, $id_financement)
     {
         // Valider avant de mettre à jour
@@ -37,11 +62,24 @@ class FinancementController
             return false; // Échec de validation
         }
         
+=======
+    public function updateFinancement($financement, $id_financement)
+    {
+        // Valider avant de mettre à jour
+        if (! $financement->validate()) {
+            return false; // Échec de validation
+        }
+
+>>>>>>> 06b9c94 (second)
         $db = config::getConnexion();
         try {
             $query = $db->prepare(
                 'UPDATE `financement` SET
+<<<<<<< HEAD
                     montant = :montant, 
+=======
+                    montant = :montant,
+>>>>>>> 06b9c94 (second)
                     typeOperation = :typeOperation,
                     titre = :titre,
                     date_operation = :date_operation,
@@ -51,12 +89,21 @@ class FinancementController
             );
             $query->execute([
                 'id_financement' => $id_financement,
+<<<<<<< HEAD
                 'montant' => $financement->getMontant(),
                 'typeOperation' => $financement->getTypeOperation(),
                 'titre' => $financement->getTitre(),
                 'date_operation' => $financement->getDateOperation(),
                 'id_contrat' => $financement->getIdContrat(),
                 'id_Projet' => $financement->getIdProjet(),
+=======
+                'montant'        => $financement->getMontant(),
+                'typeOperation'  => $financement->getTypeOperation(),
+                'titre'          => $financement->getTitre(),
+                'date_operation' => $financement->getDateOperation(),
+                'id_contrat'     => $financement->getIdContrat(),
+                'id_Projet'      => $financement->getIdProjet(),
+>>>>>>> 06b9c94 (second)
             ]);
             return true;
         } catch (PDOException $e) {
@@ -64,8 +111,11 @@ class FinancementController
             return false;
         }
     }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 06b9c94 (second)
     public function deleteFinancement($id_financement)
     {
         $db = config::getConnexion();
@@ -74,7 +124,11 @@ class FinancementController
             $db->beginTransaction();
 
             // Delete the Financement record
+<<<<<<< HEAD
             $sqlDeleteFinancement = "DELETE FROM financement WHERE id_financement = :id_financement";
+=======
+            $sqlDeleteFinancement  = "DELETE FROM financement WHERE id_financement = :id_financement";
+>>>>>>> 06b9c94 (second)
             $stmtDeleteFinancement = $db->prepare($sqlDeleteFinancement);
             $stmtDeleteFinancement->bindValue(':id_financement', $id_financement);
             $stmtDeleteFinancement->execute();
@@ -92,7 +146,11 @@ class FinancementController
     public function listFinancement()
     {
         $sql = "SELECT * FROM financement;";
+<<<<<<< HEAD
         $db = config::getConnexion();
+=======
+        $db  = config::getConnexion();
+>>>>>>> 06b9c94 (second)
         try {
             $liste = $db->query($sql);
             return $liste;
@@ -101,10 +159,17 @@ class FinancementController
         }
     }
 
+<<<<<<< HEAD
     function showFinancement($id_financement)
     {
         $sql = "SELECT * FROM `financement` WHERE id_financement = :id_financement";
         $db = config::getConnexion();
+=======
+    public function showFinancement($id_financement)
+    {
+        $sql = "SELECT * FROM `financement` WHERE id_financement = :id_financement";
+        $db  = config::getConnexion();
+>>>>>>> 06b9c94 (second)
         try {
             $query = $db->prepare($sql);
             $query->execute(['id_financement' => $id_financement]);
@@ -121,14 +186,23 @@ class FinancementController
 
         // Validation du montant
         $montant = $financement->getMontant();
+<<<<<<< HEAD
         if (!is_numeric($montant) || $montant <= 0) {
+=======
+        if (! is_numeric($montant) || $montant <= 0) {
+>>>>>>> 06b9c94 (second)
             $errors[] = "Le montant doit être un nombre positif";
         }
 
         // Validation du type d'opération
         $typeOperation = $financement->getTypeOperation();
+<<<<<<< HEAD
         $allowedTypes = ['encaissement', 'decaissement'];
         if (!in_array($typeOperation, $allowedTypes)) {
+=======
+        $allowedTypes  = ['encaissement', 'decaissement'];
+        if (! in_array($typeOperation, $allowedTypes)) {
+>>>>>>> 06b9c94 (second)
             $errors[] = "Type d'opération invalide";
         }
 
@@ -152,11 +226,19 @@ class FinancementController
         }
 
         // Validation des relations
+<<<<<<< HEAD
         if (!$this->checkIdExists('contrat', 'id_contrat', $financement->getIdContrat())) {
             $errors[] = "Le contrat sélectionné n'existe pas";
         }
 
         if (!$this->checkIdExists('projet', 'id_Projet', $financement->getIdProjet())) {
+=======
+        if (! $this->checkIdExists('contrat', 'id_contrat', $financement->getIdContrat())) {
+            $errors[] = "Le contrat sélectionné n'existe pas";
+        }
+
+        if (! $this->checkIdExists('projet', 'id_Projet', $financement->getIdProjet())) {
+>>>>>>> 06b9c94 (second)
             $errors[] = "Le projet sélectionné n'existe pas";
         }
 
@@ -164,12 +246,21 @@ class FinancementController
     }
     private function checkIdExists($table, $column, $id)
     {
+<<<<<<< HEAD
         $db = config::getConnexion();
         $sql = "SELECT $column FROM $table WHERE $column = :id";
+=======
+        $db    = config::getConnexion();
+        $sql   = "SELECT $column FROM $table WHERE $column = :id";
+>>>>>>> 06b9c94 (second)
         $query = $db->prepare($sql);
         $query->execute(['id' => $id]);
         return $query->rowCount() > 0;
     }
 
+<<<<<<< HEAD
 
 }
+=======
+}
+>>>>>>> 06b9c94 (second)
