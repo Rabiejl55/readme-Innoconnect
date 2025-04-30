@@ -82,7 +82,6 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
     $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
     // Set image scale factor
-    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
     // Add a page
     $pdf->AddPage();
@@ -96,7 +95,6 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
     $html .= '<thead>';
     $html .= '<tr style="background-color:#f8f9fa;">';
     $html .= '<th><b>ID</b></th>';
-    $html .= '<th><b>Profile Photo</b></th>';
     $html .= '<th><b>Last Name</b></th>';
     $html .= '<th><b>First Name</b></th>';
     $html .= '<th><b>Email</b></th>';
@@ -107,12 +105,11 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
     $html .= '<tbody>';
 
     foreach ($utilisateurs as $utilisateur) {
-        $photoPath = !empty($utilisateur['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . $utilisateur['photo_profil'] : '';
-        $photoText = !empty($utilisateur['photo_profil']) ? (file_exists($photoPath) ? '<img src="' . $photoPath . '" width="30" height="30" />' : 'Missing') : 'No Photo';
+      
+
 
         $html .= '<tr>';
         $html .= '<td>' . htmlspecialchars($utilisateur['id_utilisateur']) . '</td>';
-        $html .= '<td>' . $photoText . '</td>';
         $html .= '<td>' . htmlspecialchars($utilisateur['nom']) . '</td>';
         $html .= '<td>' . htmlspecialchars($utilisateur['prenom']) . '</td>';
         $html .= '<td>' . htmlspecialchars($utilisateur['email']) . '</td>';
@@ -673,9 +670,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
                                                             <i class="fas fa-image me-1"></i> Delete Photo
                                                         </a>
                                                     <?php endif; ?>
-                                                    <a href="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>&action=change_photo" class="text-secondary font-weight-bold text-xs">
-                                                        <i class="fas fa-camera me-1"></i> Change Photo
-                                                    </a>
+
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>

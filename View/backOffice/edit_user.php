@@ -40,12 +40,11 @@ if (!$userToEdit) {
     exit;
 }
 
-$action = isset($_GET['action']) ? $_GET['action'] : '';
 $error = '';
+$changedFields = [];
 
 // Handle form submission for updating user details
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'change_photo') {
-    $changedFields = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom']);
     $prenom = trim($_POST['prenom']);
     $email = trim($_POST['email']);
@@ -96,6 +95,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'change_photo') {
         exit;
     }
 
+    // Handle photo upload
+    $photo_profil = $userToEdit['photo_profil']; // Keep the existing photo by default
+    if (isset($_FILES['photo_profil']) && $_FILES['photo_profil']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/';
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $maxSize = 5 * 1024 * 1024;
+
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $photo = $_FILES['photo_profil'];
+        if (in_array($photo['type'], $allowedTypes) && $photo['size'] <= $maxSize) {
+            $extension = pathinfo($photo['name'], PATHINFO_EXTENSION);
+            $filename = uniqid() . '.' . $extension;
+            $destination = $uploadDir . $filename;
+
+            // Delete the old photo if it exists
+            if (!empty($userToEdit['photo_profil'])) {
+                $oldPhotoPath = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/' . $userToEdit['photo_profil'];
+                if (file_exists($oldPhotoPath)) {
+                    unlink($oldPhotoPath);
+                }
+            }
+
+            if (move_uploaded_file($photo['tmp_name'], $destination)) {
+                $photo_profil = '' . $filename;
+                $changedFields[] = 'photo_profil';
+            } else {
+                header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Failed to upload the photo");
+                exit;
+            }
+        } else {
+            header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Invalid photo format or size. Please upload a JPEG, PNG, or GIF file under 5MB");
+            exit;
+        }
+    }
+
     // Track changed fields
     if ($nom !== $userToEdit['nom']) $changedFields[] = 'nom';
     if ($prenom !== $userToEdit['prenom']) $changedFields[] = 'prenom';
@@ -104,8 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'change_photo') {
     if ($date_inscription !== $userToEdit['date_inscription']) $changedFields[] = 'date_inscription';
 
     try {
-        // Passer null pour photo_profil car il n'est pas modifié ici
-        $updated = $userC->updateUser($userToEditId, $nom, $prenom, $email, $type, null, $dateFormatted);
+        $updated = $userC->updateUser($userToEditId, $nom, $prenom, $email, $type, $photo_profil, $dateFormatted);
         if ($updated) {
             $changedFieldsStr = implode(',', $changedFields);
             header("Location: listeUser.php?success=User updated successfully&highlight=$userToEditId&changed=$changedFieldsStr");
@@ -117,45 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'change_photo') {
         error_log("Error updating user: " . $e->getMessage());
         header("Location: edit_user.php?id_utilisateur=$userToEditId&error=Error updating user: " . htmlspecialchars($e->getMessage()));
         exit;
-    }
-}
-
-// Handle profile photo change
-if ($action === 'change_photo' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo_profil'])) {
-    $photo = $_FILES['photo_profil'];
-    $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/uploads/photos/';
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    $maxSize = 5 * 1024 * 1024;
-
-    if (!file_exists($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
-
-    if ($photo['error'] === UPLOAD_ERR_OK && in_array($photo['type'], $allowedTypes) && $photo['size'] <= $maxSize) {
-        $extension = pathinfo($photo['name'], PATHINFO_EXTENSION);
-        $filename = uniqid() . '.' . $extension;
-        $destination = $uploadDir . $filename;
-
-        if (!empty($userToEdit['photo_profil'])) {
-            $oldPhotoPath = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/' . $userToEdit['photo_profil'];
-            if (file_exists($oldPhotoPath)) {
-                unlink($oldPhotoPath);
-            }
-        }
-
-        if (move_uploaded_file($photo['tmp_name'], $destination)) {
-            $conn = config::getConnexion();
-            $relativePath = 'uploads/photos/' . $filename;
-            $stmt = $conn->prepare("UPDATE utilisateur SET photo_profil = ? WHERE id_utilisateur = ?");
-            $stmt->execute([$relativePath, $userToEditId]);
-
-            header("Location: listeUser.php?success=Profile photo updated successfully&highlight=$userToEditId");
-            exit;
-        } else {
-            $error = "Failed to upload the photo.";
-        }
-    } else {
-        $error = "Invalid photo format or size. Please upload a JPEG, PNG, or GIF file under 5MB.";
     }
 }
 ?>
@@ -759,7 +756,7 @@ if ($action === 'change_photo' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset
                 <i class="fas fa-bars navbar-toggler" style="display: none;"></i>
                 <a href="listeUser.php">User Management</a>
                 <i class="fas fa-chevron-right"></i>
-                <span><?php echo $action === 'change_photo' ? 'Change Profile Photo' : 'Edit User'; ?></span>
+                <span>Edit User</span>
             </div>
             <div class="nav-icons">
                 <i class="fas fa-bell"></i>
@@ -785,8 +782,8 @@ if ($action === 'change_photo' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset
         <div class="main-content">
             <div class="page-header">
                 <div>
-                    <h2><?php echo $action === 'change_photo' ? 'Change Profile Photo' : 'Edit User'; ?></h2>
-                    <p><?php echo $action === 'change_photo' ? 'Upload a new profile photo for the user.' : 'Update the details of the user below.'; ?></p>
+                    <h2>Edit User</h2>
+                    <p>Update the details of the user below.</p>
                 </div>
                 <a href="listeUser.php" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Back to Users
@@ -801,84 +798,72 @@ if ($action === 'change_photo' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset
                     <div class="alert alert-success"><?php echo htmlspecialchars($_GET['success']); ?></div>
                 <?php endif; ?>
 
-                <?php if ($action === 'change_photo'): ?>
-                    <form id="changePhotoForm" method="POST" enctype="multipart/form-data" action="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($userToEditId); ?>&action=change_photo">
-                        <div class="form-group full-width">
-                            <label>Current Photo</label>
-                            <div class="current-photo">
-                                <?php
-                                $photoPath = !empty($userToEdit['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/' . $userToEdit['photo_profil'] : '';
-                                $photoUrl = !empty($userToEdit['photo_profil']) ? '/ProjetInnoconnect/frontOffice/' . htmlspecialchars($userToEdit['photo_profil']) : '';
-                                if (!empty($photoPath) && file_exists($photoPath)): ?>
-                                    <img src="<?php echo $photoUrl; ?>" alt="Current Photo">
-                                <?php else: ?>
-                                    <p>No photo available.</p>
-                                <?php endif; ?>
-                            </div>
+                <form id="editUserForm" method="POST" action="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($userToEditId); ?>" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="nom">Last Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($userToEdit['nom']); ?>">
                         </div>
-                        <div class="form-group full-width">
-                            <label for="photo_profil">Upload New Photo</label>
-                            <input type="file" id="photo_profil" name="photo_profil">
-                            <div id="photoError" class="error-message"></div>
-                            <small style="color: #6c757d; font-size: 0.85em;">JPEG, PNG, or GIF. Max 5MB.</small>
+                        <div id="nomError" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">First Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($userToEdit['prenom']); ?>">
                         </div>
-                        <div class="btn-group">
-                            <button type="submit" class="btn btn-primary">Upload Photo</button>
-                            <a href="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($userToEditId); ?>" class="btn btn-secondary">Cancel</a>
+                        <div id="prenomError" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="text" id="email" name="email" value="<?php echo htmlspecialchars($userToEdit['email']); ?>">
                         </div>
-                    </form>
-                <?php else: ?>
-                    <form id="editUserForm" method="POST" action="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($userToEditId); ?>">
-                        <div class="form-group">
-                            <label for="nom">Last Name</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-user"></i>
-                                <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($userToEdit['nom']); ?>">
-                            </div>
-                            <div id="nomError" class="error-message"></div>
+                        <div id="emailError" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="type">User Type</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-users"></i>
+                            <select id="type" name="type">
+                                <option value="administrateur" <?php echo $userToEdit['type'] === 'administrateur' ? 'selected' : ''; ?>>Administrator</option>
+                                <option value="investisseur" <?php echo $userToEdit['type'] === 'investisseur' ? 'selected' : ''; ?>>Investor</option>
+                                <option value="innovateur" <?php echo $userToEdit['type'] === 'innovateur' ? 'selected' : ''; ?>>Innovator</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            <label for="prenom">First Name</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-user"></i>
-                                <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($userToEdit['prenom']); ?>">
-                            </div>
-                            <div id="prenomError" class="error-message"></div>
+                        <div id="typeError" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="photo_profil">Profile Photo</label>
+                        <div class="current-photo">
+                            <?php
+                            $photoPath = !empty($userToEdit['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/' . $userToEdit['photo_profil'] : '';
+                            $photoUrl = !empty($userToEdit['photo_profil']) ? '/ProjetInnoconnect/' . htmlspecialchars($userToEdit['photo_profil']) : '';
+                            if (!empty($photoPath) && file_exists($photoPath)): ?>
+                                <img src="<?php echo $photoUrl; ?>" alt="Current Photo">
+                            <?php else: ?>
+                                <p>No photo available.</p>
+                            <?php endif; ?>
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-envelope"></i>
-                                <input type="text" id="email" name="email" value="<?php echo htmlspecialchars($userToEdit['email']); ?>">
-                            </div>
-                            <div id="emailError" class="error-message"></div>
+                        <input type="file" id="photo_profil" name="photo_profil">
+                        <div id="photoError" class="error-message"></div>
+                        <small style="color: #6c757d; font-size: 0.85em;">JPEG, PNG, or GIF. Max 5MB.</small>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="date_inscription">Registration Date</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="text" id="date_inscription" name="date_inscription" placeholder="JJ/MM/AAAA" value="<?php echo htmlspecialchars($userToEdit['date_inscription']); ?>">
                         </div>
-                        <div class="form-group">
-                            <label for="type">User Type</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-users"></i>
-                                <select id="type" name="type">
-                                    <option value="administrateur" <?php echo $userToEdit['type'] === 'administrateur' ? 'selected' : ''; ?>>Administrator</option>
-                                    <option value="investisseur" <?php echo $userToEdit['type'] === 'investisseur' ? 'selected' : ''; ?>>Investor</option>
-                                    <option value="innovateur" <?php echo $userToEdit['type'] === 'innovateur' ? 'selected' : ''; ?>>Innovator</option>
-                                </select>
-                            </div>
-                            <div id="typeError" class="error-message"></div>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="date_inscription">Registration Date</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-calendar-alt"></i>
-                                <input type="text" id="date_inscription" name="date_inscription" placeholder="JJ/MM/AAAA" value="<?php echo htmlspecialchars($userToEdit['date_inscription']); ?>">
-                            </div>
-                            <div id="dateError" class="error-message"></div>
-                        </div>
-                        <div class="btn-group">
-                            <button type="submit" class="btn btn-primary">Update User</button>
-                            <a href="listeUser.php" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
-                <?php endif; ?>
+                        <div id="dateError" class="error-message"></div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">Update User</button>
+                        <a href="listeUser.php" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -931,6 +916,7 @@ if ($action === 'change_photo' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset
                 const email = document.getElementById('email').value.trim();
                 const type = document.getElementById('type').value;
                 const dateInscription = document.getElementById('date_inscription').value.trim();
+                const photo = document.getElementById('photo_profil').files[0];
 
                 document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
 
@@ -991,27 +977,7 @@ if ($action === 'change_photo' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset
                     }
                 }
 
-                if (isValid) {
-                    this.submit();
-                }
-            });
-        }
-
-        const changePhotoForm = document.getElementById('changePhotoForm');
-        if (changePhotoForm) {
-            changePhotoForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                let isValid = true;
-                const photo = document.getElementById('photo_profil').files[0];
-
-                document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
-
-                if (!photo) {
-                    document.getElementById('photoError').textContent = 'Please select a photo';
-                    document.getElementById('photoError').style.display = 'block';
-                    isValid = false;
-                } else {
+                if (photo) {
                     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
                     const maxSize = 5 * 1024 * 1024;
                     if (!allowedTypes.includes(photo.type)) {

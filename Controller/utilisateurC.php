@@ -58,6 +58,19 @@ class userC {
         }
     }
 
+    public function isDateTimeField() {
+        try {
+            $db = config::getConnexion();
+            $query = "SHOW COLUMNS FROM utilisateur WHERE Field = 'date_inscription'";
+            $stmt = $db->query($query);
+            $column = $stmt->fetch(PDO::FETCH_ASSOC);
+            return stripos($column['Type'], 'datetime') !== false;
+        } catch (PDOException $e) {
+            error_log("Error checking field type: " . $e->getMessage());
+            return false;
+        }
+    }
+    
     public function afficherUser($sortColumn = 'id_utilisateur', $sortOrder = 'ASC') {
         $conn = config::getConnexion();
         // Liste des colonnes autorisées pour le tri

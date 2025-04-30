@@ -374,3 +374,42 @@
 2025-04-29 22:32:45 - Attempting to display profile picture: ../../uploads/uploads/photos/6811152f62037.jpeg
 2025-04-29 23:33:45 - User profile loaded for ID: 24, photo_profil: uploads/photos/6811152f62037.jpeg
 2025-04-29 23:33:45 - Attempting to display profile picture: ../../uploads/uploads/photos/6811152f62037.jpeg
+2025-04-30 11:53:10 - User profile loaded for ID: 24, photo_profil: uploads/photos/6811152f62037.jpeg
+2025-04-30 11:53:10 - Attempting to display profile picture: ../../uploads/uploads/photos/6811152f62037.jpeg
+2025-04-30 11:53:19 - User profile loaded for ID: 24, photo_profil: uploads/photos/6811152f62037.jpeg
+2025-04-30 11:53:19 - Profile updated successfully for user ID: 24
+2025-04-30 11:53:19 - User profile loaded for ID: 24, photo_profil: uploads/photos/6811152f62037.jpeg
+2025-04-30 11:53:19 - Attempting to display profile picture: ../../uploads/uploads/photos/6811152f62037.jpeg
+2025-04-30 11:54:10 - User profile loaded for ID: 24, photo_profil: uploads/photos/6811152f62037.jpeg
+2025-04-30 11:54:10 - Attempting to display profile picture: ../../uploads/uploads/photos/6811152f62037.jpeg
+2025-04-30 11:54:49 - User profile loaded for ID: 24, photo_profil: uploads/photos/6811152f62037.jpeg
+2025-04-30 11:54:49 - Profile photo upload started: type=image/jpeg, size=73366 bytes
+2025-04-30 11:54:49 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1746006889.jpeg
+2025-04-30 11:54:49 - Updating user with photo_profil: 24_1746006889.jpeg
+2025-04-30 11:54:49 - Photo uploaded and user updated with photo_profil: 24_1746006889.jpeg
+2025-04-30 11:54:49 - Profile updated successfully for user ID: 24
+2025-04-30 11:54:49 - User profile loaded for ID: 24, photo_profil: 24_1746006889.jpeg
+2025-04-30 11:54:49 - Attempting to display profile picture: ../../uploads/24_1746006889.jpeg
+2025-04-30 12:02:25 - User profile loaded for ID: 24, photo_profil: 24_1746006889.jpeg
+2025-04-30 12:02:25 - Attempting to display profile picture: 24_1746006889.jpeg
+2025-04-30 12:02:26 - User profile loaded for ID: 24, photo_profil: 24_1746006889.jpeg
+2025-04-30 12:02:26 - Attempting to display profile picture: 24_1746006889.jpeg
+2025-04-30 12:02:45 - User profile loaded for ID: 24, photo_profil: 24_1746006889.jpeg
+2025-04-30 12:02:45 - Profile photo upload started: type=image/png, size=41632 bytes
+2025-04-30 12:02:45 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1746007365.png
+2025-04-30 12:02:45 - Updating user with photo_profil: /ProjetInnoconnect/uploads/24_1746007365.png
+2025-04-30 12:02:45 - Photo uploaded and user updated with photo_profil: /ProjetInnoconnect/uploads/24_1746007365.png
+2025-04-30 12:03:56 - User profile loaded for ID: 24, photo_profil: /ProjetInnoconnect/uploads/24_1746007365.png
+2025-04-30 12:03:56 - Profile photo upload started: type=image/png, size=41632 bytes
+2025-04-30 12:03:56 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1746007436.png
+2025-04-30 12:03:56 - Updating user with photo_profil: /ProjetInnoconnect/uploads/24_1746007436.png
+2025-04-30 12:03:56 - Photo uploaded and user updated with photo_profil: /ProjetInnoconnect/uploads/24_1746007436.png
+2025-04-30 12:03:56 - Profile updated successfully for user ID: 24, date_inscription: 2025-04-10
+2025-04-30 12:49:00 - User profile loaded for ID: 24, photo_profil: /ProjetInnoconnect/uploads/24_1746007436.png
+2025-04-30 12:49:00 - Attempting to display profile picture: /ProjetInnoconnect/uploads/24_1746007436.png
+2025-04-30 12:49:19 - User profile loaded for ID: 24, photo_profil: /ProjetInnoconnect/uploads/24_1746007436.png
+2025-04-30 12:49:19 - Profile photo upload started: type=image/jpeg, size=103746 bytes
+2025-04-30 12:49:19 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1746010159.jpeg
+2025-04-30 12:49:19 - Updating user with photo_profil: /ProjetInnoconnect/uploads/24_1746010159.jpeg
+2025-04-30 12:49:19 - Photo uploaded and user updated with photo_profil: /ProjetInnoconnect/uploads/24_1746010159.jpeg
+2025-04-30 12:49:19 - Profile updated successfully for user ID: 24, date_inscription: 2025-04-10

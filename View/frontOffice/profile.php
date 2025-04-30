@@ -39,45 +39,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $date_inscription = trim($_POST['date_inscription']);
 
     // Validate inputs
-    if (empty($nom) || empty($prenom) || empty($email) || empty($date_inscription)) {
-        header("Location: profile.php?error=All fields are required");
-        exit;
-    }
-
-    // Validate email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        header("Location: profile.php?error=Invalid email format");
-        exit;
+    $errors = [];
+    if (empty($nom)) $errors[] = "Last name is required.";
+    if (empty($prenom)) $errors[] = "First name is required.";
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format.";
+    if (empty($date_inscription)) $errors[] = "Register date is required.";
+    else {
+        // Validate date format and ensure it's not in the future
+        $dateObj = DateTime::createFromFormat('Y-m-d', $date_inscription);
+        if (!$dateObj || $dateObj->format('Y-m-d') !== $date_inscription) {
+            $errors[] = "Invalid date format for register date.";
+        } else {
+            $today = new DateTime();
+            if ($dateObj > $today) {
+                $errors[] = "Register date cannot be in the future.";
+            }
+        }
     }
 
     // Option 1: Email changes are disabled (email field is readonly)
     if ($email !== $user['email']) {
-        header("Location: profile.php?error=Email cannot be changed");
+        $errors[] = "Email cannot be changed.";
+    }
+
+    if (!empty($errors)) {
+        header("Location: profile.php?error=" . urlencode(implode(" ", $errors)));
         exit;
     }
-
-    /*
-    // Option 2: Limit email changes to once every 30 days
-    if ($email !== $user['email']) {
-        // Check time since last email change
-        if ($user['last_email_change']) {
-            $lastChange = new DateTime($user['last_email_change']);
-            $now = new DateTime();
-            $interval = $lastChange->diff($now);
-            $daysSinceLastChange = $interval->days;
-            if ($daysSinceLastChange < 30) {
-                header("Location: profile.php?error=You can only change your email once every 30 days");
-                exit;
-            }
-        }
-
-        // Check if email already exists (excluding the current user)
-        if ($userC->emailExists($email, $userId)) {
-            header("Location: profile.php?error=Email already exists");
-            exit;
-        }
-    }
-    */
 
     // Handle photo upload
     $photo_profil = $user['photo_profil'];
@@ -126,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
         }
 
         try {
-            $photo_profil = '' . $newFileName;
+            $photo_profil = '/ProjetInnoconnect/uploads/' . $newFileName; // Correct path for database
             $db = config::getConnexion();
             logMessage("Updating user with photo_profil: $photo_profil");
             $stmt = $db->prepare("UPDATE utilisateur SET photo_profil = :photo_profil WHERE id_utilisateur = :id_utilisateur");
@@ -140,17 +128,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
             header("Location: login.php?success=Registration successful! Please login. Note: Failed to save photo due to database error.");
             exit;
         }
-        }
-    
+    }
 
     // Update profile
-    // try {
-    //     $userC->updateUser($userId, $nom, $prenom, $email, $user['type'], $photo_profil, $date_inscription);
-    // } catch (Exception $e) {
-    //     logMessage("Error updating user: " . $e->getMessage());
-    //     header("Location: profile.php?error=Error updating profile");
-    //     exit;
-    // }
+    try {
+        // Format date if necessary (for DATETIME fields)
+        $date_inscription_formatted = $date_inscription;
+        if ($userC->isDateTimeField()) { // Check if date_inscription is DATETIME
+            $date_inscription_formatted .= " 00:00:00";
+        }
+
+        // Call updateUser to update all fields
+        $userC->updateUser($userId, $nom, $prenom, $email, $user['type'], $photo_profil, $date_inscription_formatted);
+        logMessage("Profile updated successfully for user ID: $userId, date_inscription: $date_inscription_formatted");
+    } catch (Exception $e) {
+        logMessage("Error updating user: " . $e->getMessage());
+        header("Location: profile.php?error=Error updating profile: " . urlencode($e->getMessage()));
+        exit;
+    }
 
     // Handle password update if provided
     if (!empty($password)) {
@@ -161,18 +156,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $conn->prepare("UPDATE utilisateur SET mot_de_passe = ? WHERE id_utilisateur = ?");
         $stmt->execute([$hashed_password, $userId]); 
+        logMessage("Password updated for user ID: $userId");
     }
 
-    /*
-    // Update last_email_change if email was changed (for Option 2)
-    if ($email !== $user['email']) {
-        $stmt = $conn->prepare("UPDATE utilisateur SET last_email_change = NOW() WHERE id_utilisateur = ?");
-        $stmt->execute([$userId]);
-    }
-    */
-
-    logMessage("Profile updated successfully for user ID: $userId");
-    header("Location: profile.php?success=Profile updated successfully");
+    // Redirect to listeUser.php to reflect changes in the table
+    header("Location: ../backOffice/listeUser.php?success=Profile updated successfully&highlight=$userId&changed=nom,prenom,email,date_inscription&t=" . time());
     exit;
 }
 
@@ -180,8 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     try {
         // Delete the user's photo if it exists
-        if ($user['photo_profil'] && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $user['photo_profil'])) {
-            unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $user['photo_profil']);
+        if ($user['photo_profil'] && file_exists($_SERVER['DOCUMENT_ROOT'] . $user['photo_profil'])) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . $user['photo_profil']);
             logMessage("Deleted profile picture: " . $user['photo_profil']);
         }
         $userC->deleteUser($userId);
@@ -216,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #007bff;
-            display: block; /* Ensure the image is displayed */
+            display: block;
         }
         .profile-pic-placeholder {
             width: 150px;
@@ -248,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                 <li><a href="../../index.html">Home</a></li>
                 <li><a href="profile.php" class="active">My Profile</a></li>
                 <?php if ($_SESSION['user_type'] === 'administrateur'): ?>
-                    <li><a href="../../dashboard.php">Dashboard</a></li>
+                    <li><a href="../backOffice/listeUser.php">Dashboard</a></li>
                 <?php endif; ?>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
@@ -267,10 +255,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
             <div class="profile-pic-container">
                 <?php
                 $imagePath = '';
-                $defaultImage = '../../uploads/default_profile.jpg'; // Chemin relatif
+                $defaultImage = '../../uploads/default_profile.jpg';
                 $debugMessage = '';
                 if ($user['photo_profil']) {
-                    $imagePath = '../../uploads/' . $user['photo_profil']; // Chemin relatif depuis frontOffice/
+                    $imagePath = $user['photo_profil']; // Use the path directly from the database
                     logMessage("Attempting to display profile picture: $imagePath");
                 } else {
                     logMessage("No photo_profil set for user ID: $userId");
@@ -317,7 +305,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                 <div class="form-group input-with-icon">
                     <label for="date_inscription">Registration Date</label>
                     <i class="fas fa-calendar-alt"></i>
-                    <input type="date" id="date_inscription" name="date_inscription" value="<?php echo htmlspecialchars($user['date_inscription']); ?>" oninput="validateDate()">
+                    <input type="date" id="date_inscription" name="date_inscription" value="<?php echo htmlspecialchars(date('Y-m-d', strtotime($user['date_inscription']))); ?>" oninput="validateDate()">
                     <span id="date_inscription-error" class="error-message" style="display: none;"></span>
                 </div>
                 <div class="form-group input-with-icon">
@@ -385,11 +373,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
         function validateDate() {
             const date = document.getElementById("date_inscription").value;
             const dateError = document.getElementById("date_inscription-error");
+            const today = new Date().toISOString().split("T")[0];
             if (!date) {
                 dateError.textContent = "Registration date is required.";
                 dateError.style.display = "block";
+                return false;
+            } else if (date > today) {
+                dateError.textContent = "Registration date cannot be in the future.";
+                dateError.style.display = "block";
+                return false;
             } else {
                 dateError.style.display = "none";
+                return true;
             }
         }
 
@@ -398,11 +393,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
             const prenomValid = validateName("prenom");
             validateEmail();
             validatePassword();
-            validateDate();
+            const dateValid = validateDate();
             const emailError = document.getElementById("email-error").style.display === "block";
             const passwordError = document.getElementById("password-error").style.display === "block";
-            const dateError = document.getElementById("date_inscription-error").style.display === "block";
-            return nomValid && prenomValid && !emailError && !passwordError && !dateError;
+            return nomValid && prenomValid && dateValid && !emailError && !passwordError;
         }
 
         function togglePassword(inputId) {
