@@ -3,18 +3,35 @@ ob_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-error_log('Starting forumview.php', 3, 'C:\xampp2\logs\debug.log');
 
-// Set default timezone (adjust to your server's timezone if needed)
+function safeErrorLog($message, $destination = 'C:\xampp2\logs\debug.log') {
+    $logDir = dirname($destination);
+    if (!is_dir($logDir)) {
+        @mkdir($logDir, 0777, true);
+    }
+    if (@is_writable($destination) || @touch($destination)) {
+        error_log($message . PHP_EOL, 3, $destination);
+    } else {
+        error_log("Custom log failed ($destination): $message");
+    }
+}
+safeErrorLog('Starting forumview.php');
+
+// Set default timezone
 date_default_timezone_set('UTC');
 
 require_once '../controller/forumc.php';
 require_once '../Model/forum.php';
 
 $forumC = new ForumC();
-$forums = $forumC->afficherForums();
 $errorMessage = '';
 
+// Handle search and sort parameters
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'date_desc';
+$forums = $forumC->afficherForums($search, $sort);
+
+// Validate input
 function validateInput($data, $maxLength, $minLength, $fieldName, &$errors) {
     $data = trim($data);
     if (empty($data)) {
@@ -29,7 +46,6 @@ function validateInput($data, $maxLength, $minLength, $fieldName, &$errors) {
         $errors[] = "$fieldName must be $maxLength characters or less.";
         return false;
     }
-    // Allow letters, numbers, spaces, and common punctuation
     if (!preg_match('/^[A-Za-z0-9\s.,!?\'"-]+$/', $data)) {
         $errors[] = "$fieldName contains invalid characters.";
         return false;
@@ -37,9 +53,10 @@ function validateInput($data, $maxLength, $minLength, $fieldName, &$errors) {
     return $data;
 }
 
+// Validate image
 function validateImage($file, $fieldName, &$errors) {
     if ($file['size'] == 0 || $file['error'] == UPLOAD_ERR_NO_FILE) {
-        return null; // No new image uploaded, preserve existing
+        return null;
     }
     $allowedTypes = ['image/jpeg', 'image/png'];
     $maxSize = 5 * 1024 * 1024;
@@ -58,11 +75,33 @@ function validateImage($file, $fieldName, &$errors) {
     $fileName = uniqid() . '_' . basename($file['name']);
     $targetPath = $uploadDir . $fileName;
     if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-        error_log("Uploaded $fieldName to $targetPath", 3, 'C:\xampp2\logs\debug.log');
+        safeErrorLog("Uploaded $fieldName to $targetPath");
         return $targetPath;
     }
     $errors[] = "Failed to upload $fieldName.";
     return false;
+}
+
+// Handle export
+if (isset($_GET['export']) && $_GET['export'] === 'csv') {
+    ob_end_clean();
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="forums_export_' . date('Ymd_His') . '.csv"');
+    $output = fopen('php://output', 'w');
+    fputcsv($output, ['ID', 'Title', 'Category', 'User ID', 'Created At']);
+    foreach ($forums as $forum) {
+        fputcsv($output, [
+            $forum['id'],
+            $forum['titre'],
+            $forum['category'],
+            $forum['user_id'],
+            $forum['date_creation'],
+           
+        ]);
+    }
+    fclose($output);
+    safeErrorLog("Exported forums to CSV");
+    exit;
 }
 
 // Handle forum deletion
@@ -80,7 +119,7 @@ if (isset($_GET['delete'])) {
                 $errors[] = "Forum not found.";
             } else {
                 $forumC->supprimerForum($forum_id);
-                header("Location: forumview.php");
+                header("Location: forumview.php?search=" . urlencode($search) . "&sort=" . urlencode($sort));
                 exit;
             }
         } catch (Exception $e) {
@@ -92,8 +131,8 @@ if (isset($_GET['delete'])) {
 
 // Handle create forum
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['titre'], $_POST['message'], $_POST['category']) && !isset($_POST['forum_id'])) {
-    error_log("Create forum POST: " . print_r($_POST, true), 3, 'C:\xampp2\logs\debug.log');
-    error_log("Create forum FILES: " . print_r($_FILES, true), 3, 'C:\xampp2\logs\debug.log');
+    safeErrorLog("Create forum POST: " . print_r($_POST, true));
+    safeErrorLog("Create forum FILES: " . print_r($_FILES, true));
     $errors = [];
     $titre = validateInput($_POST['titre'], 50, 3, "Title", $errors);
     $message = validateInput($_POST['message'], 500, 10, "Message", $errors);
@@ -104,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['titre'], $_POST['messa
         try {
             $forum = new Forum($titre, $message, $category, 1, $image, $message_image);
             $forumC->ajouterForum($forum);
-            header("Location: forumview.php");
+            header("Location: forumview.php?search=" . urlencode($search) . "&sort=" . urlencode($sort));
             exit;
         } catch (Exception $e) {
             $errors[] = "Failed to create discussion: " . $e->getMessage();
@@ -115,8 +154,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['titre'], $_POST['messa
 
 // Handle edit forum
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['forum_id'], $_POST['titre'], $_POST['message'], $_POST['category'], $_POST['edit_forum'])) {
-    error_log("Edit forum POST: " . print_r($_POST, true), 3, 'C:\xampp2\logs\debug.log');
-    error_log("Edit forum FILES: " . print_r($_FILES, true), 3, 'C:\xampp2\logs\debug.log');
+    safeErrorLog("Edit forum POST: " . print_r($_POST, true));
+    safeErrorLog("Edit forum FILES: " . print_r($_FILES, true));
     $errors = [];
     $forum_id = filter_var($_POST['forum_id'], FILTER_VALIDATE_INT);
     $titre = validateInput($_POST['titre'], 50, 3, "Title", $errors);
@@ -140,13 +179,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['forum_id'], $_POST['ti
     }
     if (empty($errors)) {
         try {
-            // Preserve existing images if no new ones uploaded
             $finalImage = $image !== false ? $image : $existingForum['image'];
             $finalMessageImage = $message_image !== false ? $message_image : $existingForum['message_image'];
             $forum = new Forum($titre, $message, $category, 1, $finalImage, $finalMessageImage);
             $forum->setId($forum_id);
             $forumC->modifierForum($forum);
-            header("Location: forumview.php");
+            header("Location: forumview.php?search=" . urlencode($search) . "&sort=" . urlencode($sort));
             exit;
         } catch (Exception $e) {
             $errors[] = "Failed to update discussion: " . $e->getMessage();
@@ -157,8 +195,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['forum_id'], $_POST['ti
 
 // Handle new message
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['forum_id'], $_POST['message'], $_POST['new_message'])) {
-    error_log("New message POST: " . print_r($_POST, true), 3, 'C:\xampp2\logs\debug.log');
-    error_log("New message FILES: " . print_r($_FILES, true), 3, 'C:\xampp2\logs\debug.log');
+    safeErrorLog("New message POST: " . print_r($_POST, true));
+    safeErrorLog("New message FILES: " . print_r($_FILES, true));
     $errors = [];
     $forum_id = filter_var($_POST['forum_id'], FILTER_VALIDATE_INT);
     $message = validateInput($_POST['message'], 500, 10, "Message", $errors);
@@ -176,7 +214,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['forum_id'], $_POST['me
     if (empty($errors)) {
         try {
             $forumC->ajouterMessage($forum_id, 1, $message, $image);
-            header("Location: forumview.php");
+            header("Location: forumview.php?search=" . urlencode($search) . "&sort=" . urlencode($sort));
             exit;
         } catch (Exception $e) {
             $errors[] = "Failed to add reply: " . $e->getMessage();
@@ -187,7 +225,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['forum_id'], $_POST['me
 
 // Handle delete image
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_image'], $_POST['table'], $_POST['id'], $_POST['column'])) {
-    error_log("Delete image POST: " . print_r($_POST, true), 3, 'C:\xampp2\logs\debug.log');
+    safeErrorLog("Delete image POST: " . print_r($_POST, true));
     $errors = [];
     $table = $_POST['table'];
     $id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
@@ -203,7 +241,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_image'], $_POST
                 $errors[] = ucfirst($table) . " not found.";
             } else {
                 $forumC->deleteImage($table, $id, $column);
-                header("Location: forumview.php");
+                header("Location: forumview.php?search=" . urlencode($search) . "&sort=" . urlencode($sort));
                 exit;
             }
         } catch (Exception $e) {
@@ -223,7 +261,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reaction_type'], $_POS
     $target_type = trim($_POST['target_type'] ?? '');
     $target_id = filter_var($_POST['target_id'] ?? 0, FILTER_VALIDATE_INT);
     $user_id = 1;
-    error_log("Reaction request: user_id=$user_id, target_type=$target_type, target_id=$target_id, reaction_type=$reaction_type", 3, 'C:\xampp2\logs\debug.log');
+    safeErrorLog("Reaction request: user_id=$user_id, target_type=$target_type, target_id=$target_id, reaction_type=$reaction_type");
 
     if (!in_array($reaction_type, ['like', 'love', 'haha'])) {
         $errors[] = "Invalid reaction type: $reaction_type";
@@ -244,17 +282,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reaction_type'], $_POS
                     'haha' => $forumC->getReactionCount($target_type, $target_id, 'haha')
                 ]
             ];
-            error_log("Reaction response: " . json_encode($response), 3, 'C:\xampp2\logs\debug.log');
+            safeErrorLog("Reaction response: " . json_encode($response));
             echo json_encode($response);
         } catch (Exception $e) {
             $errors[] = "Server error: " . $e->getMessage();
             $response = ['success' => false, 'message' => implode(', ', $errors)];
-            error_log("Reaction error: " . json_encode($response), 3, 'C:\xampp2\logs\debug.log');
+            safeErrorLog("Reaction error: " . json_encode($response));
             echo json_encode($response);
         }
     } else {
         $response = ['success' => false, 'message' => implode(', ', $errors)];
-        error_log("Reaction validation error: " . json_encode($response), 3, 'C:\xampp2\logs\debug.log');
+        safeErrorLog("Reaction validation error: " . json_encode($response));
         echo json_encode($response);
     }
     exit;
@@ -263,10 +301,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reaction_type'], $_POS
 function timeAgo($datetime) {
     try {
         $date = new DateTime($datetime);
-        // Format as "Month Day, Year, HH:MM" (e.g., "April 26, 2025, 14:30")
         return $date->format('F j, Y, H:i');
     } catch (Exception $e) {
-        error_log("timeAgo error: " . $e->getMessage(), 3, 'C:\xampp2\logs\debug.log');
+        safeErrorLog("timeAgo error: " . $e->getMessage());
         return 'Invalid date';
     }
 }
@@ -558,6 +595,69 @@ function timeAgo($datetime) {
         .scroll-top.visible {
             opacity: 1;
         }
+        .control-bar {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .control-bar .search-container {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        .control-bar .search-container input {
+            padding-left: 35px;
+        }
+        .control-bar .search-container i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6f42c1;
+        }
+        .control-bar .sort-container select {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            color: #333;
+            background-color: #fff;
+            transition: border-color 0.2s ease;
+        }
+        .control-bar .sort-container select:focus {
+            border-color: #6f42c1;
+            box-shadow: 0 0 5px rgba(111, 66, 193, 0.3);
+        }
+        .control-bar .btn-export {
+            background-color: #17a2b8;
+            color: white;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        .control-bar .btn-export:hover {
+            background-color: #138496;
+            transform: translateY(-2px);
+        }
+        .control-bar .btn-export i {
+            margin-right: 5px;
+        }
+        .loading-spinner {
+            display: none;
+            font-size: 0.9em;
+            color: #6f42c1;
+            margin-left: 10px;
+        }
+        .loading-spinner.active {
+            display: inline-block;
+        }
         @media (max-width: 768px) {
             .forum-post, .message-post {
                 padding: 15px;
@@ -586,19 +686,30 @@ function timeAgo($datetime) {
             .timestamp {
                 font-size: 0.8em;
             }
+            .control-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .control-bar .search-container {
+                min-width: 100%;
+            }
+            .control-bar .sort-container select,
+            .control-bar .btn-export {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body data-aos-easing="ease" data-aos-duration="1000" data-aos-delay="0">
     <header id="header" class="header d-flex align-items-center fixed-top">
         <div class="container-fluid container-xl position-relative d-flex align-items-center">
-            <a href="../view/starter-page.html" class="logo d-flex align-items-center me-auto">
+            <a href="../view/index.html" class="logo d-flex align-items-center me-auto">
                 <img src="../assets/img/innoconnect.jpg" alt="InnoConnect Logo" class="img-fluid" style="max-height: 45px;">
                 <h1 class="sitename">InnoConnect</h1>
             </a>
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="../view/starter-page.html">Home</a></li>
+                    <li><a href="../view/index.html">Home</a></li>
                     <li><a href="forumview.php" class="active">Forum</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="../view/index.html#services">Services</a></li>
@@ -614,6 +725,11 @@ function timeAgo($datetime) {
         <div class="container">
             <?php if (!empty($errorMessage)): ?>
                 <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
+            <?php endif; ?>
+            <?php if (!empty($search) && empty($forums) && strlen($search) < 3): ?>
+                <div class="alert alert-warning">Search term must be at least 3 characters long.</div>
+            <?php elseif (!empty($search) && empty($forums)): ?>
+                <div class="alert alert-info">No discussions found for "<?php echo htmlspecialchars($search); ?>". Try a different search term.</div>
             <?php endif; ?>
             <div class="d-flex justify-content-end mb-3">
                 <button class="toggle-form-btn" onclick="toggleForm()">
@@ -655,10 +771,28 @@ function timeAgo($datetime) {
                 </form>
             </div>
 
+            <div class="control-bar" data-aos="fade-up">
+                <div class="search-container">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search forums..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+                <div class="sort-container">
+                    <select id="sortSelect" class="form-select">
+                        <option value="date_desc" <?php echo $sort === 'date_desc' ? 'selected' : ''; ?>>Newest First</option>
+                        <option value="title_asc" <?php echo $sort === 'title_asc' ? 'selected' : ''; ?>>Title (A-Z)</option>
+                        <option value="title_desc" <?php echo $sort === 'title_desc' ? 'selected' : ''; ?>>Title (Z-A)</option>
+                    </select>
+                </div>
+                <a href="?export=csv&search=<?php echo urlencode($search); ?>&sort=<?php echo urlencode($sort); ?>" class="btn btn-export">
+                    <i class="bi bi-download"></i> Export as CSV
+                </a>
+                <span class="loading-spinner">Searching...</span>
+            </div>
+
             <div class="forum-list" data-aos="fade-up" data-aos-delay="200">
                 <h2 class="mb-4">Ongoing Discussions</h2>
-                <?php if (empty($forums)): ?>
-                    <div class="alert alert-info text-center">No discussions available yet. Start one using the button above!</div>
+                <?php if (empty($forums) && empty($search)): ?>
+                    <div class="alert alert-info text-center">No discussions found. Start a new discussion!</div>
                 <?php else: ?>
                     <?php foreach ($forums as $forum): ?>
                         <div class="forum-post">
@@ -668,7 +802,7 @@ function timeAgo($datetime) {
                             </div>
                             <div class="post-title"><?php echo htmlspecialchars($forum['titre']); ?></div>
                             <span class="category"><?php echo htmlspecialchars($forum['category']); ?></span>
-                            <div class="post-content"><?php echo nl2br(htmlspecialchars($forum['message'] ?? '')); ?></div>
+                            <div class="post-content"><?php echo nl2br(htmlspecialchars($forum['first_message'] ?? '')); ?></div>
                             <?php if (!empty($forum['image'])): ?>
                                 <img src="<?php echo htmlspecialchars($forum['image']); ?>" class="post-image" alt="Forum Image">
                             <?php endif; ?>
@@ -700,12 +834,12 @@ function timeAgo($datetime) {
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#messageModal<?php echo $forum['id']; ?>">
-                                    <i class="bi bi-chat-dots"></i> Reply
+                                    <i class="bi bi-chat-dots"></i> View & Reply
                                 </button>
                                 <button class="btn btn-primary btn-sm edit-forum-btn" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $forum['id']; ?>" data-forum-id="<?php echo $forum['id']; ?>">
                                     <i class="bi bi-pencil"></i> Edit
                                 </button>
-                                <a href="?delete=<?php echo $forum['id']; ?>" class="btn btn-danger btn-sm">
+                                <a href="?delete=<?php echo $forum['id']; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo urlencode($sort); ?>" class="btn btn-danger btn-sm">
                                     <i class="bi bi-trash"></i> Delete
                                 </a>
                             </div>
@@ -802,7 +936,7 @@ function timeAgo($datetime) {
                                             </div>
                                             <div class="mb-3">
                                                 <label for="edit_message_<?php echo $forum['id']; ?>" class="form-label">Message</label>
-                                                <textarea class="form-control" id="edit_message_<?php echo $forum['id']; ?>" name="message" rows="4"><?php echo htmlspecialchars($forum['message'] ?? ''); ?></textarea>
+                                                <textarea class="form-control" id="edit_message_<?php echo $forum['id']; ?>" name="message" rows="4"><?php echo htmlspecialchars($forum['first_message'] ?? ''); ?></textarea>
                                                 <div class="input-error" id="edit_messageError_<?php echo $forum['id']; ?>"></div>
                                             </div>
                                             <div class="mb-3">
@@ -827,14 +961,11 @@ function timeAgo($datetime) {
                                             <div class="mb-3">
                                                 <label for="edit_message_image_<?php echo $forum['id']; ?>" class="form-label">Message Image (Optional)</label>
                                                 <input type="file" class="form-control" id="edit_message_image_<?php echo $forum['id']; ?>" name="message_image" accept="image/jpeg,image/png">
-                                                <?php
-                                                $messages = $forumC->getMessagesByForumId($forum['id']);
-                                                $firstMessage = !empty($messages) ? $messages[0] : null;
-                                                if ($firstMessage && !empty($firstMessage['image'])): ?>
-                                                    <small>Current: <a href="<?php echo htmlspecialchars($firstMessage['image']); ?>" target="_blank">View Image</a></small>
+                                                <?php if (!empty($forum['message_image'])): ?>
+                                                    <small>Current: <a href="<?php echo htmlspecialchars($forum['message_image']); ?>" target="_blank">View Image</a></small>
                                                     <form method="POST" style="display: inline;">
                                                         <input type="hidden" name="table" value="messages">
-                                                        <input type="hidden" name="id" value="<?php echo $firstMessage['id']; ?>">
+                                                        <input type="hidden" name="id" value="<?php echo $forum['id']; ?>">
                                                         <input type="hidden" name="column" value="image">
                                                         <input type="hidden" name="delete_image" value="1">
                                                         <button type="submit" class="btn btn-danger btn-sm mt-2">Delete Image</button>
@@ -1037,6 +1168,31 @@ function timeAgo($datetime) {
                     },
                     dataType: 'json'
                 });
+            });
+
+            // Debounced search
+            let searchTimeout;
+            $('#searchInput').on('input', function() {
+                clearTimeout(searchTimeout);
+                const spinner = $('.loading-spinner');
+                spinner.addClass('active');
+                const searchValue = $(this).val();
+                if (searchValue.length > 0 && searchValue.length < 3) {
+                    spinner.removeClass('active');
+                    return;
+                }
+                searchTimeout = setTimeout(() => {
+                    const sortValue = $('#sortSelect').val();
+                    window.location.href = `?search=${encodeURIComponent(searchValue)}&sort=${sortValue}`;
+                }, 500);
+                setTimeout(() => spinner.removeClass('active'), 1000);
+            });
+
+            // Handle sort change
+            $('#sortSelect').on('change', function() {
+                const sortValue = $(this).val();
+                const searchValue = $('#searchInput').val();
+                window.location.href = `?search=${encodeURIComponent(searchValue)}&sort=${sortValue}`;
             });
         });
     </script>
