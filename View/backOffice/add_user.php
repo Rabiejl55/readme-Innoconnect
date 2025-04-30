@@ -128,10 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$photoError && (in_array($_FILES['photo']['type'], $allowedTypes) && $_FILES['photo']['size'] <= $maxSize)) {
             if (move_uploaded_file($_FILES['photo']['tmp_name'], $photoPath)) {
                 $photo = '/ProjetInnoconnect/uploads/' . $photoName;
-                // Debug: Confirm the photo path
                 error_log("Photo uploaded successfully: $photo");
-            }
-            else {
+            } else {
                 $photoError = "Failed to upload photo";
             }
         } else {
@@ -139,7 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Debug: Log the photo value before insertion
     error_log("Photo value before insertion: " . ($photo ?? 'NULL'));
 
     // Proceed with adding the user
@@ -171,13 +168,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add User - InnoConnect</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- Updated Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
     <link id="pagestyle" href="../../assets2/css/argon-dashboard.css" rel="stylesheet" />
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
+        /* [Previous CSS remains unchanged] */
         * {
             margin: 0;
             padding: 0;
@@ -774,12 +773,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="user-info">
                 <?php
-                $photoPath = !empty($user['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '../../uploads/' . $user['photo_profil'] : '';
-                $photoUrl = !empty($user['photo_profil']) ? '../../uploads/' . htmlspecialchars($user['photo_profil']) : '';
+                $photoPath = !empty($user['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/frontOffice/' . $user['photo_profil'] : '';
+                $photoUrl = !empty($user['photo_profil']) ? '/ProjetInnoconnect/frontOffice/' . htmlspecialchars($user['photo_profil']) : '';
                 if (!empty($photoPath) && file_exists($photoPath)): ?>
                     <img src="<?php echo $photoUrl; ?>" alt="User Avatar">
                 <?php else: ?>
-                    <img src="https://via.placeholder.com/32" alt="User Avatar">
+                    <img src="https://via.placeholder.com/32" alt="Default Avatar">
                 <?php endif; ?>
                 <span><?php echo htmlspecialchars($user['prenom'] . ' ' . $user['nom']); ?></span>
                 <div class="dropdown">
