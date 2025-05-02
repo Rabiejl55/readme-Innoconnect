@@ -117,6 +117,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div>
                 <a href="forgot_password.php">Forgot Password?</a>
             </div>
+            <div class="form-group">
+    <button type="button" id="face-login-btn" class="btn btn-secondary">Login with Face Recognition</button>
+</div>
+
+<video id="video" width="320" height="240" autoplay style="display:none;"></video>
+<canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+
+<script>
+document.getElementById('face-login-btn').addEventListener('click', async () => {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+    video.style.display = 'block';
+
+    setTimeout(() => {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL('image/jpeg');
+
+        stream.getTracks().forEach(track => track.stop());
+        video.style.display = 'none';
+
+        fetch('face_login.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: imageData })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = 'dashboard.php';
+            } else {
+                alert('Face recognition failed: ' + data.error);
+            }
+        });
+    }, 3000);
+});
+</script>
         </form>
         <p>Don’t have an account? <a href="register.php">Sign Up</a></p>
     </div>

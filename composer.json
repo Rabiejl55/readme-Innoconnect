@@ -1,0 +1,5 @@
+{
+    "require": {
+        "2captcha/2captcha": "^1.2"
+    }
+}

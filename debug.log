@@ -413,3 +413,183 @@
 2025-04-30 12:49:19 - Updating user with photo_profil: /ProjetInnoconnect/uploads/24_1746010159.jpeg
 2025-04-30 12:49:19 - Photo uploaded and user updated with photo_profil: /ProjetInnoconnect/uploads/24_1746010159.jpeg
 2025-04-30 12:49:19 - Profile updated successfully for user ID: 24, date_inscription: 2025-04-10
+2025-04-30 14:41:28 - User profile loaded for ID: 24, photo_profil: uploads/photos/681206f8e40d3.png
+2025-04-30 14:41:28 - Attempting to display profile picture: uploads/photos/681206f8e40d3.png
+2025-04-30 14:53:33 - User profile loaded for ID: 24, photo_profil: 68121cb65bd31.jpeg
+2025-04-30 14:53:33 - Attempting to display profile picture: 68121cb65bd31.jpeg
+2025-04-30 14:54:01 - User profile loaded for ID: 24, photo_profil: 68121cb65bd31.jpeg
+2025-04-30 14:54:01 - Profile updated successfully for user ID: 24, date_inscription: 2025-04-09
+2025-04-30 14:57:32 - User profile loaded for ID: 24, photo_profil: 68121cb65bd31.jpeg
+2025-04-30 14:57:32 - Attempting to display profile picture: /ProjetInnoconnect/68121cb65bd31.jpeg, absolute path: C:/xampp/htdocs/ProjetInnoconnect/68121cb65bd31.jpeg
+2025-04-30 14:57:32 - Profile picture not found at: C:/xampp/htdocs/ProjetInnoconnect/68121cb65bd31.jpeg
+2025-04-30 14:57:38 - User profile loaded for ID: 24, photo_profil: 68121cb65bd31.jpeg
+2025-04-30 14:57:38 - Attempting to display profile picture: /ProjetInnoconnect/68121cb65bd31.jpeg, absolute path: C:/xampp/htdocs/ProjetInnoconnect/68121cb65bd31.jpeg
+2025-04-30 14:57:38 - Profile picture not found at: C:/xampp/htdocs/ProjetInnoconnect/68121cb65bd31.jpeg
+2025-04-30 14:57:51 - User profile loaded for ID: 24, photo_profil: 68121cb65bd31.jpeg
+2025-04-30 14:57:51 - Profile photo upload started: type=image/jpeg, size=103746 bytes
+2025-04-30 14:57:51 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1746017871.jpeg
+2025-04-30 14:57:51 - Updating user with photo_profil: uploads/24_1746017871.jpeg
+2025-04-30 14:57:51 - Photo uploaded and user updated with photo_profil: uploads/24_1746017871.jpeg
+2025-04-30 14:57:51 - Profile updated successfully for user ID: 24, date_inscription: 2025-04-09
+2025-04-30 14:58:49 - User profile loaded for ID: 24, photo_profil: uploads/24_1746017871.jpeg
+2025-04-30 14:58:49 - Attempting to display profile picture: uploads/24_1746017871.jpeg
+2025-04-30 14:58:54 - User profile loaded for ID: 24, photo_profil: uploads/24_1746017871.jpeg
+2025-04-30 14:58:54 - Attempting to display profile picture: uploads/24_1746017871.jpeg
+2025-04-30 15:01:32 - User profile loaded for ID: 24, photo_profil: uploads/24_1746017871.jpeg
+2025-04-30 15:01:32 - Attempting to display profile picture: uploads/24_1746017871.jpeg
+2025-04-30 15:07:11 - User profile loaded for ID: 24, photo_profil: uploads/24_1746017871.jpeg
+2025-04-30 15:07:11 - Attempting to display profile picture: uploads/24_1746017871.jpeg
+2025-04-30 15:07:23 - User profile loaded for ID: 24, photo_profil: uploads/24_1746017871.jpeg
+2025-04-30 15:07:23 - Attempting to display profile picture: ../../uploads/uploads/24_1746017871.jpeg
+2025-04-30 15:07:35 - User profile loaded for ID: 24, photo_profil: uploads/24_1746017871.jpeg
+2025-04-30 15:07:35 - Profile photo upload started: type=image/jpeg, size=103746 bytes
+2025-04-30 15:07:35 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1746018455.jpeg
+2025-04-30 15:07:35 - Updating user with photo_profil: 24_1746018455.jpeg
+2025-04-30 15:07:35 - Photo uploaded and user updated with photo_profil: 24_1746018455.jpeg
+2025-04-30 15:07:35 - Profile updated successfully for user ID: 24
+2025-04-30 15:07:35 - User profile loaded for ID: 24, photo_profil: 24_1746018455.jpeg
+2025-04-30 15:07:35 - Attempting to display profile picture: ../../uploads/24_1746018455.jpeg
+2025-04-30 15:07:38 - User profile loaded for ID: 24, photo_profil: 24_1746018455.jpeg
+2025-04-30 15:07:38 - Attempting to display profile picture: ../../uploads/24_1746018455.jpeg
+2025-04-30 15:07:59 - User profile loaded for ID: 24, photo_profil: 24_1746018455.jpeg
+2025-04-30 15:07:59 - Attempting to display profile picture: ../../uploads/24_1746018455.jpeg
+2025-04-30 15:08:17 - User profile loaded for ID: 24, photo_profil: 24_1746018455.jpeg
+2025-04-30 15:08:17 - Profile photo upload started: type=image/png, size=41632 bytes
+2025-04-30 15:08:17 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/24_1746018497.png
+2025-04-30 15:08:17 - Updating user with photo_profil: 24_1746018497.png
+2025-04-30 15:08:17 - Photo uploaded and user updated with photo_profil: 24_1746018497.png
+2025-04-30 15:08:17 - Profile updated successfully for user ID: 24
+2025-04-30 15:08:17 - User profile loaded for ID: 24, photo_profil: 24_1746018497.png
+2025-04-30 15:08:17 - Attempting to display profile picture: ../../uploads/24_1746018497.png
+2025-04-30 15:10:51 - User profile loaded for ID: 24, photo_profil: 24_1746018497.png
+2025-04-30 15:10:51 - Attempting to display profile picture: ../../uploads/24_1746018497.png
+2025-04-30 15:12:21 - Starting registration process
+2025-04-30 15:12:21 - Attempting to add user: nom=ffmdmd, email=hjjddjk@gmail.com
+2025-04-30 15:12:21 - User added successfully with ID: 55
+2025-04-30 15:12:21 - Photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-30 15:12:21 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/55_1746018741.jpg
+2025-04-30 15:12:21 - Updating user with photo_profil: 55_1746018741.jpg
+2025-04-30 15:12:21 - Photo uploaded and user updated with photo_profil: 55_1746018741.jpg
+2025-04-30 15:12:21 - Registration completed successfully
+2025-04-30 15:12:55 - User profile loaded for ID: 53, photo_profil: /ProjetInnoconnect/uploads/68120ecd85027-background.jpeg
+2025-04-30 15:12:55 - Attempting to display profile picture: ../../uploads//ProjetInnoconnect/uploads/68120ecd85027-background.jpeg
+2025-04-30 15:13:28 - User profile loaded for ID: 53, photo_profil: /ProjetInnoconnect/uploads/68120ecd85027-background.jpeg
+2025-04-30 15:13:29 - Profile photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-30 15:13:29 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/53_1746018809.jpg
+2025-04-30 15:13:29 - Updating user with photo_profil: 53_1746018809.jpg
+2025-04-30 15:13:29 - Photo uploaded and user updated with photo_profil: 53_1746018809.jpg
+2025-04-30 15:13:29 - Profile updated successfully for user ID: 53
+2025-04-30 15:13:29 - User profile loaded for ID: 53, photo_profil: 53_1746018809.jpg
+2025-04-30 15:13:29 - Attempting to display profile picture: ../../uploads/53_1746018809.jpg
+2025-04-30 15:14:14 - Starting registration process
+2025-04-30 15:14:14 - Attempting to add user: nom=ezzine, email=molka@gmail.com
+2025-04-30 15:14:14 - User added successfully with ID: 56
+2025-04-30 15:14:14 - Photo upload started: type=image/jpeg, size=73366 bytes
+2025-04-30 15:14:14 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/56_1746018854.jpeg
+2025-04-30 15:14:14 - Updating user with photo_profil: 56_1746018854.jpeg
+2025-04-30 15:14:14 - Photo uploaded and user updated with photo_profil: 56_1746018854.jpeg
+2025-04-30 15:14:14 - Registration completed successfully
+2025-04-30 15:14:26 - User profile loaded for ID: 56, photo_profil: 56_1746018854.jpeg
+2025-04-30 15:14:26 - Attempting to display profile picture: ../../uploads/56_1746018854.jpeg
+2025-04-30 15:15:23 - User profile loaded for ID: 24, photo_profil: 24_1746018497.png
+2025-04-30 15:15:23 - Attempting to display profile picture: ../../uploads/24_1746018497.png
+2025-04-30 15:23:16 - Starting registration process
+2025-04-30 15:23:17 - Attempting to add user: nom=mohamed, email=maram@gmail.com
+2025-04-30 15:23:17 - User added successfully with ID: 57
+2025-04-30 15:23:17 - Photo upload started: type=image/jpeg, size=141745 bytes
+2025-04-30 15:23:17 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/57_1746019397.jpg
+2025-04-30 15:23:17 - Updating user with photo_profil: 57_1746019397.jpg
+2025-04-30 15:23:17 - Photo uploaded and user updated with photo_profil: 57_1746019397.jpg
+2025-04-30 15:23:17 - Registration completed successfully
+2025-04-30 15:23:32 - User profile loaded for ID: 57, photo_profil: 57_1746019397.jpg
+2025-04-30 15:23:32 - Attempting to display profile picture: ../../uploads/57_1746019397.jpg
+2025-04-30 15:24:02 - User profile loaded for ID: 57, photo_profil: 57_1746019397.jpg
+2025-04-30 15:24:02 - Attempting to display profile picture: ../../uploads/57_1746019397.jpg
+2025-04-30 15:26:45 - Starting registration process
+2025-04-30 15:26:46 - Attempting to add user: nom=sliti, email=ala@gmail.com
+2025-04-30 15:26:46 - User added successfully with ID: 58
+2025-04-30 15:26:46 - Photo upload started: type=image/jpeg, size=103746 bytes
+2025-04-30 15:26:46 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/58_1746019606.jpeg
+2025-04-30 15:26:46 - Updating user with photo_profil: 58_1746019606.jpeg
+2025-04-30 15:26:46 - Photo uploaded and user updated with photo_profil: 58_1746019606.jpeg
+2025-04-30 15:26:46 - Registration completed successfully
+2025-04-30 15:26:58 - User profile loaded for ID: 58, photo_profil: 58_1746019606.jpeg
+2025-04-30 15:26:58 - Attempting to display profile picture: ../../uploads/58_1746019606.jpeg
+2025-04-30 15:40:43 - Form submitted: nom=rabie, prenom=rrr, email=rr@gmail.com, type=administrateur, date_inscription=08/07/2024
+2025-04-30 15:40:43 - Password hashed for email: rr@gmail.com
+2025-04-30 15:40:43 - Photo uploaded successfully: uploads/6812285b554c2-idea.png
+2025-04-30 15:40:43 - Photo value before insertion: uploads/6812285b554c2-idea.png
+2025-04-30 15:40:43 - User addition successful: ID=61, email=rr@gmail.com
+2025-05-01 20:48:52 - Starting registration process
+2025-05-01 20:48:53 - reCAPTCHA verified successfully via Google
+2025-05-01 20:48:53 - Attempting to add user: nom=bassem, email=farouha@gmail.com
+2025-05-01 20:48:53 - User added successfully with ID: 64
+2025-05-01 20:48:53 - Photo upload started: type=image/jpeg, size=141745 bytes
+2025-05-01 20:48:53 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/64_1746125333.jpg
+2025-05-01 20:48:53 - Updating user with photo_profil: 64_1746125333.jpg
+2025-05-01 20:48:53 - Photo uploaded and user updated with photo_profil: 64_1746125333.jpg
+2025-05-01 20:48:53 - Registration completed successfully
+2025-05-01 20:55:11 - User profile loaded for ID: 64, photo_profil: 64_1746125333.jpg
+2025-05-01 20:55:11 - Attempting to display profile picture: ../../uploads/64_1746125333.jpg
+2025-05-02 17:23:40 - Starting registration process
+2025-05-02 17:23:41 - reCAPTCHA verified successfully via Google
+2025-05-02 17:23:41 - Attempting to add user: nom=bassem, email=farawla@gmail.com
+2025-05-02 17:23:41 - User added successfully with ID: 65
+2025-05-02 17:23:41 - Photo upload started: type=image/jpeg, size=141745 bytes
+2025-05-02 17:23:41 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/65_1746199421.jpg
+2025-05-02 17:23:41 - Updating user with photo_profil: 65_1746199421.jpg
+2025-05-02 17:23:41 - Photo uploaded and user updated with photo_profil: 65_1746199421.jpg
+2025-05-02 17:23:41 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : 
+2025-05-02 17:23:41 - Registration completed successfully
+2025-05-02 17:25:44 - User profile loaded for ID: 65, photo_profil: 65_1746199421.jpg
+2025-05-02 17:25:44 - Attempting to display profile picture: ../../uploads/65_1746199421.jpg
+2025-05-02 21:07:34 - User profile loaded for ID: 65, photo_profil: 65_1746199421.jpg
+2025-05-02 21:07:34 - User account deleted for ID: 65
+2025-05-02 21:08:31 - Starting registration process
+2025-05-02 21:08:32 - reCAPTCHA verified successfully via Google
+2025-05-02 21:08:32 - Attempting to add user: nom=bassem, email=farawla@gmail.com
+2025-05-02 21:08:32 - User added successfully with ID: 66
+2025-05-02 21:08:32 - Photo upload started: type=image/jpeg, size=62133 bytes
+2025-05-02 21:08:32 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/66_1746212912.jpg
+2025-05-02 21:08:32 - Updating user with photo_profil: 66_1746212912.jpg
+2025-05-02 21:08:32 - Photo uploaded and user updated with photo_profil: 66_1746212912.jpg
+2025-05-02 21:08:36 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : Encoding généré avec succès
+
+2025-05-02 21:08:36 - Registration completed successfully
+2025-05-02 21:09:18 - User profile loaded for ID: 66, photo_profil: 66_1746212912.jpg
+2025-05-02 21:09:18 - Attempting to display profile picture: ../../uploads/66_1746212912.jpg
+2025-05-02 21:16:03 - Starting registration process
+2025-05-02 21:16:04 - reCAPTCHA verified successfully via Google
+2025-05-02 21:16:04 - Attempting to add user: nom=jkdsosd, email=lll@gmail.com
+2025-05-02 21:16:04 - User added successfully with ID: 67
+2025-05-02 21:16:04 - Photo upload failed: Profile picture is required
+2025-05-02 21:22:26 - Starting registration process
+2025-05-02 21:22:27 - reCAPTCHA verified successfully via Google
+2025-05-02 21:22:27 - Attempting to add user: nom=fff, email=rr@gmail.com
+2025-05-02 21:22:27 - User added successfully with ID: 68
+2025-05-02 21:22:27 - Photo upload started: type=image/jpeg, size=10534 bytes
+2025-05-02 21:22:27 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/68_1746213747.jpeg
+2025-05-02 21:22:27 - Updating user with photo_profil: 68_1746213747.jpeg
+2025-05-02 21:22:27 - Photo uploaded and user updated with photo_profil: 68_1746213747.jpeg
+2025-05-02 21:22:31 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : Encoding généré avec succès
+
+2025-05-02 21:22:31 - Registration completed successfully
+2025-05-02 21:22:56 - User profile loaded for ID: 68, photo_profil: 68_1746213747.jpeg
+2025-05-02 21:22:56 - Attempting to display profile picture: ../../uploads/68_1746213747.jpeg
+2025-05-02 21:33:20 - User profile loaded for ID: 68, photo_profil: 68_1746213747.jpeg
+2025-05-02 21:33:20 - User account deleted for ID: 68
+2025-05-02 21:34:05 - Starting registration process
+2025-05-02 21:34:06 - reCAPTCHA verified successfully via Google
+2025-05-02 21:34:06 - Attempting to add user: nom=jjjs, email=klaudia@gmail.com
+2025-05-02 21:34:06 - User added successfully with ID: 69
+2025-05-02 21:34:06 - Photo upload started: type=image/jpeg, size=63959 bytes
+2025-05-02 21:34:06 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/69_1746214446.jpg
+2025-05-02 21:34:06 - Updating user with photo_profil: 69_1746214446.jpg
+2025-05-02 21:34:06 - Photo uploaded and user updated with photo_profil: 69_1746214446.jpg
+2025-05-02 21:34:10 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : Encoding généré avec succès
+
+2025-05-02 21:34:10 - Registration completed successfully
+2025-05-02 21:34:35 - Starting face login process
+2025-05-02 21:34:35 - No webcam image received
+2025-05-02 21:34:45 - User profile loaded for ID: 69, photo_profil: 69_1746214446.jpg
+2025-05-02 21:34:45 - Attempting to display profile picture: ../../uploads/69_1746214446.jpg

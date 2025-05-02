@@ -5,6 +5,12 @@ header("Pragma: no-cache");
 
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/config.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/Controller/utilisateurC.php';
+
+// Inclure la bibliothèque 2Captcha (si installée via Composer)
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/vendor/autoload.php';
+
+use TwoCaptcha\TwoCaptcha;
+
 session_start();
 
 // Générer un jeton CSRF
@@ -33,6 +39,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: register.php?error=Invalid CSRF token");
         exit;
     }
+
+    // Vérifier le reCAPTCHA directement avec Google
+    $recaptchaResponse = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : '';
+    if (empty($recaptchaResponse)) {
+        logMessage("reCAPTCHA validation failed: No response received");
+        header("Location: register.php?error=Please complete the reCAPTCHA verification");
+        exit;
+    }
+
+    $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+    $response = file_get_contents($verifyUrl . '?secret=' . '6LeZBisrAAAAAK2CRpum3u6w4B9egsPUWOJnKwv7' . '&response=' . $recaptchaResponse);
+    $responseKeys = json_decode($response, true);
+
+    if (intval($responseKeys["success"]) !== 1) {
+        logMessage("reCAPTCHA verification failed: " . json_encode($responseKeys));
+        header("Location: register.php?error=Failed reCAPTCHA verification");
+        exit;
+    }
+
+    logMessage("reCAPTCHA verified successfully via Google");
 
     $nom = trim($_POST['nom']);
     $prenom = trim($_POST['prenom']);
@@ -93,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Handle photo upload in a separate step
+    // Handle photo upload and face encoding
     $uploadPath = null;
     if (isset($_FILES['photo_profil']) && $_FILES['photo_profil']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/';
@@ -106,19 +132,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         logMessage("Photo upload started: type=$fileType, size=$fileSize bytes");
 
+        // Vérifier le type de fichier
         if (!in_array($fileType, $allowedTypes)) {
             logMessage("File upload failed: Invalid file type ($fileType)");
             header("Location: login.php?success=Registration successful! Please login. Note: Invalid file type for photo (JPEG, PNG, GIF only).");
             exit;
         }
 
+        // Vérifier la taille du fichier
         if ($fileSize > $maxFileSize) {
             logMessage("File upload failed: File size ($fileSize bytes) exceeds 5MB limit");
             header("Location: login.php?success=Registration successful! Please login. Note: Photo exceeds 5MB limit.");
             exit;
         }
 
-        // Check if upload directory exists and is writable
+        // Vérifier si le dossier d'upload existe et est accessible
         if (!is_dir($uploadDir)) {
             logMessage("Upload directory does not exist: $uploadDir");
             header("Location: login.php?success=Registration successful! Please login. Note: Server error - upload directory not found.");
@@ -130,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+        // Générer un nom unique pour la photo
         $fileExt = strtolower(pathinfo($_FILES['photo_profil']['name'], PATHINFO_EXTENSION));
         $newFileName = $userId . '_' . time() . '.' . $fileExt;
         $uploadPath = $uploadDir . $newFileName;
@@ -141,9 +170,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Update the user with the photo path
+        // Mettre à jour le chemin de la photo dans la base de données
         try {
-            $photo_profil = '' . $newFileName;
+            $photo_profil = $newFileName;
             $db = config::getConnexion();
             logMessage("Updating user with photo_profil: $photo_profil");
             $stmt = $db->prepare("UPDATE utilisateur SET photo_profil = :photo_profil WHERE id_utilisateur = :id_utilisateur");
@@ -157,12 +186,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: login.php?success=Registration successful! Please login. Note: Failed to save photo due to database error.");
             exit;
         }
+
+        // Générer l'encodage du visage pour la reconnaissance faciale
+        $python_script = 'C:\xampp\htdocs\ProjetInnoconnect\scripts\generate_encoding.py';
+        $command = escapeshellcmd("py -3.11 $python_script $uploadPath $userId");
+        $output = shell_exec($command);
+        logMessage("Résultat de la génération d'encodage : $output");
+
+        if (strpos($output, "Aucun visage détecté") !== false) {
+            // Supprimer la photo téléversée si aucun visage n'est détecté
+            if ($uploadPath && file_exists($uploadPath)) {
+                unlink($uploadPath);
+            }
+            // Mettre à jour la base de données pour retirer le chemin de la photo
+            try {
+                $db = config::getConnexion();
+                $stmt = $db->prepare("UPDATE utilisateur SET photo_profil = NULL WHERE id_utilisateur = :id_utilisateur");
+                $stmt->execute([':id_utilisateur' => $userId]);
+                logMessage("Photo removed from database due to face detection failure");
+            } catch (Exception $e) {
+                logMessage("Error removing photo from database: " . $e->getMessage());
+            }
+            header("Location: register.php?error=No face detected in the profile picture");
+            exit;
+        }
+    } else {
+        // Photo de profil obligatoire
+        logMessage("Photo upload failed: Profile picture is required");
+        header("Location: register.php?error=Profile picture is required.");
+        exit;
     }
 
     logMessage("Registration completed successfully");
     header("Location: login.php?success=Registration successful! Please login.");
     exit;
-}
+} // Fermeture du bloc if ($_SERVER['REQUEST_METHOD'] === 'POST')
 ?>
 
 <!DOCTYPE html>
@@ -178,6 +236,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="../assets2/css/bootstrap.min.css" rel="stylesheet" />
     <link id="pagestyle" href="../assets2/css/argon-dashboard.css?v=2.1.0" rel="stylesheet" />
     <link href="../../styles.css" rel="stylesheet">
+    <!-- Ajout du script reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         .strength-message {
             font-size: 0.85em;
@@ -263,10 +323,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </select>
                             </div>
                             <div class="form-group input-with-icon">
-                                <label for="photo_profil">Profile Picture (Optional)</label>
+                                <label for="photo_profil">Profile Picture (Required)</label>
                                 <i class="fas fa-camera"></i>
                                 <input type="file" id="photo_profil" name="photo_profil" accept="image/*" onchange="previewImage(event)">
                                 <img id="photo-preview" style="display: none; width: 100px; height: 100px; margin-top: 10px; border-radius: 50%;">
+                            </div>
+                            <!-- Ajout du widget reCAPTCHA -->
+                            <div class="form-group">
+                                <label>Human Verification</label>
+                                <div class="g-recaptcha" data-sitekey="6LeZBisrAAAAAFWGxjGV-ZR8JVq-N_rOlyqptgZe"></div>
+                                <span id="recaptcha-error" class="error-message"></span>
                             </div>
                             <div style="display: flex; justify-content: space-between;">
                                 <button type="submit" class="register-btn btn-primary">Sign Up</button>
@@ -382,7 +448,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const emailError = document.getElementById("email-error");
             const nomError = document.getElementById("nom-error");
             const prenomError = document.getElementById("prenom-error");
+            const recaptchaError = document.getElementById("recaptcha-error");
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const recaptchaResponse = grecaptcha.getResponse(); // Récupérer la réponse reCAPTCHA
 
             let isValid = true;
 
@@ -415,6 +483,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (type === "") {
                 alert("Please select a user type.");
                 isValid = false;
+            }
+
+            // Validate reCAPTCHA
+            if (!recaptchaResponse) {
+                recaptchaError.textContent = "Please complete the reCAPTCHA verification.";
+                recaptchaError.style.display = "block";
+                isValid = false;
+            } else {
+                recaptchaError.style.display = "none";
             }
 
             return isValid;
