@@ -31,7 +31,7 @@ try {
     error_log("Erreur récupération moderation queue: " . $e->getMessage());
 }
 
-// Récupérer des tâches fictives
+
 $tasks = $pdo->query("
     SELECT id, titre AS title, 'Admin' AS responsible, 
            DATE_ADD(NOW(), INTERVAL 2 DAY) AS deadline

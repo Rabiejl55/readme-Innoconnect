@@ -96,7 +96,6 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             $forum['category'],
             $forum['user_id'],
             $forum['date_creation'],
-           
         ]);
     }
     fclose($output);
@@ -373,51 +372,87 @@ function timeAgo($datetime) {
         .forum-post {
             background: white;
             border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
         }
         .forum-post:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
         .forum-post .post-header {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f1f3f5;
+            padding-bottom: 10px;
         }
         .forum-post .post-header .user-info {
             font-weight: 600;
             color: #6f42c1;
+            font-size: 1.1em;
         }
         .forum-post .post-header .timestamp {
-            color: #666;
+            color: #6c757d;
             font-size: 0.9em;
-            margin-left: 10px;
             white-space: nowrap;
         }
         .forum-post .post-title {
-            font-size: 1.25em;
-            font-weight: 600;
-            color: #6f42c1;
-            margin-bottom: 5px;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #343a40;
+            margin-bottom: 10px;
+            line-height: 1.3;
         }
         .forum-post .category {
             background-color: #17a2b8;
             color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 0.9em;
+            font-weight: 500;
             display: inline-block;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .forum-post .post-body {
+            margin-bottom: 20px;
         }
         .forum-post .post-content {
-            margin-bottom: 10px;
+            font-size: 1em;
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .forum-post .post-image-container {
+            width: 100%;
+            margin: 15px 0;
         }
         .forum-post .post-image {
-            max-width: 100%;
-            border-radius: 10px;
-            margin: 10px 0;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: block;
+        }
+        .forum-post .post-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f1f3f5;
+        }
+        .forum-post .reaction-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .forum-post .action-buttons {
+            display: flex;
+            gap: 10px;
         }
         .message-post {
             background: #f8f9fa;
@@ -659,11 +694,30 @@ function timeAgo($datetime) {
             display: inline-block;
         }
         @media (max-width: 768px) {
-            .forum-post, .message-post {
-                padding: 15px;
+            .forum-post {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            .forum-post .post-title {
+                font-size: 1.3em;
+            }
+            .forum-post .post-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .forum-post .post-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .forum-post .action-buttons {
+                width: 100%;
+                justify-content: space-between;
             }
             .btn-sm {
                 font-size: 0.8em;
+                padding: 5px 10px;
             }
             .form-container {
                 padding: 15px;
@@ -697,6 +751,206 @@ function timeAgo($datetime) {
             .control-bar .btn-export {
                 width: 100%;
             }
+        }
+        .chatbot-float-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #6f42c1 60%, #8a5ed6 100%);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            box-shadow: 0 4px 16px rgba(111,66,193,0.2);
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .chatbot-float-btn:hover {
+            background: linear-gradient(135deg, #5a32a1 60%, #6f42c1 100%);
+            transform: scale(1.08);
+            box-shadow: 0 8px 32px rgba(111,66,193,0.25);
+        }
+        .chatbot-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.18);
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        .chatbot-modal.active {
+            display: flex;
+            animation: chatbot-fade-in 0.25s;
+        }
+        @keyframes chatbot-fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .chatbot-modal-content {
+            background: #fff;
+            padding: 0 0 12px 0;
+            border-radius: 18px;
+            width: 370px;
+            max-width: 98vw;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1.5px solid #ece6fa;
+            animation: chatbot-modal-pop 0.3s;
+        }
+        @keyframes chatbot-modal-pop {
+            from { transform: scale(0.95); opacity: 0.7; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .chatbot-header {
+            background: linear-gradient(90deg, #6f42c1 60%, #8a5ed6 100%);
+            color: #fff;
+            border-radius: 18px 18px 0 0;
+            padding: 16px 18px 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .chatbot-avatar {
+            background: #fff;
+            color: #6f42c1;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            margin-right: 10px;
+            box-shadow: 0 2px 8px rgba(111,66,193,0.08);
+        }
+        .chatbot-title {
+            font-weight: 600;
+            font-size: 1.1em;
+            flex: 1;
+            margin-left: 8px;
+        }
+        .chatbot-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 1.7em;
+            color: #fff;
+            cursor: pointer;
+            opacity: 0.85;
+            transition: color 0.2s, opacity 0.2s;
+        }
+        .chatbot-close:hover {
+            color: #ffe6e6;
+            opacity: 1;
+        }
+        .chatbot-messages {
+            font-size: 1em;
+            min-height: 60px;
+            max-height: 260px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 18px 12px 10px 12px;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chatbot-bubble {
+            display: inline-block;
+            padding: 9px 15px;
+            border-radius: 18px;
+            margin-bottom: 2px;
+            max-width: 85%;
+            word-break: break-word;
+            box-shadow: 0 2px 8px rgba(111,66,193,0.04);
+            font-size: 0.98em;
+        }
+        .chatbot-bubble.user {
+            background: linear-gradient(90deg, #e0d4ff 60%, #f3eaff 100%);
+            color: #4b2e83;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+        }
+        .chatbot-bubble.bot {
+            background: linear-gradient(90deg, #f7f6fa 60%, #ece6fa 100%);
+            color: #6f42c1;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+        .chatbot-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px 0 14px;
+        }
+        .chatbot-input {
+            border-radius: 18px;
+            border: 1.5px solid #ece6fa;
+            resize: none;
+            font-size: 1em;
+            padding: 8px 12px;
+            flex: 1;
+            min-height: 38px;
+            max-height: 80px;
+            box-shadow: none;
+            transition: border 0.2s;
+        }
+        .chatbot-input:focus {
+            border: 1.5px solid #6f42c1;
+            outline: none;
+        }
+        .chatbot-send-btn {
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            background: linear-gradient(135deg, #6f42c1 60%, #8a5ed6 100%);
+            border: none;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(111,66,193,0.10);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .chatbot-send-btn:active, .chatbot-send-btn:focus {
+            background: linear-gradient(135deg, #5a32a1 60%, #6f42c1 100%);
+            transform: scale(0.97);
+        }
+        .chatbot-send-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .chatbot-loading-spinner {
+            margin-left: 6px;
+            color: #6f42c1;
+            font-size: 1.3em;
+            animation: chatbot-spin 1s linear infinite;
+        }
+        @keyframes chatbot-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media (max-width: 600px) {
+            .chatbot-modal-content { width: 99vw; }
+            .chatbot-float-btn { right: 10px; bottom: 10px; }
+            .chatbot-header { padding: 12px 8px 10px 8px; }
+            .chatbot-input-row { padding: 8px 4px 0 4px; }
         }
     </style>
 </head>
@@ -800,48 +1054,56 @@ function timeAgo($datetime) {
                                 <span class="user-info">User <?php echo htmlspecialchars($forum['user_id'] ?? 'Unknown'); ?></span>
                                 <span class="timestamp"><?php echo timeAgo($forum['date_creation']); ?></span>
                             </div>
-                            <div class="post-title"><?php echo htmlspecialchars($forum['titre']); ?></div>
-                            <span class="category"><?php echo htmlspecialchars($forum['category']); ?></span>
-                            <div class="post-content"><?php echo nl2br(htmlspecialchars($forum['first_message'] ?? '')); ?></div>
-                            <?php if (!empty($forum['image'])): ?>
-                                <img src="<?php echo htmlspecialchars($forum['image']); ?>" class="post-image" alt="Forum Image">
-                            <?php endif; ?>
-                            <?php if (!empty($forum['message_image'])): ?>
-                                <img src="<?php echo htmlspecialchars($forum['message_image']); ?>" class="post-image" alt="Message Image">
-                            <?php endif; ?>
-                            <div class="reaction-buttons" data-forum-id="<?php echo $forum['id']; ?>">
-                                <?php
-                                $reactions = [
-                                    'like' => '👍',
-                                    'love' => '❤️',
-                                    'haha' => '😄'
-                                ];
-                                $pdo = config::getConnexion();
-                                foreach ($reactions as $type => $emoji):
-                                    $count = $forumC->getReactionCount('forum', $forum['id'], $type);
-                                    $hasReacted = $pdo->prepare("SELECT id FROM reactions WHERE forum_id = :forum_id AND user_id = :user_id AND reaction_type = :type");
-                                    $hasReacted->execute(['forum_id' => $forum['id'], 'user_id' => 1, 'type' => $type]);
-                                    $active = $hasReacted->fetch() ? 'active' : '';
-                                ?>
-                                    <button class="reaction-btn <?php echo $active; ?>" data-type="<?php echo $type; ?>" data-target="forum" data-id="<?php echo $forum['id']; ?>" title="<?php echo ucfirst($type); ?>">
-                                        <span><?php echo $emoji; ?></span>
-                                        <?php if ($count > 0): ?>
-                                            <span class="reaction-count"><?php echo $count; ?></span>
-                                        <?php endif; ?>
-                                    </button>
-                                    <span class="reaction-feedback" id="forum-<?php echo $forum['id']; ?>-<?php echo $type; ?>-feedback"></span>
-                                <?php endforeach; ?>
+                            <div class="post-body">
+                                <div class="post-title"><?php echo htmlspecialchars($forum['titre']); ?></div>
+                                <span class="category"><?php echo htmlspecialchars($forum['category']); ?></span>
+                                <div class="post-content"><?php echo nl2br(htmlspecialchars($forum['first_message'] ?? '')); ?></div>
+                                <?php if (!empty($forum['image'])): ?>
+                                    <div class="post-image-container">
+                                        <img src="<?php echo htmlspecialchars($forum['image']); ?>" class="post-image" alt="Forum Image">
+                                    </div>
+                                <?php endif; ?>
+                                <?php if (!empty($forum['message_image'])): ?>
+                                    <div class="post-image-container">
+                                        <img src="<?php echo htmlspecialchars($forum['message_image']); ?>" class="post-image" alt="Message Image">
+                                    </div>
+                                <?php endif; ?>
                             </div>
-                            <div class="d-flex gap-2 mt-3">
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#messageModal<?php echo $forum['id']; ?>">
-                                    <i class="bi bi-chat-dots"></i> View & Reply
-                                </button>
-                                <button class="btn btn-primary btn-sm edit-forum-btn" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $forum['id']; ?>" data-forum-id="<?php echo $forum['id']; ?>">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </button>
-                                <a href="?delete=<?php echo $forum['id']; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo urlencode($sort); ?>" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash"></i> Delete
-                                </a>
+                            <div class="post-footer">
+                                <div class="reaction-buttons" data-forum-id="<?php echo $forum['id']; ?>">
+                                    <?php
+                                    $reactions = [
+                                        'like' => '👍',
+                                        'love' => '❤️',
+                                        'haha' => '😄'
+                                    ];
+                                    $pdo = config::getConnexion();
+                                    foreach ($reactions as $type => $emoji):
+                                        $count = $forumC->getReactionCount('forum', $forum['id'], $type);
+                                        $hasReacted = $pdo->prepare("SELECT id FROM reactions WHERE forum_id = :forum_id AND user_id = :user_id AND reaction_type = :type");
+                                        $hasReacted->execute(['forum_id' => $forum['id'], 'user_id' => 1, 'type' => $type]);
+                                        $active = $hasReacted->fetch() ? 'active' : '';
+                                    ?>
+                                        <button class="reaction-btn <?php echo $active; ?>" data-type="<?php echo $type; ?>" data-target="forum" data-id="<?php echo $forum['id']; ?>" title="<?php echo ucfirst($type); ?>">
+                                            <span><?php echo $emoji; ?></span>
+                                            <?php if ($count > 0): ?>
+                                                <span class="reaction-count"><?php echo $count; ?></span>
+                                            <?php endif; ?>
+                                        </button>
+                                        <span class="reaction-feedback" id="forum-<?php echo $forum['id']; ?>-<?php echo $type; ?>-feedback"></span>
+                                    <?php endforeach; ?>
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#messageModal<?php echo $forum['id']; ?>">
+                                        <i class="bi bi-chat-dots"></i> View & Reply
+                                    </button>
+                                    <button class="btn btn-primary btn-sm edit-forum-btn" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $forum['id']; ?>" data-forum-id="<?php echo $forum['id']; ?>">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <a href="?delete=<?php echo $forum['id']; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo urlencode($sort); ?>" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                </div>
                             </div>
                         </div>
 
@@ -991,6 +1253,25 @@ function timeAgo($datetime) {
     </footer>
 
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <button id="open-chatbot-btn" class="chatbot-float-btn" title="Open Chatbot">
+        <i class="bi bi-robot"></i>
+    </button>
+    <div id="chatbot-modal" class="chatbot-modal">
+        <div class="chatbot-modal-content">
+            <div class="chatbot-header">
+                <div class="chatbot-avatar"><i class="bi bi-robot"></i></div>
+                <span class="chatbot-title">InnoConnect Chatbot</span>
+                <span class="chatbot-close" id="close-chatbot-modal" title="Close">×</span>
+            </div>
+            <div id="chatbot-messages" class="chatbot-messages"></div>
+            <div class="chatbot-input-row">
+                <textarea id="chatbot-input" class="form-control chatbot-input" rows="1" placeholder="Type your message..."></textarea>
+                <button id="chatbot-send" class="btn btn-primary chatbot-send-btn" title="Send"><i class="bi bi-send"></i></button>
+                <span id="chatbot-loading" class="chatbot-loading-spinner" style="display:none;"><i class="bi bi-arrow-repeat"></i></span>
+            </div>
+        </div>
+    </div>
 
     <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/vendor/aos/aos.js"></script>
@@ -1194,6 +1475,52 @@ function timeAgo($datetime) {
                 const searchValue = $('#searchInput').val();
                 window.location.href = `?search=${encodeURIComponent(searchValue)}&sort=${sortValue}`;
             });
+
+            $('#open-chatbot-btn').on('click', function() {
+                $('#chatbot-modal').addClass('active');
+            });
+            $('#close-chatbot-modal').on('click', function() {
+                $('#chatbot-modal').removeClass('active');
+            });
+            $('#chatbot-send').on('click', function() {
+                sendChatbotMessage();
+            });
+            $('#chatbot-input').on('keypress', function(e) {
+                if (e.which === 13 && !e.shiftKey) {
+                    e.preventDefault();
+                    sendChatbotMessage();
+                }
+            });
+            function sendChatbotMessage() {
+                var msg = $('#chatbot-input').val().trim();
+                if (!msg) return;
+                $('#chatbot-messages').append('<div><b>You:</b> ' + $('<div>').text(msg).html() + '</div>');
+                $('#chatbot-input').val('');
+                $('#chatbot-send').prop('disabled', true);
+                $('#chatbot-loading').show();
+                $.ajax({
+                    url: 'chatbot.php',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        message: msg,
+                        forum_id: 0,
+                        user_id: 1
+                    }),
+                    success: function(res) {
+                        var reply = res && res.message ? res.message : 'No response.';
+                        $('#chatbot-messages').append('<div><b>Bot:</b> ' + $('<div>').text(reply).html() + '</div>');
+                        $('#chatbot-messages').scrollTop($('#chatbot-messages')[0].scrollHeight);
+                    },
+                    error: function(xhr) {
+                        $('#chatbot-messages').append('<div style="color:red"><b>Bot:</b> Error contacting chatbot.</div>');
+                    },
+                    complete: function() {
+                        $('#chatbot-send').prop('disabled', false);
+                        $('#chatbot-loading').hide();
+                    }
+                });
+            }
         });
     </script>
 </body>

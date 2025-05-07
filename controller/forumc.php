@@ -15,6 +15,92 @@ class ForumC {
         }
     }
 
+    // Cache for filtered texts to reduce API calls
+    private $textCache = [];
+    
+
+    // Method to filter bad words using ONLY Ninjas API with caching
+    public function filterBadWords($text) {
+        if (empty($text)) {
+            return $text;
+        }
+        
+        // Check if we already filtered this exact text
+        $cacheKey = md5($text);
+        if (isset($this->textCache[$cacheKey])) {
+            $this->safeErrorLog("Using cached filtered text for: " . substr($text, 0, 30) . "...");
+            return $this->textCache[$cacheKey];
+        }
+        
+        $apiKey = 'afWIv62+O1X5vi/oeu1deg==xmCsovym3B0HeLRA';
+        // The correct endpoint for the API Ninjas profanity filter
+        $url = 'https://api.api-ninjas.com/v1/profanityfilter?text=' . urlencode($text);
+        
+        try {
+            // Initialize cURL session
+            $ch = curl_init($url);
+            
+            // Set cURL options - using GET request as per the API documentation
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'X-Api-Key: ' . $apiKey,
+                'Content-Type: application/json'
+            ]);
+            // Set a reasonable timeout to prevent hanging
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            
+            // Execute cURL session and get the response
+            $response = curl_exec($ch);
+            
+            // Get HTTP status code
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            
+            // Check for errors or rate limiting
+            if (curl_errno($ch) || $httpCode != 200) {
+                $error = curl_error($ch);
+                curl_close($ch);
+                $this->safeErrorLog("API Error (HTTP $httpCode): $error, Response: $response");
+                
+                // If API fails, just return the original text
+                $this->textCache[$cacheKey] = $text;
+                return $text;
+            }
+            
+            // Close cURL session
+            curl_close($ch);
+            
+            // Decode the JSON response
+            $result = json_decode($response, true);
+            
+            $this->safeErrorLog("API Response: " . print_r($result, true));
+            
+            if (isset($result['censored'])) {
+                $filteredText = $result['censored'];
+                $hasProfanity = isset($result['has_profanity']) ? $result['has_profanity'] : false;
+                
+                $this->safeErrorLog("Text contains profanity: " . ($hasProfanity ? "Yes" : "No"));
+                $this->safeErrorLog("Original text: " . $text);
+                $this->safeErrorLog("Filtered text: " . $filteredText);
+                
+                // Cache the result and return
+                $this->textCache[$cacheKey] = $filteredText;
+                return $filteredText;
+            } else {
+                $this->safeErrorLog("Unexpected API response format: " . $response);
+                
+                // If response format is wrong, return original text
+                $this->textCache[$cacheKey] = $text;
+                return $text;
+            }
+        } catch (Exception $e) {
+            $this->safeErrorLog("Exception in API call: " . $e->getMessage());
+            
+            // If exception occurs, return original text
+            $this->textCache[$cacheKey] = $text;
+            return $text;
+        }
+    }
+
     public function afficherForums($search = '', $sort = 'date_desc', $limit = 100, $offset = 0) {
         try {
             $pdo = config::getConnexion();
@@ -101,6 +187,15 @@ class ForumC {
     public function ajouterForum($forum) {
         try {
             $pdo = config::getConnexion();
+            
+            // Filter bad words from title and message
+            $filteredTitle = $this->filterBadWords($forum->getTitre());
+            $filteredMessage = $this->filterBadWords($forum->getMessage());
+            
+            // Update the forum object with filtered content
+            $forum->setTitre($filteredTitle);
+            $forum->setMessage($filteredMessage);
+            
             $query = "INSERT INTO forums (titre, category, user_id, date_creation, image) 
                       VALUES (:titre, :category, :user_id, NOW(), :image)";
             $stmt = $pdo->prepare($query);
@@ -130,6 +225,15 @@ class ForumC {
     public function modifierForum($forum) {
         try {
             $pdo = config::getConnexion();
+            
+            // Filter bad words from title and message
+            $filteredTitle = $this->filterBadWords($forum->getTitre());
+            $filteredMessage = $this->filterBadWords($forum->getMessage());
+            
+            // Update the forum object with filtered content
+            $forum->setTitre($filteredTitle);
+            $forum->setMessage($filteredMessage);
+            
             $query = "UPDATE forums SET titre = :titre, category = :category, image = :image WHERE id = :id";
             $stmt = $pdo->prepare($query);
             $stmt->execute([
@@ -223,6 +327,10 @@ class ForumC {
     public function ajouterMessage($forum_id, $user_id, $message, $image = null) {
         try {
             $pdo = config::getConnexion();
+            
+            // Filter bad words from message
+            $filteredMessage = $this->filterBadWords($message);
+            
             $query = "INSERT INTO messages (forum_id, user_id, message, date_creation, image) 
                       VALUES (:forum_id, :user_id, :message, NOW(), :image)";
             $stmt = $pdo->prepare($query);
@@ -230,7 +338,7 @@ class ForumC {
             $stmt->execute([
                 'forum_id' => $forum_id,
                 'user_id' => $user_id,
-                'message' => $message,
+                'message' => $filteredMessage,
                 'image' => $image
             ]);
             $this->safeErrorLog("Added message to forum ID $forum_id");
