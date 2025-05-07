@@ -121,7 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button type="button" id="face-login-btn" class="btn btn-secondary">Login with Face Recognition</button>
 </div>
 
-<video id="video" width="320" height="240" autoplay style="display:none;"></video>
+<video id="video" width="320" height="250" autoplay style="display: block;"></video>
+    <button onclick="captureImage()">Capturer et Se Connecter</button>
+    <input type="hidden" id="webcam_image_input">
+    <div id="face-login-message" style="margin-top: 10px; color: red;"></div>
 <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
 
 <script>
@@ -166,6 +169,61 @@ document.getElementById('face-login-btn').addEventListener('click', async () => 
     </footer>
 
     <script>
+        const video = document.getElementById('video');
+        const webcamInput = document.getElementById('webcam_image_input');
+        const messageDiv = document.getElementById('face-login-message');
+
+        // Accéder à la webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                messageDiv.textContent = 'Erreur : Accès à la webcam refusé ou non disponible. Vérifiez les permissions.';
+                console.error('Erreur webcam:', err);
+            });
+
+        function captureImage() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            canvas.toBlob(blob => {
+                const file = new File([blob], 'webcam_capture.jpg', { type: 'image/jpeg' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                webcamInput.files = dataTransfer.files;
+                loginWithFace();
+            }, 'image/jpeg');
+        }
+        function loginWithFace() {
+    const formData = new FormData();
+    const webcamImage = document.getElementById('webcam_image_input').files[0]; // Assure-toi que cet ID correspond à ton input
+    formData.append('webcam_image', webcamImage);
+
+    fetch('face_login.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        const messageDiv = document.getElementById('face-login-message'); // Ajoute un div pour afficher les messages
+        if (data.status === 'success') {
+            messageDiv.style.color = 'green';
+            messageDiv.textContent = data.message;
+            setTimeout(() => {
+                window.location.href = 'dashboard.php'; // Redirige vers le tableau de bord
+            }, 1000);
+        } else {
+            messageDiv.style.color = 'red';
+            messageDiv.textContent = data.message;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('face-login-message').textContent = 'Une erreur s\'est produite. Veuillez réessayer.';
+    });
+}
         function validateEmail() {
             const email = document.getElementById("email").value;
             const emailError = document.getElementById("email-error");

@@ -139,7 +139,8 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
     <link rel="apple-touch-icon" sizes="76x76" href="../assets2/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets2/img/favicon.png">
     <title>Back-Office InnoConnect - User Management</title>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -662,8 +663,8 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
                                                     <a href="edit_user.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>" class="text-secondary font-weight-bold text-xs me-2">
                                                         <i class="fas fa-edit me-1"></i> Edit
                                                     </a>
-                                                    <a href="delete_user.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>" class="text-secondary font-weight-bold text-xs me-2" onclick="return confirm('Are you sure you want to delete this user?');">
-                                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                                    <a href="#" class="text-secondary font-weight-bold text-xs me-2 delete-btn" data-id="<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>" data-name="<?php echo htmlspecialchars($utilisateur['prenom'] . ' ' . $utilisateur['nom']); ?>" data-email="<?php echo htmlspecialchars($utilisateur['email']); ?>">
+                                                    <i class="fas fa-trash-alt me-1"></i> Delete
                                                     </a>
                                                     <?php if (!empty($utilisateur['photo_profil'])): ?>
                                                         <a href="delete_photo.php?id_utilisateur=<?php echo htmlspecialchars($utilisateur['id_utilisateur']); ?>" class="text-secondary font-weight-bold text-xs me-2" onclick="return confirm('Are you sure you want to delete this user\'s profile photo?');">
@@ -697,6 +698,26 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
                 </div>
             </footer>
         </div>
+        <!-- Modal for Delete Confirmation -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the user:</p>
+                <p><strong id="modalUserName"></strong> (<span id="modalUserEmail"></span>)</p>
+                <p style="color: #6c757d;">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete User</button>
+            </div>
+        </div>
+    </div>
+</div>
     </main>
     <!-- Fixed Plugin (Theme Configurator) -->
     <div class="fixed-plugin">
@@ -882,6 +903,46 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
         });
     </script>
     <script src="../../assets2/js/argon-dashboard.min.js?v=2.0.4"></script>
+    <script>
+$(document).ready(function() {
+    $('.delete-btn').click(function() {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const email = $(this).data('email');
+        console.log('Delete button clicked:', { id, name, email }); // Log les données
+        $('#modalUserName').text(name);
+        $('#modalUserEmail').text(email);
+        $('#confirmDelete').data('id', id);
+        $('#deleteModal').modal('show');
+    });
+
+    $('#confirmDelete').click(function() {
+        const id = $(this).data('id');
+        console.log('Confirm delete for ID:', id); // Log l’ID envoyé
+        $.ajax({
+            url: 'delete_user_action.php',
+            type: 'POST',
+            data: { id_utilisateur: id },
+            dataType: 'json', // Assure que la réponse est interprétée comme JSON
+            success: function(response) {
+                console.log('AJAX response:', response); // Log la réponse
+                if (response.success) {
+                    $('#userRow-' + id).remove();
+                    $('#deleteModal').modal('hide');
+                    alert('User deleted successfully!');
+                    location.reload();
+                } else {
+                    alert('Failed to delete user: ' + (response.message || 'Unknown error'));
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('AJAX error:', { status, error, response: xhr.responseText }); // Log l’erreur
+                alert('An error occurred while deleting the user.');
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>

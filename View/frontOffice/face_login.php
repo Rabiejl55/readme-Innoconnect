@@ -10,49 +10,53 @@ function logMessage($message) {
 
 logMessage("Starting face login process");
 
-// Vérifier si une image a été capturée depuis la webcam
 if (!isset($_FILES['webcam_image']) || $_FILES['webcam_image']['error'] !== UPLOAD_ERR_OK) {
-    logMessage("No webcam image received");
-    echo json_encode(['status' => 'error', 'message' => 'No webcam image received']);
+    $errorMsg = isset($_FILES['webcam_image']) ? "Error code: " . $_FILES['webcam_image']['error'] : 'No file uploaded';
+    logMessage("No webcam image received. $errorMsg");
+    echo json_encode(['status' => 'error', 'message' => 'Aucune image webcam reçue.']);
     exit;
 }
 
-// Dossier temporaire pour l'image webcam
 $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/temp/';
-if (!is_dir($uploadDir)) {
-    mkdir($uploadDir, 0777, true);
-}
-
+if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 $fileExt = strtolower(pathinfo($_FILES['webcam_image']['name'], PATHINFO_EXTENSION));
 $webcamImagePath = $uploadDir . 'webcam_' . time() . '.' . $fileExt;
 
 if (!move_uploaded_file($_FILES['webcam_image']['tmp_name'], $webcamImagePath)) {
-    logMessage("Failed to save webcam image");
-    echo json_encode(['status' => 'error', 'message' => 'Failed to save webcam image']);
+    logMessage("Failed to move uploaded file to $webcamImagePath");
+    echo json_encode(['status' => 'error', 'message' => 'Échec de l\'enregistrement de l\'image.']);
+    exit;
+}
+logMessage("Webcam image saved at: $webcamImagePath");
+
+$brightness_script = 'C:\xampp\htdocs\ProjetInnoconnect\scripts\check_brightness.py';
+$brightness_command = escapeshellcmd('"C:\Users\ferie\AppData\Local\Programs\Python\Python311\python.exe" ' . $brightness_script . ' ' . $webcamImagePath);
+$brightness_output = shell_exec($brightness_command);
+logMessage("Brightness check result: $brightness_output");
+
+if (strpos($brightness_output, "Image trop sombre") !== false || strpos($brightness_output, "Trop de reflets") !== false) {
+    logMessage("Image rejected: $brightness_output");
+    unlink($webcamImagePath);
+    echo json_encode(['status' => 'error', 'message' => trim($brightness_output)]);
     exit;
 }
 
-logMessage("Webcam image saved at: $webcamImagePath");
-
-// Générer l'encodage pour l'image webcam
 $python_script = 'C:\xampp\htdocs\ProjetInnoconnect\scripts\generate_temp_encoding.py';
 $tempEncodingPath = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/face_encodings/temp_encoding.npy';
 $command = escapeshellcmd('"C:\Users\ferie\AppData\Local\Programs\Python\Python311\python.exe" ' . $python_script . ' ' . $webcamImagePath . ' ' . $tempEncodingPath);
 $output = shell_exec($command);
-
 logMessage("Generate temp encoding result: $output");
 
 if (strpos($output, "Aucun visage détecté") !== false || !file_exists($tempEncodingPath)) {
     logMessage("No face detected in webcam image");
     unlink($webcamImagePath);
-    echo json_encode(['status' => 'error', 'message' => 'No face detected in webcam image']);
+    echo json_encode(['status' => 'error', 'message' => 'Aucun visage détecté.']);
     exit;
 }
 
-// Charger l'encodage de la webcam
 $webcamEncoding = unserialize(file_get_contents($tempEncodingPath));
+logMessage("Webcam encoding loaded, size: " . count($webcamEncoding));
 
-// Récupérer tous les utilisateurs
 $db = config::getConnexion();
 $stmt = $db->query("SELECT id_utilisateur FROM utilisateur");
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -70,12 +74,11 @@ foreach ($users as $user) {
     }
 
     $storedEncoding = unserialize(file_get_contents($encodingFile));
+    logMessage("Stored encoding loaded for user $userId, size: " . count($storedEncoding));
 
-    // Comparer les encodages avec face_recognition
     $python_compare_script = 'C:\xampp\htdocs\ProjetInnoconnect\scripts\compare_encodings.py';
     $command = escapeshellcmd('"C:\Users\ferie\AppData\Local\Programs\Python\Python311\python.exe" ' . $python_compare_script . ' ' . $tempEncodingPath . ' ' . $encodingFile);
     $compareOutput = shell_exec($command);
-
     logMessage("Comparison result for user $userId: $compareOutput");
 
     if (trim($compareOutput) === "True") {
@@ -85,16 +88,20 @@ foreach ($users as $user) {
     }
 }
 
-// Nettoyer les fichiers temporaires
-unlink($webcamImagePath);
-unlink($tempEncodingPath);
-
+// After finding a match, add additional verification
 if ($matchFound) {
     logMessage("Face matched for user ID: $matchedUserId");
+    
+    // Add additional verification if needed
+    // For example, you could check if the user has recently logged in from this device
+    // or require a secondary verification for high-security actions
+    
     $_SESSION['user_id'] = $matchedUserId;
-    echo json_encode(['status' => 'success', 'message' => 'Face recognized successfully']);
+    echo json_encode(['status' => 'success', 'message' => 'Visage reconnu avec succès !']);
 } else {
     logMessage("No matching face found");
-    echo json_encode(['status' => 'error', 'message' => 'No matching face found']);
+    echo json_encode(['status' => 'error', 'message' => 'Face recognition failed. Visage non reconnu.']);
 }
+unlink($webcamImagePath);
+unlink($tempEncodingPath);
 ?>

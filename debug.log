@@ -593,3 +593,138 @@
 2025-05-02 21:34:35 - No webcam image received
 2025-05-02 21:34:45 - User profile loaded for ID: 69, photo_profil: 69_1746214446.jpg
 2025-05-02 21:34:45 - Attempting to display profile picture: ../../uploads/69_1746214446.jpg
+2025-05-02 21:43:43 - Starting registration process
+2025-05-02 21:43:44 - reCAPTCHA verified successfully via Google
+2025-05-02 21:43:44 - Attempting to add user: nom=bassem, email=bassouma@gmail.com
+2025-05-02 21:43:44 - User added successfully with ID: 70
+2025-05-02 21:43:44 - Photo upload started: type=image/jpeg, size=10534 bytes
+2025-05-02 21:43:44 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/70_1746215024.jpeg
+2025-05-02 21:43:44 - Updating user with photo_profil: 70_1746215024.jpeg
+2025-05-02 21:43:44 - Photo uploaded and user updated with photo_profil: 70_1746215024.jpeg
+2025-05-02 21:43:47 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : Encoding généré avec succès
+
+2025-05-02 21:43:47 - Registration completed successfully
+2025-05-02 21:44:09 - Starting face login process
+2025-05-02 21:44:09 - No webcam image received
+2025-05-02 21:56:40 - User profile loaded for ID: 70, photo_profil: 70_1746215024.jpeg
+2025-05-02 21:56:40 - Attempting to display profile picture: ../../uploads/70_1746215024.jpeg
+2025-05-02 21:56:43 - User profile loaded for ID: 70, photo_profil: 70_1746215024.jpeg
+2025-05-02 21:56:43 - User account deleted for ID: 70
+2025-05-02 22:00:35 - Starting registration process
+2025-05-02 22:00:36 - reCAPTCHA verified successfully via Google
+2025-05-02 22:00:36 - Attempting to add user: nom=bassem, email=basouma@gmail.com
+2025-05-02 22:00:36 - User added successfully with ID: 71
+2025-05-02 22:00:36 - Photo upload started: type=image/jpeg, size=273785 bytes
+2025-05-02 22:00:36 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/71_1746216036.jpeg
+2025-05-02 22:00:36 - Updating user with photo_profil: 71_1746216036.jpeg
+2025-05-02 22:00:36 - Photo uploaded and user updated with photo_profil: 71_1746216036.jpeg
+2025-05-02 22:00:41 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : Encoding généré avec succès
+
+2025-05-02 22:00:41 - Registration completed successfully
+2025-05-02 22:00:59 - Starting face login process
+2025-05-02 22:00:59 - No webcam image received
+2025-05-02 22:17:19 - Starting face login process
+2025-05-02 22:17:19 - No webcam image received
+2025-05-02 22:17:36 - Starting face login process
+2025-05-02 22:17:36 - No webcam image received
+2025-05-02 22:17:45 - Starting face login process
+2025-05-02 22:17:45 - No webcam image received
+2025-05-02 22:17:53 - Starting face login process
+2025-05-02 22:17:53 - No webcam image received
+2025-05-02 22:18:01 - Starting face login process
+2025-05-02 22:18:01 - No webcam image received
+2025-05-02 22:18:08 - Starting face login process
+2025-05-02 22:18:08 - No webcam image received
+2025-05-02 22:38:31 - Starting face login process
+2025-05-02 22:38:31 - No webcam image received
+2025-05-02 22:38:48 - Starting face login process
+2025-05-02 22:38:48 - No webcam image received
+2025-05-02 22:38:54 - User profile loaded for ID: 66, photo_profil: 66_1746212912.jpg
+2025-05-02 22:38:54 - Attempting to display profile picture: ../../uploads/66_1746212912.jpg
+2025-05-02 22:40:41 - Starting face login process
+2025-05-02 22:40:41 - No webcam image received
+2025-05-02 22:42:39 - Starting face login process
+2025-05-02 22:42:39 - No webcam image received
+2025-05-02 22:46:50 - Starting face login process
+2025-05-02 22:46:50 - No webcam image received
+2025-05-02 22:48:19 - Starting face login process
+2025-05-02 22:48:19 - No webcam image received
+2025-05-02 22:56:37 - User profile loaded for ID: 66, photo_profil: 66_1746212912.jpg
+2025-05-02 22:56:37 - Attempting to display profile picture: ../../uploads/66_1746212912.jpg
+2025-05-02 22:58:14 - Starting face login process
+2025-05-02 22:58:14 - Files array: Array
+(
+)
+
+2025-05-02 22:58:14 - No webcam image received. No file uploaded
+2025-05-02 22:58:21 - User profile loaded for ID: 66, photo_profil: 66_1746212912.jpg
+2025-05-02 22:58:21 - Attempting to display profile picture: ../../uploads/66_1746212912.jpg
+2025-05-02 23:00:04 - Starting face login process
+2025-05-02 23:00:04 - Files array: Array
+(
+)
+
+2025-05-02 23:00:04 - No webcam image received. No file uploaded
+2025-05-02 23:00:13 - Starting face login process
+2025-05-02 23:00:13 - Files array: Array
+(
+)
+
+2025-05-02 23:00:13 - No webcam image received. No file uploaded
+2025-05-02 23:07:11 - Starting face login process
+2025-05-02 23:07:11 - Files array: Array
+(
+)
+
+2025-05-02 23:07:11 - No webcam image received. No file uploaded
+2025-05-06 13:45:10 - Starting registration process
+2025-05-06 13:45:10 - reCAPTCHA verified successfully via Google
+2025-05-06 13:45:10 - Attempting to add user: nom=bassem, email=faryoula@esprit.tn
+2025-05-06 13:45:10 - User added successfully with ID: 72
+2025-05-06 13:45:10 - Photo upload started: type=image/jpeg, size=62133 bytes
+2025-05-06 13:45:10 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/72_1746531910.jpg
+2025-05-06 13:45:10 - Updating user with photo_profil: 72_1746531910.jpg
+2025-05-06 13:45:10 - Photo uploaded and user updated with photo_profil: 72_1746531910.jpg
+2025-05-06 13:45:16 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : Encoding généré avec succès
+
+2025-05-06 13:45:16 - Registration completed successfully
+2025-05-06 13:45:38 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 13:45:38 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 13:51:07 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 13:51:07 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 13:52:55 - Starting registration process
+2025-05-06 13:52:56 - reCAPTCHA verified successfully via Google
+2025-05-06 13:52:56 - Attempting to add user: nom=chakroun, email=nermine@gmail.com
+2025-05-06 13:56:40 - Starting registration process
+2025-05-06 13:56:41 - reCAPTCHA verified successfully via Google
+2025-05-06 13:56:41 - Attempting to add user: nom=chakroun, email=nermine@gmail.com
+2025-05-06 16:05:02 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 16:05:02 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 16:05:26 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 16:05:26 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 17:43:07 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 17:43:07 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 17:48:24 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 17:48:24 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 17:50:00 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 17:50:00 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 17:56:23 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 17:56:23 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 17:56:56 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 17:56:56 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 18:02:02 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 18:02:02 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 18:08:05 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 18:08:05 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-06 18:13:41 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-06 18:13:41 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-07 21:25:35 - Starting face login process
+2025-05-07 21:25:35 - No webcam image received. No file uploaded
+2025-05-07 21:25:49 - Starting face login process
+2025-05-07 21:25:49 - No webcam image received. No file uploaded
+2025-05-07 21:26:00 - Starting face login process
+2025-05-07 21:26:00 - No webcam image received. No file uploaded
+2025-05-07 21:26:19 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-07 21:26:19 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-07 21:53:48 - Delete request received for ID: 62
+2025-05-07 21:53:48 - User deleted successfully: ID 62
