@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Feedback - InnoConnect</title>
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- Styles personnalisés -->
+  <style>
+    body {
+      background-color: #f0f0f0;
+    }
+
+    .form-label, h2, h3 {
+      color: #007bff;
+    }
+
+    .star-rating {
+      display: flex;
+      justify-content: flex-start;
+      font-size: 25px;
+    }
+
+    .star-rating input {
+      display: none;
+    }
+
+    .star-rating label {
+      cursor: pointer;
+      color: grey;
+      padding: 0 5px;
+    }
+
+    .star-rating input:checked ~ label {
+      color: gold;
+    }
+
+    .feedback-container {
+      margin-top: 20px;
+    }
+
+    .feedback {
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+
+    .feedback .name {
+      font-weight: bold;
+    }
+
+    .feedback .type {
+      font-style: italic;
+      color: grey;
+    }
+
+    .feedback .rating {
+      color: gold;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .submit-btn-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    /* Scroll to Top Button */
+    #scroll-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 9999;
+      display: none;
+      font-size: 50px;
+      color: #007bff;
+      cursor: pointer;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    #scroll-top:hover {
+      color: #0056b3;
+    }
+  </style>
+</head>
+
+<body class="starter-page-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+      <a href="index.html" class="logo d-flex align-items-center me-auto">
+        <h1 class="sitename">InnoConnect</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero"></a></li>
+          <li><a href="#about"></a></li>
+          <li><a href="#services"></a></li>
+          <li><a href="#admin"></a></li>
+          <li><a href="#portfolio"></a></li>
+          <li><a href="#team"></a></li>
+          <li><a href="#contact"></a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container mt-5 form-container">
+      <h2>Submit Your Complaint</h2>
+
+      <form id="feedbackForm">
+        <div class="mb-3">
+          <label for="name" class="form-label">Your Name</label>
+          <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="type" class="form-label">Your Type</label>
+          <select id="type" class="form-select" required>
+            <option value="Innovator">Innovator</option>
+            <option value="Investor">Investor</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Rate us:</label>
+          <div class="star-rating">
+            <input type="radio" id="star5" name="rating" value="5"><label for="star5">&#9733;</label>
+            <input type="radio" id="star4" name="rating" value="4"><label for="star4">&#9733;</label>
+            <input type="radio" id="star3" name="rating" value="3"><label for="star3">&#9733;</label>
+            <input type="radio" id="star2" name="rating" value="2"><label for="star2">&#9733;</label>
+            <input type="radio" id="star1" name="rating" value="1"><label for="star1">&#9733;</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="comment" class="form-label">Your reclamation</label>
+          <textarea id="comment" class="form-control" rows="4" placeholder="Write your comment" required></textarea>
+        </div>
+
+        <div class="submit-btn-container">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+
+      <div class="feedback-container mt-5">
+        <h3>Previous Complaint</h3>
+        <div id="feedbacks"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="footer accent-background">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-5 col-md-12 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <i class="bi bi-arrow-left" style="font-size: 60px; font-weight: bold; color: white;"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <a href="#" id="scroll-top" title="Scroll to Top">
+    <i class="bi bi-arrow-up-circle-fill"></i>
+  </a>
+
+  <!-- Scripts -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
+  <script>
+    // Form feedback submission
+    document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const type = document.getElementById('type').value;
+      const rating = document.querySelector('input[name="rating"]:checked')?.value;
+      const comment = document.getElementById('comment').value;
+
+      if (!rating) {
+        alert('Please select a rating.');
+        return;
+      }
+
+      const feedbackDiv = document.createElement('div');
+      feedbackDiv.classList.add('feedback');
+
+      feedbackDiv.innerHTML = `
+        <div class="name">${name}</div>
+        <div class="type">${type}</div>
+        <div class="rating">Rating: ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</div>
+        <div class="comment">${comment}</div>
+      `;
+
+      document.getElementById('feedbacks').prepend(feedbackDiv);
+      document.getElementById('feedbackForm').reset();
+    });
+
+    // Scroll to Top functionality
+    const scrollTopBtn = document.getElementById('scroll-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 200) {
+        scrollTopBtn.style.display = 'block';
+      } else {
+        scrollTopBtn.style.display = 'none';
+      }
+    });
+
+    scrollTopBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
