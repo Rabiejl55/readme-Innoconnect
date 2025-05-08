@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnoConnect - Plateforme Investisseurs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6f42c1;
+            --secondary-color: #6610f2;
+            --accent-blue: #094f88;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --background-light: #e3f2fd;
+            --white: #ffffff;
+            --gradient-purple: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--gradient-purple);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+
+        .logo {
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn {
+            background: var(--white);
+            color: var(--primary-color);
+            padding: 0.625rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            margin-left: 1rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .active {
+            background: var(--primary-color);
+            color: var(--white);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main {
+            margin-top: 5rem;
+            padding: 2rem 1rem;
+            flex-grow: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Styles du simulateur */
+        #simulateur-financement {
+            max-width: 600px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            margin: 2rem auto;
+        }
+
+        #simulateur-financement h2 {
+            color: #6f42c1;
+            margin-bottom: 30px;
+        }
+
+        #simulateur-financement input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        #simulateur-financement button {
+            width: 100%;
+            background-color: #6f42c1;
+            color: white;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        #simulateur-financement button:hover {
+            opacity: 0.9;
+        }
+
+        #resultat {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* Nouveaux styles pour les filtres */
+        .filter-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .filter-box {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 2px solid var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-purple);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .filter-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(111, 66, 193, 0.15);
+        }
+
+        .filter-box:hover::before {
+            opacity: 1;
+        }
+
+        .filter-title {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .filter-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--gradient-purple);
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 0.7rem;
+            border: 1px solid #e0e0e0;
+            background: var(--white);
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f42c1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+        }
+
+        /* Section des statistiques */
+        .numbers-section {
+            background: var(--white);
+            padding: 2rem;
+            margin-top: 4rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .metric-card {
+            background: var(--gradient-purple);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+            flex: 1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .metric-label {
+            font-size: 1.125rem;
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--gradient-purple);
+            color: var(--white);
+            padding: 4rem 0 2rem;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-about {
+            max-width: 300px;
+        }
+
+        .footer-about p {
+            margin-top: 1rem;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            color: var(--white);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-link:hover {
+            opacity: 0.8;
+        }
+
+        .footer-links {
+            min-width: 200px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin: 0.5rem 0;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .filter-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics {
+                flex-direction: column;
+            }
+            
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .footer-links {
+                text-align: center;
+            }
+        }
+
+        /* Styles pour le chatbot */
+        .chatbot-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-purple);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-icon {
+            color: white;
+            font-size: 24px;
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: var(--gradient-purple);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            line-height: 1.4;
+        }
+
+        .bot-message {
+            background: #f0f2f5;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+
+        .user-message {
+            background: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chatbot-input {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .chatbot-input button:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">InnoConnect</a>
+            <a href="Investisseur.html" class="btn active">Home</a>
+            <a href="ContratInvestisseur.php" class="btn">Contract</a>
+            <a href="investisseurProjet.html" class="btn">Project</a>
+            <a href="index.html" class="btn">Get Started</a>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section id="simulateur-financement">
+               
+                <h2>investors welcome</h2>
+                <h2>Simulez un financement</h2>
+                <div>
+                    <label for="montant" style="display:block; margin-bottom: 10px; font-weight: bold;">Entrez un montant :</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="number" id="montant" placeholder="Ex: 250" style="flex: 2;">
+                        <select id="devise" style="flex: 1; min-width: 100px;" onchange="convertirMontant()">
+                            <option value="EUR">EUR (€)</option>
+                            <option value="TND">TND (د.ت)</option>
+                            <option value="USD">USD ($)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="JPY">JPY (¥)</option>
+                            <option value="CHF">CHF</option>
+                            <option value="CAD">CAD</option>
+                        </select>
+                    </div>
+                    <div id="montantConverti" style="margin-bottom: 15px; color: var(--primary-color); font-weight: bold;"></div>
+                    <button onclick="afficherCategorie()">Vérifier la catégorie</button>
+                    <div id="resultat"></div>
+                </div>
+            </section>
+
+            <section class="hero-banner">
+                <h1 class="hero-title">Investissez dans des projets innovants à fort potentiel</h1>
+                <p class="hero-text">
+                    En tant qu'<strong>investisseur</strong>, découvrez des opportunités
+                    soigneusement sélectionnées et alignées avec vos critères.
+                </p>
+            </section>
+
+            <section class="filter-container">
+                <div class="filter-box">
+                    <h3 class="filter-title">Montant</h3>
+                    <select aria-label="Montant à investir">
+                        <option value="">Sélectionner un montant</option>
+                        <option value="200">Moins de 200€</option>
+                        <option value="500">De 200€ à 500€</option>
+                        <option value="500plus">Plus de 500€</option>
+                    </select>
+                </div>
+                <div class="filter-box">
+                    <h3 class="filter-title">Secteur</h3>
+                    <select aria-label="Secteur d'activité">
+                        <option value="">Secteur</option>
+                        <option value="greentech">GreenTech</option>
+                        <option value="sante">Santé</option>
+                        <option value="ia">Intelligence Artificielle</option>
+                    </select>
+                </div>
+                <div class="filter-box">
+                    <h3 class="filter-title">Type de Financement</h3>
+                    <select aria-label="Type d'investissement">
+                        <option value="">Type d'investissement</option>
+                        <option value="equity">Equity</option>
+                        <option value="pret">Prêt</option>
+                        <option value="dons">Dons avec contreparties</option>
+                    </select>
+                </div>
+            </section>
+
+            <div class="numbers-section">
+                <section class="metrics">
+                    <div class="metric-card">
+                        <div class="metric-value">127M€</div>
+                        <div class="metric-label">Levés sur la plateforme</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">89%</div>
+                        <div class="metric-label">Taux de réussite</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">420+</div>
+                        <div class="metric-label">Projets financés</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-about">
+                <a href="index.html" class="logo">InnoConnect</a>
+                <p>
+                    Connecter les investisseurs avec des projets innovants à fort potentiel pour transformer les idées en réussites concrètes.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">LinkedIn</a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h4>Liens utiles</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="#about">À propos</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#financement">Financement</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Nos services</h4>
+                <ul>
+                    <li><a href="#">Conseil en innovation</a></li>
+                    <li><a href="#">Accès au financement</a></li>
+                    <li><a href="#">Réseau d'experts</a></li>
+                    <li><a href="#">Partenariats stratégiques</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>&copy; 2025 InnoConnect. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Chatbot Button -->
+    <div class="chatbot-button" onclick="toggleChatbot()">
+        <i class="fas fa-comments chatbot-icon"></i>
+    </div>
+
+    <!-- Chatbot Window -->
+    <div class="chatbot-window" id="chatbot">
+        <div class="chatbot-header">
+            <h3>Assistant InnoConnect</h3>
+            <button onclick="toggleChatbot()" style="background: none; border: none; color: white; cursor: pointer;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="message bot-message">
+                Bonjour ! Je suis votre assistant InnoConnect. Comment puis-je vous aider avec vos investissements aujourd'hui ?
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="userInput" placeholder="Tapez votre message..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let tauxChange = {};
+        
+        // Fonction pour charger les taux de change
+        async function chargerTauxChange() {
+            try {
+                const response = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');  
+                const data = await response.json();
+                tauxChange = data.rates;
+                console.log('Taux de change chargés:', tauxChange);
+            } catch (error) {
+                console.error('Erreur lors du chargement des taux de change:', error);
+            }
+        }
+
+        // Charger les taux au démarrage
+        chargerTauxChange();
+
+        // Fonction pour convertir le montant
+        async function convertirMontant() {
+            const montant = parseFloat(document.getElementById("montant").value);
+            const deviseSelectionnee = document.getElementById("devise").value;
+            const montantConvertiElement = document.getElementById("montantConverti");
+
+            if (isNaN(montant) || montant <= 0) {
+                montantConvertiElement.textContent = "";
+                return;
+            }
+
+            try {
+                if (deviseSelectionnee === "EUR") {
+                    montantConvertiElement.textContent = "";
+                    return;
+                }
+
+                if (!tauxChange[deviseSelectionnee]) {
+                    await chargerTauxChange();
+                }
+
+                const taux = tauxChange[deviseSelectionnee];
+                const montantEUR = montant / taux;
+                
+                montantConvertiElement.textContent = `${montant} ${deviseSelectionnee} = ${montantEUR.toFixed(2)} EUR`;
+            } catch (error) {
+                console.error('Erreur lors de la conversion:', error);
+                montantConvertiElement.textContent = "Erreur de conversion";
+            }
+        }
+
+        // Ajouter l'événement input pour la conversion en temps réel
+        document.getElementById("montant").addEventListener("input", convertirMontant);
+
+        function afficherCategorie() {
+            const montant = parseFloat(document.getElementById("montant").value);
+            const devise = document.getElementById("devise").value;
+            const resultat = document.getElementById("resultat");
+
+            if (isNaN(montant) || montant <= 0) {
+                resultat.style.display = "block";
+                resultat.style.backgroundColor = "#ffcdd2";
+                resultat.style.color = "#c62828";
+                resultat.innerText = "Veuillez entrer un montant valide supérieur à 0.";
+                return;
+            }
+
+            let montantEUR = montant;
+            if (devise !== "EUR") {
+                montantEUR = montant / tauxChange[devise];
+            }
+
+            let message = "";
+            let bgColor = "";
+            
+            if (montantEUR < 200) {
+                message = "Catégorie : Financement inférieur à 200€";
+                bgColor = "#28a745";
+            } else if (montantEUR <= 500) {
+                message = "Catégorie : Financement entre 200€ et 500€";
+                bgColor = "#fd7e14";
+            } else {
+                message = "Catégorie : Financement supérieur à 500€";
+                bgColor = "#6f42c1";
+            }
+
+            resultat.style.display = "block";
+            resultat.style.backgroundColor = bgColor;
+            resultat.style.color = "white";
+            resultat.innerText = message;
+        }
+
+        // Chatbot functions
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            chatbot.style.display = chatbot.style.display === 'none' || chatbot.style.display === '' ? 'flex' : 'none';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            // Ajouter le message de l'utilisateur
+            addMessage(message, 'user-message');
+            
+            // Réinitialiser l'input
+            input.value = '';
+            
+            // Simuler la réponse du bot
+            setTimeout(() => {
+                const response = getBotResponse(message);
+                addMessage(response, 'bot-message');
+            }, 500);
+        }
+
+        function addMessage(text, className) {
+            const messages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.textContent = text;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function getBotResponse(message) {
+            message = message.toLowerCase();
+            
+            // Détecter si le message contient un montant
+            const montantMatch = message.match(/(\d+)(\s*[€e]|\s+euros?)?/);
+            
+            if (montantMatch) {
+                const montant = parseInt(montantMatch[1]);
+                let response = "";
+                
+                if (montant < 200) {
+                    response = `${montant}€ est inférieur au montant minimum recommandé de 200€. Cependant, vous pouvez toujours explorer les projets disponibles dans cette catégorie. Souhaitez-vous voir les projets correspondants ?`;
+                } else if (montant <= 500) {
+                    response = `Un investissement de ${montant}€ vous donne accès à nos projets de catégorie intermédiaire. C'est un excellent montant pour commencer ! Voulez-vous que je vous montre les projets disponibles dans cette gamme ?`;
+                } else {
+                    response = `Excellent ! Avec ${montant}€, vous avez accès à nos projets premium. C'est un investissement significatif qui vous ouvre de nombreuses opportunités. Souhaitez-vous explorer les projets disponibles ou en savoir plus sur nos garanties pour les investissements importants ?`;
+                }
+                return response;
+            }
+            
+            if (message.includes('bonjour') || message.includes('salut')) {
+                return "Bonjour ! Comment puis-je vous aider aujourd'hui ?";
+            }
+            else if (message.includes('investir') || message.includes('investissement')) {
+                return "Pour investir, vous pouvez commencer par utiliser notre simulateur de financement en haut de la page. Quel montant souhaitez-vous investir ? Vous pouvez simplement me dire le montant en euros.";
+            }
+            else if (message.includes('projet')) {
+                return "Nous avons plusieurs projets innovants dans différents secteurs. Vous pouvez les filtrer par montant, secteur et type de financement dans la section des filtres. Quel type de projet vous intéresse ?";
+            }
+            else if (message.includes('montant') || message.includes('minimum')) {
+                return "Le montant minimum d'investissement recommandé est de 200€. Vous pouvez simuler différents montants avec notre calculateur. Dites-moi simplement le montant que vous envisagez d'investir.";
+            }
+            else if (message.includes('secteur')) {
+                return "Nous couvrons plusieurs secteurs : GreenTech, Santé, et Intelligence Artificielle. Quel secteur vous intéresse particulièrement ? Je peux vous donner plus de détails sur chacun d'entre eux.";
+            }
+            else if (message.includes('contact') || message.includes('aide')) {
+                return "Notre équipe est disponible pour vous aider. Vous pouvez nous contacter via la section Contact ou par email à support@innoconnect.com. Souhaitez-vous que je vous donne plus de détails sur nos horaires de disponibilité ?";
+            }
+            else if (message.includes('merci')) {
+                return "Je vous en prie ! N'hésitez pas si vous avez d'autres questions.";
+            }
+            else if (message.includes('garantie') || message.includes('sécurité')) {
+                return "Nous offrons plusieurs garanties pour sécuriser vos investissements : protection des données, transparence totale, et suivi régulier des projets. Souhaitez-vous en savoir plus sur un aspect particulier ?";
+            }
+            else {
+                return "Je ne suis pas sûr de comprendre votre demande. Vous pouvez me parler de : \n- Un montant à investir (ex: 300€)\n- Un secteur d'intérêt (GreenTech, Santé, IA)\n- Des garanties\n- Nos projets\n- Ou demander à me contacter";
+            }
+        }
+    </script>
+</body>
+</html>

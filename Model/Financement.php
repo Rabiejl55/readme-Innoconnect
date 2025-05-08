@@ -10,13 +10,13 @@ class Financement{
     private $errors = [];
 
 
-    public function __construct( $montant,$typeOperation,$titre, $date_operation, $id_contrat, $id_Projet) {
-        $this->montant = $montant;
-        $this->typeOperation = $typeOperation;
-        $this->titre = $titre;
-        $this->date_operation = $date_operation;
-        $this->id_contrat = $id_contrat;
-        $this->id_Projet = $id_Projet;
+    public function __construct( ) {
+        $this->montant = null;
+        $this->typeOperation = null;
+        $this->titre = null;
+        $this->date_operation = null;
+        $this->id_contrat = null;
+        $this->id_Projet = null;
     }
 
     public function getIdFinancement() {

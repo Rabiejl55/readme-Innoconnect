@@ -1,73 +1,78 @@
 <?php
-require_once '../../Model/Financement.php';
 require_once '../../Controller/FinancementController.php';
-
-$financementController = new FinancementController();
+require_once '../../Model/Financement.php';
+require_once '../../Controller/ContratController.php';
 
 $errors = [];
-$showAddModal = false;
-$showEditModal = false;
+$success = '';
 
-// Appel de la fonction addFinancement
-if (isset($_POST['submit'])) {
-  $montant = $_POST['montant'];
-  $typeOperation = $_POST['typeOperation'];
-  $titre = $_POST['titre'];
-  $date_operation = $_POST['date_operation'];
-  $id_contrat = $_POST['id_contrat'];
-  $id_Projet = $_POST['id_Projet'];
+$controller = new FinancementController();
+$contractController = new ContratController();
+$contracts = $contractController->getAllContrats();
 
-  $financement = new Financement($montant, $typeOperation, $titre, $date_operation, $id_contrat, $id_Projet);
-  
-  // Si validation réussie, ajouter et rediriger
-  if ($financementController->addFinancement($financement)) {
-    header('Location: FinancementView.php');
-    exit();
-  } else {
-    // Sinon, récupérer les erreurs
-    $errors = $financement->getErrors();
-    // Les erreurs seront affichées dans le formulaire
-    $showAddModal = true; // Indique qu'il faut ouvrir le modal d'ajout
+// Handle Add New Financement
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit']) && empty($_POST['id_financement'])) {
+    try {
+        $financement = new Financement();
+        $financement->setTitre($_POST['titre']);
+        $financement->setTypeOperation($_POST['typeOperation']);
+        $financement->setMontant($_POST['montant']);
+        $financement->setDateOperation($_POST['date_operation']);
+        $financement->setIdContrat($_POST['id_contrat']);
+        $financement->setIdProjet('1'); // Set a default project ID or adjust as necessary
 
-  }
-}
+        $result = $controller->addFinancement($financement);
 
-// Appel de la fonction delete
-if (isset($_POST['delete_id'])) {
-  $id_financement = $_POST['delete_id'];
-  if ($financementController->showFinancement($id_financement)) {
-    $financementController->deleteFinancement($id_financement);
-  }
-  header("Location: FinancementView.php");
-}
-// Appel de la fonction UpdateFinancement
-if (isset($_POST['update'])) {
-  $id_financement = $_POST['edit_id'];
-  $financement = new Financement(
-    $_POST['edit_montant'],
-    $_POST['edit_typeOperation'],
-    $_POST['edit_titre'],
-    $_POST['edit_date_operation'],
-    $_POST['edit_id_contrat'],
-    $_POST['edit_id_Projet']
-  );
-  
-  // Si validation réussie, mettre à jour et rediriger
-  if ($financementController->updateFinancement($financement, $id_financement)) {
-    header('Location: FinancementView.php');
-    exit();
-  } else {
-    // Sinon, récupérer les erreurs
-    $errors = $financement->getErrors();
-    $showEditModal = true; // Indique qu'il faut ouvrir le modal d'édition
-    $_POST['edit_id_saved'] = $id_financement; // Sauvegarde l'ID pour le modal  
+        if ($result) {
+            $success = "Financement ajouté avec succès !";
+            $_POST = []; // Clear POST data after successful submission
+        } else {
+            $errors['global'] = "Erreur lors de l'ajout du financement.";
+        }
+    } catch (Exception $e) {
+        $errors['global'] = "Erreur : " . $e->getMessage();
     }
 }
-// Appel de la fonction afficher
-$financements = $financementController->listFinancement();
 
+// Handle Delete
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+    try {
+        $deleteId = (int)$_POST['delete_id'];
+        $controller->deleteFinancement($deleteId);
+        $success = "Financement supprimé avec succès.";
+    } catch (Exception $e) {
+        $errors['global'] = "Erreur suppression : " . $e->getMessage();
+    }
+}
+
+// Handle Update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit']) && !empty($_POST['id_financement'])) {
+    try {
+        $financement = new Financement();
+        $financement->setIdFinancement($_POST['id_financement']);
+        $financement->setTitre($_POST['titre']);
+        $financement->setTypeOperation($_POST['typeOperation']);
+        $financement->setMontant($_POST['montant']);
+        $financement->setDateOperation($_POST['date_operation']);
+        $financement->setIdContrat($_POST['id_contrat']);
+        $financement->setIdProjet($_POST['id_Projet']);
+
+        $result = $controller->updateFinancement($financement, $_POST['id_financement']);
+
+        if ($result) {
+            $success = "Financement modifié avec succès !";
+            $_POST = [];
+        } else {
+            $errors['global'] = "Erreur lors de la modification.";
+        }
+    } catch (Exception $e) {
+        $errors['global'] = "Erreur : " . $e->getMessage();
+    }
+}
+
+// Load all financements
+$financements = $controller->listFinancement();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -180,45 +185,22 @@ $financements = $financementController->listFinancement();
     <hr class="horizontal dark mt-0" />
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="doch.html">
-            <i class="fas fa-home text-primary"></i>
-            <span class="nav-link-text ms-2">Dashboard</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="innovateur.html">
-            <i class="fas fa-lightbulb text-warning"></i>
-            <span class="nav-link-text ms-2">User Management</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="investisseur.html">
-            <i class="fas fa-hand-holding-usd text-success"></i>
-            <span class="nav-link-text ms-2">Project Management</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="contractIntelligent.html">
-            <i class="fas fa-file-signature text-info"></i>
-            <span class="nav-link-text ms-2">Feedback Management</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="contractIntelligent.html">
-            <i class="fas fa-file-signature text-info"></i>
-            <span class="nav-link-text ms-2">Collaborative Management</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="contractIntelligent.html">
+      <li class="nav-item">
+          <a class="nav-link active" href="FinancementView.php">
             <i class="fas fa-file-signature text-info"></i>
             <span class="nav-link-text ms-2">Financement Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="ContratView.php">
+            <i class="fas fa-file-signature text-info"></i>
+            <span class="nav-link-text ms-2">Contract Management</span>
           </a>
         </li>
       </ul>
     </div>
   </aside>
+  
 
   <!-- Contenu principal -->
   <main class="main-content position-relative border-radius-lg">
@@ -252,6 +234,19 @@ $financements = $financementController->listFinancement();
                   <input type="text" class="form-control" id="searchInput" placeholder="Rechercher par ID, Type..."
                     oninput="filterTable()" />
                 </div>
+                <div class="message-container">
+    <?php if (!empty($success)): ?>
+        <div class="alert alert-success" style="color:white !important;" role="alert">
+            <?php echo htmlspecialchars($success); ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($errors['global'])): ?>
+        <div class="alert alert-danger" role="alert" style="color:white !important;">
+            <?php echo htmlspecialchars($errors['global']); ?>
+        </div>
+    <?php endif; ?>
+</div>
                 <div class="table-responsive p-0">
                   <table class="table align-items-center mb-0" id="decaissementsTable">
                     <thead>
@@ -273,9 +268,8 @@ $financements = $financementController->listFinancement();
                           <td><?= $financement['montant'] ?> €</td>
                           <td><?= $financement['typeOperation'] ?></td>
                           <td><?= $financement['id_contrat'] ?></td>
-                          <td><?= $financement['id_Projet'] ?></td>
+                          <td><?= $financement['id_projet'] ?></td>
 
-                          <!-- action buttons -->
                           <td>
                             <button class="btn btn-link text-primary" onclick="openEditForm(
                 '<?= $financement['id_financement'] ?>',
@@ -284,7 +278,7 @@ $financements = $financementController->listFinancement();
                 '<?= $financement['montant'] ?>',
                 '<?= $financement['date_operation'] ?>',
                 '<?= $financement['id_contrat'] ?>',
-                '<?= $financement['id_Projet'] ?>'
+                '<?= $financement['id_projet'] ?>'
             )">
                               <i class="fas fa-pencil-alt me-2"></i>Modifier
                             </button>
@@ -321,133 +315,145 @@ $financements = $financementController->listFinancement();
   <div class="modal fade" id="FinancementModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <form method="POST" action="FinancementView.php">
-          <div class="modal-header">
-            <h5 class="modal-title">Ajouter Financement</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Titre</label>
-              <input type="text" class="form-control <?php echo isset($errors['titre']) ? 'is-invalid' : ''; ?>" name="titre" value="<?php echo isset($_POST['titre']) ? htmlspecialchars($_POST['titre']) : ''; ?>" >
-              <?php if (isset($errors['titre'])): ?>
+     <!-- HTML Form for Adding Financement -->
+<form method="POST" action="FinancementView.php">
+    <div class="modal-header">
+        <h5 class="modal-title">Ajouter Financement</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Titre</label>
+            <input type="text" class="form-control <?php echo isset($errors['titre']) ? 'is-invalid' : ''; ?>" name="titre" value="<?php echo isset($_POST['titre']) ? htmlspecialchars($_POST['titre']) : ''; ?>" >
+            <?php if (isset($errors['titre'])): ?>
                 <div class="invalid-feedback"><?php echo $errors['titre']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>Type d'opération</label>
-              <select class="form-select <?php echo isset($errors['typeOperation']) ? 'is-invalid' : ''; ?>" name="typeOperation" >
+            <?php endif; ?>
+        </div>
+
+        <div class="form-group">
+            <label>Type d'opération</label>
+            <select class="form-select <?php echo isset($errors['typeOperation']) ? 'is-invalid' : ''; ?>" name="typeOperation">
                 <option value="encaissement" <?php echo (isset($_POST['typeOperation']) && $_POST['typeOperation'] === 'encaissement') ? 'selected' : ''; ?>>Encaissement</option>
-                <option value="decaissement" <?php echo (isset($_POST['typeOperation']) && $_POST['typeOperation'] === 'decaissement') ? 'selected' : ''; ?>>Decaissement</option>
+                <option value="decaissement" <?php echo (isset($_POST['typeOperation']) && $_POST['typeOperation'] === 'decaissement') ? 'selected' : ''; ?>>Décaissement</option>
                 <option value="tresorerie finale" <?php echo (isset($_POST['typeOperation']) && $_POST['typeOperation'] === 'tresorerie finale') ? 'selected' : ''; ?>>Trésorerie Finale</option>
-              </select>
-              <?php if (isset($errors['typeOperation'])): ?>
+            </select>
+            <?php if (isset($errors['typeOperation'])): ?>
                 <div class="invalid-feedback"><?php echo $errors['typeOperation']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>Montant (€)</label>
-              <input type="number" class="form-control <?php echo isset($errors['montant']) ? 'is-invalid' : ''; ?>" name="montant" step="0.01" value="<?php echo isset($_POST['montant']) ? htmlspecialchars($_POST['montant']) : ''; ?>" >
-              <?php if (isset($errors['montant'])): ?>
+            <?php endif; ?>
+        </div>
+
+        <div class="form-group">
+            <label>Montant (€)</label>
+            <input type="number" class="form-control <?php echo isset($errors['montant']) ? 'is-invalid' : ''; ?>" name="montant" step="0.01" value="<?php echo isset($_POST['montant']) ? htmlspecialchars($_POST['montant']) : ''; ?>" >
+            <?php if (isset($errors['montant'])): ?>
                 <div class="invalid-feedback"><?php echo $errors['montant']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>Date</label>
-              <input type="date" class="form-control <?php echo isset($errors['date_operation']) ? 'is-invalid' : ''; ?>" name="date_operation" value="<?php echo isset($_POST['date_operation']) ? htmlspecialchars($_POST['date_operation']) : ''; ?>" >
-              <?php if (isset($errors['date_operation'])): ?>
+            <?php endif; ?>
+        </div>
+
+        <div class="form-group">
+            <label>Date</label>
+            <input type="date" class="form-control <?php echo isset($errors['date_operation']) ? 'is-invalid' : ''; ?>" name="date_operation" value="<?php echo isset($_POST['date_operation']) ? htmlspecialchars($_POST['date_operation']) : ''; ?>" >
+            <?php if (isset($errors['date_operation'])): ?>
                 <div class="invalid-feedback"><?php echo $errors['date_operation']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>ID Contrat</label>
-              <input type="text" class="form-control <?php echo isset($errors['id_contrat']) ? 'is-invalid' : ''; ?>" name="id_contrat" value="<?php echo isset($_POST['id_contrat']) ? htmlspecialchars($_POST['id_contrat']) : ''; ?>" >
-              <?php if (isset($errors['id_contrat'])): ?>
+            <?php endif; ?>
+        </div>
+
+        <div class="form-group">
+            <label>ID Contrat</label>
+            <select class="form-select <?php echo isset($errors['id_contrat']) ? 'is-invalid' : ''; ?>" name="id_contrat">
+                <option value="">Sélectionner un contrat</option>
+                <?php foreach ($contracts as $contract): ?>
+                    <option value="<?php echo $contract['id_contrat']; ?>" <?php echo (isset($_POST['id_contrat']) && $_POST['id_contrat'] === $contract['id_contrat']) ? 'selected' : ''; ?>>
+                      <span >Inno : </span>  <?php echo $contract['innovateur_nom']; ?>  <span>Inve.</span><?php echo $contract['investisseur_nom']; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php if (isset($errors['id_contrat'])): ?>
                 <div class="invalid-feedback"><?php echo $errors['id_contrat']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>ID Projet</label>
-              <input type="text" class="form-control <?php echo isset($errors['id_Projet']) ? 'is-invalid' : ''; ?>" name="id_Projet" value="<?php echo isset($_POST['id_Projet']) ? htmlspecialchars($_POST['id_Projet']) : ''; ?>" >
-              <?php if (isset($errors['id_Projet'])): ?>
-                <div class="invalid-feedback"><?php echo $errors['id_Projet']; ?></div>
-              <?php endif; ?>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            <button type="submit" class="btn btn-danger" name="submit">Enregistrer</button>
-          </div>
-        </form>
+            <?php endif; ?>
+        </div>
+
+        <div class="form-group">
+            <label>ID Projet</label>
+            <input type="text" class="form-control" name="id_Projet" value="1" readonly>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-danger" name="submit">Enregistrer</button>
+    </div>
+</form>
       </div>
     </div>
   </div>
 
-  <!-- Modal Edit -->
-  <div class="modal fade" id="EditModal">
+<!-- Modal Edit -->
+<div class="modal fade" id="EditModal">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <form method="POST">
-          <div class="modal-header">
-            <h5 class="modal-title">Modifier Financement</h5>
-          </div>
-          <div class="modal-body">
-            <input type="hidden" name="edit_id" id="edit_id" value="<?php echo isset($_POST['edit_id_saved']) ? $_POST['edit_id_saved'] : ''; ?>">
-            <div class="form-group">
-              <label>Titre</label>
-              <input type="text" class="form-control <?php echo isset($errors['titre']) ? 'is-invalid' : ''; ?>" name="edit_titre" id="edit_titre" value="<?php echo isset($_POST['edit_titre']) ? htmlspecialchars($_POST['edit_titre']) : ''; ?>" >
-              <?php if (isset($errors['titre'])): ?>
-                <div class="invalid-feedback"><?php echo $errors['titre']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>Type d'opération</label>
-              <select class="form-select <?php echo isset($errors['typeOperation']) ? 'is-invalid' : ''; ?>" name="edit_typeOperation" id="edit_typeOperation" >
-                <option value="encaissement" <?php echo (isset($_POST['edit_typeOperation']) && $_POST['edit_typeOperation'] === 'encaissement') ? 'selected' : ''; ?>>Encaissement</option>
-                <option value="decaissement" <?php echo (isset($_POST['edit_typeOperation']) && $_POST['edit_typeOperation'] === 'decaissement') ? 'selected' : ''; ?>>Decaissement</option>
-                <option value="tresorerie finale" <?php echo (isset($_POST['edit_typeOperation']) && $_POST['edit_typeOperation'] === 'tresorerie finale') ? 'selected' : ''; ?>>Trésorerie Finale</option>
-              </select>
-              <?php if (isset($errors['typeOperation'])): ?>
-                <div class="invalid-feedback"><?php echo $errors['typeOperation']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>Montant (€)</label>
-              <input type="number" class="form-control <?php echo isset($errors['montant']) ? 'is-invalid' : ''; ?>" name="edit_montant" id="edit_montant" step="0.01" value="<?php echo isset($_POST['edit_montant']) ? htmlspecialchars($_POST['edit_montant']) : ''; ?>" >
-              <?php if (isset($errors['montant'])): ?>
-                <div class="invalid-feedback"><?php echo $errors['montant']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>Date</label>
-              <input type="date" class="form-control <?php echo isset($errors['date_operation']) ? 'is-invalid' : ''; ?>" name="edit_date_operation" id="edit_date_operation" value="<?php echo isset($_POST['edit_date_operation']) ? htmlspecialchars($_POST['edit_date_operation']) : ''; ?>" >
-              <?php if (isset($errors['date_operation'])): ?>
-                <div class="invalid-feedback"><?php echo $errors['date_operation']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>ID Contrat</label>
-              <input type="text" class="form-control <?php echo isset($errors['id_contrat']) ? 'is-invalid' : ''; ?>" name="edit_id_contrat" id="edit_id_contrat" value="<?php echo isset($_POST['edit_id_contrat']) ? htmlspecialchars($_POST['edit_id_contrat']) : ''; ?>" >
-              <?php if (isset($errors['id_contrat'])): ?>
-                <div class="invalid-feedback"><?php echo $errors['id_contrat']; ?></div>
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label>ID Projet</label>
-              <input type="text" class="form-control <?php echo isset($errors['id_Projet']) ? 'is-invalid' : ''; ?>" name="edit_id_Projet" id="edit_id_Projet" value="<?php echo isset($_POST['edit_id_Projet']) ? htmlspecialchars($_POST['edit_id_Projet']) : ''; ?>" >
-              <?php if (isset($errors['id_Projet'])): ?>
-                <div class="invalid-feedback"><?php echo $errors['id_Projet']; ?></div>
-              <?php endif; ?>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            <button type="submit" class="btn btn-primary" name="update">Enregistrer</button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-content">
+            <form method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier Financement</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id_financement" id="edit_id" value="<?php echo isset($_POST['id_financement']) ? htmlspecialchars($_POST['id_financement']) : ''; ?>">
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" class="form-control <?php echo isset($errors['titre']) ? 'is-invalid' : ''; ?>" name="titre" id="edit_titre" value="<?php echo isset($_POST['titre']) ? htmlspecialchars($_POST['titre']) : ''; ?>">
+                        <?php if (isset($errors['titre'])): ?>
+                            <div class="invalid-feedback"><?php echo $errors['titre']; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="form-group">
+                        <label>Type d'opération</label>
+                        <select class="form-select <?php echo isset($errors['typeOperation']) ? 'is-invalid' : ''; ?>" name="typeOperation" id="edit_typeOperation">
+                            <option value="encaissement" <?php echo (isset($_POST['typeOperation']) && $_POST['typeOperation'] === 'encaissement') ? 'selected' : ''; ?>>Encaissement</option>
+                            <option value="decaissement" <?php echo (isset($_POST['typeOperation']) && $_POST['typeOperation'] === 'decaissement') ? 'selected' : ''; ?>>Decaissement</option>
+                            <option value="tresorerie finale" <?php echo (isset($_POST['typeOperation']) && $_POST['typeOperation'] === 'tresorerie finale') ? 'selected' : ''; ?>>Trésorerie Finale</option>
+                        </select>
+                        <?php if (isset($errors['typeOperation'])): ?>
+                            <div class="invalid-feedback"><?php echo $errors['typeOperation']; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="form-group">
+                        <label>Montant (€)</label>
+                        <input type="number" class="form-control <?php echo isset($errors['montant']) ? 'is-invalid' : ''; ?>" name="montant" id="edit_montant" step="0.01" value="<?php echo isset($_POST['montant']) ? htmlspecialchars($_POST['montant']) : ''; ?>">
+                        <?php if (isset($errors['montant'])): ?>
+                            <div class="invalid-feedback"><?php echo $errors['montant']; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" class="form-control <?php echo isset($errors['date_operation']) ? 'is-invalid' : ''; ?>" name="date_operation" id="edit_date_operation" value="<?php echo isset($_POST['date_operation']) ? htmlspecialchars($_POST['date_operation']) : ''; ?>">
+                        <?php if (isset($errors['date_operation'])): ?>
+                            <div class="invalid-feedback"><?php echo $errors['date_operation']; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Contrat</label>
+                        <input type="text" class="form-control <?php echo isset($errors['id_contrat']) ? 'is-invalid' : ''; ?>" name="id_contrat" id="edit_id_contrat" value="<?php echo isset($_POST['id_contrat']) ? htmlspecialchars($_POST['id_contrat']) : ''; ?>">
+                        <?php if (isset($errors['id_contrat'])): ?>
+                            <div class="invalid-feedback"><?php echo $errors['id_contrat']; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Projet</label>
+                        <input type="text" class="form-control <?php echo isset($errors['id_Projet']) ? 'is-invalid' : ''; ?>" name="id_Projet" id="edit_id_Projet" value="<?php echo isset($_POST['id_Projet']) ? htmlspecialchars($_POST['id_Projet']) : ''; ?>">
+                        <?php if (isset($errors['id_Projet'])): ?>
+                            <div class="invalid-feedback"><?php echo $errors['id_Projet']; ?></div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary" name="submit">Enregistrer</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
   <!-- JS -->
   <script src="../../assets/js/core/popper.min.js"></script>
   <script src="../../assets/js/core/bootstrap.min.js"></script>
