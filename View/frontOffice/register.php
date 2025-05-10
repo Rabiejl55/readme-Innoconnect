@@ -5,17 +5,49 @@ header("Pragma: no-cache");
 
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/config.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/Controller/utilisateurC.php';
-
-// Inclure la bibliothèque 2Captcha (si installée via Composer)
 require_once $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/vendor/autoload.php';
 
 use TwoCaptcha\TwoCaptcha;
 
 session_start();
 
-// Générer un jeton CSRF
+// Vérifier si la session est bien démarrée
+if (session_status() !== PHP_SESSION_ACTIVE || session_id() === '') {
+    logMessage("Session failed to start properly");
+    die("Session error. Please clear your cookies and try again.");
+}
+
+// Régénérer l'ID de session pour éviter les problèmes de corruption
+if (!isset($_SESSION['session_initialized'])) {
+    session_regenerate_id(true);
+    $_SESSION['session_initialized'] = true;
+    logMessage("Session ID regenerated");
+}
+
+// Générer un jeton CSRF uniquement s'il n'existe pas
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    logMessage("New CSRF token generated: " . $_SESSION['csrf_token']);
+}
+
+// Initialiser le compteur de tentatives CSRF
+if (!isset($_SESSION['csrf_attempts'])) {
+    $_SESSION['csrf_attempts'] = 0;
+}
+
+// Initialiser les notifications
+$notification = isset($_SESSION['notification']) ? $_SESSION['notification'] : null;
+unset($_SESSION['notification']);
+
+// Fonction IA pour générer un message
+function generateWelcomeMessage($name, $type) {
+    $greetings = [
+        'investisseur' => "Welcome to the investment world, ",
+        'innovateur' => "Get ready to innovate, ",
+        'administrateur' => "Take charge as an admin, "
+    ];
+    $greeting = $greetings[$type] ?? "Welcome, ";
+    return $greeting . "$name! We're excited to have you on board at InnoConnect. Explore your new features and shape the future!";
 }
 
 // Enable error logging
@@ -24,203 +56,162 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Log file for debugging
-$logFile = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/debug.log';
+$logFile = dirname(__DIR__, 2) . '/debug.log';
 function logMessage($message) {
     global $logFile;
+    if (empty($logFile)) {
+        error_log("Log file path is empty in logMessage()");
+        return;
+    }
+    if (!file_exists($logFile)) {
+        file_put_contents($logFile, "Log file created\n");
+    }
     file_put_contents($logFile, date('Y-m-d H:i:s') . " - " . $message . "\n", FILE_APPEND);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     logMessage("Starting registration process");
+    logMessage("CSRF token in session: " . ($_SESSION['csrf_token'] ?? 'undefined'));
+    logMessage("CSRF token from POST: " . ($_POST['csrf_token'] ?? 'undefined'));
 
     // Vérifier le jeton CSRF
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        logMessage("CSRF token validation failed");
-        header("Location: register.php?error=Invalid CSRF token");
-        exit;
-    }
-
-    // Vérifier le reCAPTCHA directement avec Google
-    $recaptchaResponse = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : '';
-    if (empty($recaptchaResponse)) {
-        logMessage("reCAPTCHA validation failed: No response received");
-        header("Location: register.php?error=Please complete the reCAPTCHA verification");
-        exit;
-    }
-
-    $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
-    $response = file_get_contents($verifyUrl . '?secret=' . '6LeZBisrAAAAAK2CRpum3u6w4B9egsPUWOJnKwv7' . '&response=' . $recaptchaResponse);
-    $responseKeys = json_decode($response, true);
-
-    if (intval($responseKeys["success"]) !== 1) {
-        logMessage("reCAPTCHA verification failed: " . json_encode($responseKeys));
-        header("Location: register.php?error=Failed reCAPTCHA verification");
-        exit;
-    }
-
-    logMessage("reCAPTCHA verified successfully via Google");
-
-    $nom = trim($_POST['nom']);
-    $prenom = trim($_POST['prenom']);
-    $email = trim($_POST['email']);
-    $mot_de_passe = trim($_POST['mot_de_passe']);
-    $type = $_POST['type'];
-
-    if (empty($nom) || empty($prenom) || empty($email) || empty($mot_de_passe) || empty($type)) {
-        logMessage("Validation failed: Missing required fields");
-        header("Location: register.php?error=All fields are required");
-        exit;
-    }
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        logMessage("Validation failed: Invalid email format");
-        header("Location: register.php?error=Invalid email format");
-        exit;
-    }
-
-    $validTypes = ['investisseur', 'innovateur', 'administrateur'];
-    if (!in_array($type, $validTypes)) {
-        logMessage("Validation failed: Invalid user type");
-        header("Location: register.php?error=Invalid user type");
-        exit;
-    }
-
-    $userC = new userC();
-    $existingUser = $userC->emailExists($email);
-    if ($existingUser) {
-        logMessage("Validation failed: Email already exists");
-        header("Location: register.php?error=Email already exists");
-        exit;
-    }
-
-    // Hash the password
-    $hashed_password = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-    
-    // Set the registration date
-    $date_inscription = date('Y-m-d H:i:s');
-
-    // Set photo_profil to null initially
-    $photo_profil = null;
-
-    // Add the user to the database
-    $userId = null;
-    try {
-        logMessage("Attempting to add user: nom=$nom, email=$email");
-        $db = config::getConnexion();
-        $db->beginTransaction();
-        $userC->ajouterUser($nom, $prenom, $email, $hashed_password, $type, $date_inscription, $photo_profil);
-        $userId = $db->lastInsertId();
-        $db->commit();
-        logMessage("User added successfully with ID: $userId");
-    } catch (Exception $e) {
-        $db->rollBack();
-        logMessage("Error during user insertion: " . $e->getMessage());
-        header("Location: register.php?error=" . urlencode($e->getMessage()));
-        exit;
-    }
-
-    // Handle photo upload and face encoding
-    $uploadPath = null;
-    if (isset($_FILES['photo_profil']) && $_FILES['photo_profil']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/';
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $maxFileSize = 5 * 1024 * 1024; // 5MB
-
-        $fileType = $_FILES['photo_profil']['type'];
-        $fileSize = $_FILES['photo_profil']['size'];
-        $fileTmpName = $_FILES['photo_profil']['tmp_name'];
-
-        logMessage("Photo upload started: type=$fileType, size=$fileSize bytes");
-
-        // Vérifier le type de fichier
-        if (!in_array($fileType, $allowedTypes)) {
-            logMessage("File upload failed: Invalid file type ($fileType)");
-            header("Location: login.php?success=Registration successful! Please login. Note: Invalid file type for photo (JPEG, PNG, GIF only).");
-            exit;
-        }
-
-        // Vérifier la taille du fichier
-        if ($fileSize > $maxFileSize) {
-            logMessage("File upload failed: File size ($fileSize bytes) exceeds 5MB limit");
-            header("Location: login.php?success=Registration successful! Please login. Note: Photo exceeds 5MB limit.");
-            exit;
-        }
-
-        // Vérifier si le dossier d'upload existe et est accessible
-        if (!is_dir($uploadDir)) {
-            logMessage("Upload directory does not exist: $uploadDir");
-            header("Location: login.php?success=Registration successful! Please login. Note: Server error - upload directory not found.");
-            exit;
-        }
-        if (!is_writable($uploadDir)) {
-            logMessage("Upload directory is not writable: $uploadDir");
-            header("Location: login.php?success=Registration successful! Please login. Note: Server error - upload directory not writable.");
-            exit;
-        }
-
-        // Générer un nom unique pour la photo
-        $fileExt = strtolower(pathinfo($_FILES['photo_profil']['name'], PATHINFO_EXTENSION));
-        $newFileName = $userId . '_' . time() . '.' . $fileExt;
-        $uploadPath = $uploadDir . $newFileName;
-
-        logMessage("Attempting to move uploaded file to: $uploadPath");
-        if (!move_uploaded_file($fileTmpName, $uploadPath)) {
-            logMessage("File upload failed: Unable to move file to $uploadPath");
-            header("Location: login.php?success=Registration successful! Please login. Note: Failed to upload photo.");
-            exit;
-        }
-
-        // Mettre à jour le chemin de la photo dans la base de données
-        try {
-            $photo_profil = $newFileName;
-            $db = config::getConnexion();
-            logMessage("Updating user with photo_profil: $photo_profil");
-            $stmt = $db->prepare("UPDATE utilisateur SET photo_profil = :photo_profil WHERE id_utilisateur = :id_utilisateur");
-            $stmt->execute([':photo_profil' => $photo_profil, ':id_utilisateur' => $userId]);
-            logMessage("Photo uploaded and user updated with photo_profil: $photo_profil");
-        } catch (Exception $e) {
-            if ($uploadPath && file_exists($uploadPath)) {
-                unlink($uploadPath);
-            }
-            logMessage("Error updating user with photo: " . $e->getMessage());
-            header("Location: login.php?success=Registration successful! Please login. Note: Failed to save photo due to database error.");
-            exit;
-        }
-
-        // Générer l'encodage du visage pour la reconnaissance faciale
-        $python_script = 'C:\xampp\htdocs\ProjetInnoconnect\scripts\generate_encoding.py';
-        $command = escapeshellcmd("py -3.11 $python_script $uploadPath $userId");
-        $output = shell_exec($command);
-        logMessage("Résultat de la génération d'encodage : $output");
-
-        if (strpos($output, "Aucun visage détecté") !== false) {
-            // Supprimer la photo téléversée si aucun visage n'est détecté
-            if ($uploadPath && file_exists($uploadPath)) {
-                unlink($uploadPath);
-            }
-            // Mettre à jour la base de données pour retirer le chemin de la photo
-            try {
-                $db = config::getConnexion();
-                $stmt = $db->prepare("UPDATE utilisateur SET photo_profil = NULL WHERE id_utilisateur = :id_utilisateur");
-                $stmt->execute([':id_utilisateur' => $userId]);
-                logMessage("Photo removed from database due to face detection failure");
-            } catch (Exception $e) {
-                logMessage("Error removing photo from database: " . $e->getMessage());
-            }
-            header("Location: register.php?error=No face detected in the profile picture");
-            exit;
-        }
+    if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $_SESSION['csrf_attempts']++;
+        logMessage("CSRF token validation failed (attempt " . $_SESSION['csrf_attempts'] . ")");
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        logMessage("CSRF token regenerated after failure: " . $_SESSION['csrf_token']);
+        $_SESSION['notification'] = ['type' => 'danger', 'message' => 'Invalid CSRF token. Please try again.'];
     } else {
-        // Photo de profil obligatoire
-        logMessage("Photo upload failed: Profile picture is required");
-        header("Location: register.php?error=Profile picture is required.");
-        exit;
+        logMessage("CSRF token validated successfully");
+        $_SESSION['csrf_attempts'] = 0;
+
+        // Vérifier le reCAPTCHA
+        $recaptchaResponse = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : '';
+        if (empty($recaptchaResponse)) {
+            logMessage("reCAPTCHA validation failed: No response received");
+            $_SESSION['notification'] = ['type' => 'danger', 'message' => 'Please complete the reCAPTCHA verification'];
+        } else {
+            logMessage("reCAPTCHA response received: " . $recaptchaResponse);
+            $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+            $response = file_get_contents($verifyUrl . '?secret=' . '6LeZBisrAAAAAK2CRpum3u6w4B9egsPUWOJnKwv7' . '&response=' . $recaptchaResponse);
+            $responseKeys = json_decode($response, true);
+            logMessage("reCAPTCHA server response: " . json_encode($responseKeys));
+
+            if (intval($responseKeys["success"]) !== 1) {
+                logMessage("reCAPTCHA verification failed: " . json_encode($responseKeys));
+                $_SESSION['notification'] = ['type' => 'danger', 'message' => 'Failed reCAPTCHA verification'];
+            } else {
+                logMessage("reCAPTCHA verified successfully");
+                // Validation des champs
+                $nom = trim($_POST['nom']);
+                $prenom = trim($_POST['prenom']);
+                $email = trim($_POST['email']);
+                $mot_de_passe = trim($_POST['mot_de_passe']);
+                $type = $_POST['type'];
+
+                if (empty($nom) || empty($prenom) || empty($email) || empty($mot_de_passe) || empty($type)) {
+                    logMessage("Validation failed: Missing required fields - nom: '$nom', prenom: '$prenom', email: '$email', type: '$type'");
+                    $_SESSION['notification'] = ['type' => 'danger', 'message' => 'All fields are required'];
+                } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    logMessage("Validation failed: Invalid email format - email: '$email'");
+                    $_SESSION['notification'] = ['type' => 'danger', 'message' => 'Invalid email format'];
+                } elseif (!in_array($type, ['investisseur', 'innovateur', 'administrateur'])) {
+                    logMessage("Validation failed: Invalid user type - type: '$type'");
+                    $_SESSION['notification'] = ['type' => 'danger', 'message' => 'Invalid user type'];
+                } else {
+                    logMessage("Fields validated successfully");
+                    $userC = new userC();
+                    $existingUser = $userC->emailExists($email);
+                    if ($existingUser) {
+                        logMessage("Validation failed: Email already exists - email: '$email'");
+                        $_SESSION['notification'] = ['type' => 'danger', 'message' => 'Email already exists'];
+                    } else {
+                        logMessage("Email validated, proceeding to registration");
+                        $hashed_password = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+                        $date_inscription = date('Y-m-d H:i:s');
+                        $photo_profil = null;
+
+                        try {
+                            logMessage("Attempting to add user: nom=$nom, email=$email");
+                            $db = config::getConnexion();
+                            $db->beginTransaction();
+                            $userC->ajouterUser($nom, $prenom, $email, $hashed_password, $type, $date_inscription, $photo_profil);
+                            $userId = $db->lastInsertId();
+                            logMessage("User added with ID: $userId");
+                            $db->commit();
+                            logMessage("Transaction committed");
+
+                            // Gestion de la photo
+                            if (isset($_FILES['photo_profil']) && $_FILES['photo_profil']['error'] === UPLOAD_ERR_OK) {
+                                $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/uploads/';
+                                logMessage("Upload dir: $uploadDir");
+                                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                                $maxFileSize = 5 * 1024 * 1024;
+
+                                $fileType = $_FILES['photo_profil']['type'];
+                                $fileSize = $_FILES['photo_profil']['size'];
+                                $fileTmpName = $_FILES['photo_profil']['tmp_name'];
+
+                                if (!in_array($fileType, $allowedTypes) || $fileSize > $maxFileSize || !is_dir($uploadDir) || !is_writable($uploadDir)) {
+                                    logMessage("Photo validation failed: type=$fileType, size=$fileSize, dir=$uploadDir");
+                                    $_SESSION['notification'] = ['type' => 'danger', 'message' => 'Invalid file type, size exceeds 5MB, or server error.'];
+                                } else {
+                                    logMessage("Photo validated successfully");
+                                    $fileExt = strtolower(pathinfo($_FILES['photo_profil']['name'], PATHINFO_EXTENSION));
+                                    $newFileName = $userId . '_' . time() . '.' . $fileExt;
+                                    $uploadPath = $uploadDir . $newFileName;
+
+                                    if (move_uploaded_file($fileTmpName, $uploadPath)) {
+                                        logMessage("Photo uploaded to: $uploadPath");
+                                        $photo_profil = $newFileName;
+                                        $stmt = $db->prepare("UPDATE utilisateur SET photo_profil = :photo_profil WHERE id_utilisateur = :id_utilisateur");
+                                        $stmt->execute([':photo_profil' => $photo_profil, ':id_utilisateur' => $userId]);
+
+                                        // Génération de l’encodage facial
+                                        $python_script = 'C:\xampp\htdocs\ProjetInnoconnect\scripts\generate_encoding.py';
+                                        $command = escapeshellcmd('"C:\Users\ferie\AppData\Local\Programs\Python\Python311\python.exe" ' . $python_script . ' ' . $uploadPath . ' ' . $userId);
+                                        $output = shell_exec($command . ' 2>&1');
+                                        logMessage("Encoding result: $output");
+
+                                        if (strpos($output, "Aucun visage détecté") !== false || strpos($output, "Plusieurs visages détectés") !== false) {
+                                            unlink($uploadPath);
+                                            $db->prepare("UPDATE utilisateur SET photo_profil = NULL WHERE id_utilisateur = :id_utilisateur")->execute([':id_utilisateur' => $userId]);
+                                            $_SESSION['notification'] = ['type' => 'danger', 'message' => strpos($output, "Aucun visage détecté") !== false ? "No face detected" : "Multiple faces detected"];
+                                        }
+                                    } else {
+                                        logMessage("Failed to move uploaded file to $uploadPath");
+                                        $_SESSION['notification'] = ['type' => 'danger', 'message' => 'Failed to upload photo.'];
+                                    }
+                                }
+                            }
+
+                            // Générer et stocker le message de bienvenue
+                            if (!isset($_SESSION['notification'])) {
+                                $welcomeMessage = generateWelcomeMessage($prenom, $type);
+                                $_SESSION['welcome_message'] = $welcomeMessage;
+                                logMessage("Registration completed successfully with welcome message: $welcomeMessage");
+                                $_SESSION['notification'] = ['type' => 'success', 'message' => 'Registration successful! Please login.'];
+                                header("Location: login.php");
+                                exit;
+                            }
+                        } catch (Exception $e) {
+                            $db->rollBack();
+                            logMessage("Error during registration: " . $e->getMessage());
+                            $_SESSION['notification'] = ['type' => 'danger', 'message' => $e->getMessage()];
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    logMessage("Registration completed successfully");
-    header("Location: login.php?success=Registration successful! Please login.");
-    exit;
-} // Fermeture du bloc if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    // Rediriger si une notification d'erreur est présente
+    if (isset($_SESSION['notification']) && $_SESSION['notification']['type'] === 'danger') {
+        logMessage("Redirecting to register.php with notification: " . $_SESSION['notification']['message']);
+        header("Location: register.php");
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -236,7 +227,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="../assets2/css/bootstrap.min.css" rel="stylesheet" />
     <link id="pagestyle" href="../assets2/css/argon-dashboard.css?v=2.1.0" rel="stylesheet" />
     <link href="../../styles.css" rel="stylesheet">
-    <!-- Ajout du script reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         .strength-message {
@@ -248,6 +238,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .strength-medium { color: #ffc107; }
         .strength-strong { color: #28a745; }
         .error-message { color: #dc3545; font-size: 0.85em; margin-top: 5px; display: none; }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 300px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .notification.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .notification.danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -275,15 +278,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card-body p-5">
                         <h2 class="text-center mb-4">Sign Up</h2>
                         <p class="slogan text-center mb-4">Join InnoConnect and Shape the Future of Innovation!</p>
-                        <?php if (isset($_GET['error'])): ?>
-                            <div class="alert alert-danger"><?php echo htmlspecialchars($_GET['error']); ?></div>
+
+                        <!-- Affichage des notifications -->
+                        <?php if ($notification): ?>
+                            <div class="notification <?php echo $notification['type']; ?>" id="notification">
+                                <?php echo htmlspecialchars($notification['message']); ?>
+                            </div>
+                            <script>
+                                document.getElementById('notification').style.display = 'block';
+                                setTimeout(() => {
+                                    document.getElementById('notification').style.display = 'none';
+                                }, 5000);
+                            </script>
                         <?php endif; ?>
-                        <?php if (isset($_GET['success'])): ?>
-                            <div class="alert alert-success"><?php echo htmlspecialchars($_GET['success']); ?></div>
-                        <?php endif; ?>
+
+                        <?php
+                        if (!isset($_SESSION['csrf_token']) || empty($_SESSION['csrf_token'])) {
+                            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                            logMessage("CSRF token regenerated before form display: " . $_SESSION['csrf_token']);
+                        }
+                        ?>
+
                         <form method="POST" enctype="multipart/form-data" onsubmit="if (!validateForm()) return false; showLoader()" autocomplete="off">
-                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-        
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+
                             <input type="text" style="display:none" name="fake-username">
                             <input type="password" style="display:none" name="fake-password">
 
@@ -328,7 +346,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="file" id="photo_profil" name="photo_profil" accept="image/*" onchange="previewImage(event)">
                                 <img id="photo-preview" style="display: none; width: 100px; height: 100px; margin-top: 10px; border-radius: 50%;">
                             </div>
-                            <!-- Ajout du widget reCAPTCHA -->
                             <div class="form-group">
                                 <label>Human Verification</label>
                                 <div class="g-recaptcha" data-sitekey="6LeZBisrAAAAAFWGxjGV-ZR8JVq-N_rOlyqptgZe"></div>
@@ -450,49 +467,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const prenomError = document.getElementById("prenom-error");
             const recaptchaError = document.getElementById("recaptcha-error");
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const recaptchaResponse = grecaptcha.getResponse(); // Récupérer la réponse reCAPTCHA
+            const recaptchaResponse = grecaptcha.getResponse();
 
             let isValid = true;
 
-            // Validate Last Name
-            if (!validateName("nom")) {
-                isValid = false;
-            }
-
-            // Validate First Name
-            if (!validateName("prenom")) {
-                isValid = false;
-            }
-
-            // Validate Email
+            if (!validateName("nom")) isValid = false;
+            if (!validateName("prenom")) isValid = false;
             if (!emailRegex.test(email)) {
                 emailError.textContent = "Please enter a valid email.";
                 emailError.style.display = "block";
                 isValid = false;
-            } else {
-                emailError.style.display = "none";
-            }
-
-            // Validate Password
+            } else emailError.style.display = "none";
             if (mot_de_passe.length < 8) {
                 alert("Password must be at least 8 characters long.");
                 isValid = false;
             }
-
-            // Validate Type
             if (type === "") {
                 alert("Please select a user type.");
                 isValid = false;
             }
-
-            // Validate reCAPTCHA
             if (!recaptchaResponse) {
                 recaptchaError.textContent = "Please complete the reCAPTCHA verification.";
                 recaptchaError.style.display = "block";
                 isValid = false;
-            } else {
-                recaptchaError.style.display = "none";
-            }
+            } else recaptchaError.style.display = "none";
 
             return isValid;
         }

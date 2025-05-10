@@ -607,23 +607,20 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
                                                     </div>
                                                 </td>
                                                 <td class="photo-column">
-                                                    <div class="d-flex px-2 py-1 justify-content-center">
-                                                        <?php
-                                                        // Chemin absolu pour vérifier l'existence du fichier
-                                                        $photoPath = !empty($utilisateur['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . $utilisateur['photo_profil'] : '';
-                                                        // URL pour afficher l'image dans le navigateur
-                                                        $photoUrl = !empty($utilisateur['photo_profil']) ? htmlspecialchars($utilisateur['photo_profil']) : '';
-                                                        // Ajouter un commentaire de débogage
-                                                        echo "<!-- Debug: photoPath=$photoPath, exists=" . (file_exists($photoPath) ? 'true' : 'false') . ", photoUrl=$photoUrl -->";
-                                                        if (!empty($photoPath) && file_exists($photoPath)): ?>
-                                                            <img src="<?php echo $photoUrl; ?>" alt="Profile Photo">
-                                                        <?php elseif (!empty($utilisateur['photo_profil'])): ?>
-                                                            <span class="missing-photo">Photo missing</span>
-                                                        <?php else: ?>
-                                                            <span>No Photo</span>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </td>
+    <div class="d-flex px-2 py-1 justify-content-center">
+        <?php
+        $photoPath = !empty($utilisateur['photo_profil']) ? $_SERVER['DOCUMENT_ROOT'] . '/' . $utilisateur['photo_profil'] : '';
+        $photoUrl = !empty($utilisateur['photo_profil']) ? '/ProjetInnoconnect/' . htmlspecialchars($utilisateur['photo_profil']) : '';
+        echo "<!-- Debug: photoPath=$photoPath, exists=" . (file_exists($photoPath) ? 'true' : 'false') . ", photoUrl=$photoUrl -->";
+        if (!empty($photoPath) && file_exists($photoPath)): ?>
+            <img src="<?php echo $photoUrl; ?>" alt="Profile Photo">
+        <?php elseif (!empty($utilisateur['photo_profil'])): ?>
+            <span class="missing-photo">Photo missing</span>
+        <?php else: ?>
+            <span>No Photo</span>
+        <?php endif; ?>
+    </div>
+</td>
                                                 <td class="nom-column">
                                                     <div class="d-flex px-2 py-1">
                                                         <div class="ms-3">

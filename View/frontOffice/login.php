@@ -6,7 +6,10 @@ header("Pragma: no-cache");
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/config.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/Controller/utilisateurC.php';
 session_start();
-
+$notification = isset($_SESSION['notification']) ? $_SESSION['notification'] : null;
+$welcomeMessage = isset($_SESSION['welcome_message']) ? $_SESSION['welcome_message'] : null;
+unset($_SESSION['notification']);
+unset($_SESSION['welcome_message']); // Effacer après affichage
 // Générer un jeton CSRF
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -96,7 +99,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="text" style="display:none" name="fake-username">
             <input type="password" style="display:none" name="fake-password">
+            <!-- Affichage des notifications -->
+            <?php if ($notification): ?>
+                            <div class="notification <?php echo $notification['type']; ?>" id="notification">
+                                <?php echo htmlspecialchars($notification['message']); ?>
+                            </div>
+                            <script>
+                                document.getElementById('notification').style.display = 'block';
+                                setTimeout(() => {
+                                    document.getElementById('notification').style.display = 'none';
+                                }, 5000);
+                            </script>
+                        <?php endif; ?>
 
+                        <!-- Affichage du message de bienvenue -->
+                        <?php if ($welcomeMessage): ?>
+                            <div style="margin-top: 20px; padding: 10px; background-color: #e9ecef; border-radius: 5px; text-align: center;">
+                                <?php echo htmlspecialchars($welcomeMessage); ?>
+                            </div>
+                        <?php endif; ?>
             <div class="form-group input-with-icon">
                 <label for="email">Email</label>
                 <i class="fas fa-envelope"></i>

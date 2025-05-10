@@ -728,3 +728,588 @@
 2025-05-07 21:26:19 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
 2025-05-07 21:53:48 - Delete request received for ID: 62
 2025-05-07 21:53:48 - User deleted successfully: ID 62
+2025-05-07 22:05:31 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-07 22:05:31 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-07 22:08:16 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-07 22:08:16 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-07 22:15:17 - Starting registration process
+2025-05-07 22:15:17 - reCAPTCHA verified successfully via Google
+2025-05-07 22:15:17 - Attempting to add user: nom=jkdkd, email=sou@gmail.com
+2025-05-07 22:15:17 - User added successfully with ID: 73
+2025-05-07 22:15:17 - Photo upload started: type=image/jpeg, size=63959 bytes
+2025-05-07 22:15:17 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/73_1746648917.jpg
+2025-05-07 22:15:17 - Updating user with photo_profil: uploads/73_1746648917.jpg
+2025-05-07 22:15:17 - Photo uploaded and user updated with photo_profil: uploads/73_1746648917.jpg
+2025-05-07 22:15:22 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : Encoding généré avec succès
+
+2025-05-07 22:15:22 - Registration completed successfully
+2025-05-07 22:15:59 - User profile loaded for ID: 73, photo_profil: uploads/73_1746648917.jpg
+2025-05-07 22:15:59 - Attempting to display profile picture: ../../uploads/uploads/73_1746648917.jpg
+2025-05-07 22:28:17 - Starting registration process
+2025-05-07 22:28:18 - reCAPTCHA verified successfully via Google
+2025-05-07 22:28:18 - Attempting to add user: nom=hsjssj, email=jjj@gmail.com
+2025-05-07 22:28:18 - User added successfully with ID: 74
+2025-05-07 22:28:18 - Photo upload started: type=image/jpeg, size=10534 bytes
+2025-05-07 22:28:18 - Attempting to move uploaded file to: C:/xampp/htdocs/ProjetInnoconnect/uploads/74_1746649698.jpeg
+2025-05-07 22:28:18 - Updating user with photo_profil: 74_1746649698.jpeg
+2025-05-07 22:28:18 - Photo uploaded and user updated with photo_profil: 74_1746649698.jpeg
+2025-05-07 22:28:21 - RÃ©sultat de la gÃ©nÃ©ration d'encodage : Encoding généré avec succès
+
+2025-05-07 22:28:21 - Registration completed successfully
+2025-05-07 22:28:54 - User profile loaded for ID: 74, photo_profil: 74_1746649698.jpeg
+2025-05-07 22:28:54 - Attempting to display profile picture: ../../uploads/74_1746649698.jpeg
+2025-05-07 22:48:45 - User profile loaded for ID: 71, photo_profil: 71_1746216036.jpeg
+2025-05-07 22:48:45 - Attempting to display profile picture: ../../uploads/71_1746216036.jpeg
+2025-05-08 10:19:59 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-08 10:19:59 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:30 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:31 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:36 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:41 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:42 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:46 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:39:51 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:40:41 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:01 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:26 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:27 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:32 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:33 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:41:34 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:42:04 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:14 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:43:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:44:44 - CSRF token validation failed
+2025-05-08 10:58:42 - Starting registration process
+2025-05-08 10:58:42 - CSRF token in session: ead41a956dd477844e7e135f664b50cd1d7f39b8d9e593dff462ded5005c30b1
+2025-05-08 10:58:42 - CSRF token from POST: ead41a956dd477844e7e135f664b50cd1d7f39b8d9e593dff462ded5005c30b1
+2025-05-08 10:58:42 - reCAPTCHA verified successfully via Google
+2025-05-08 10:58:43 - Attempting to add user: nom=jjdskjskd, email=fd@gmail.com
+2025-05-08 10:58:43 - User added successfully with ID: 75
+2025-05-08 10:58:46 - Encoding result: Processing image: C:/xampp/htdocs/ProjetInnoconnect/uploads/75_1746694723.jpeg
+Image loaded successfully
+Found 1 face(s) in the image
+Encoding generated and saved successfully
+
+2025-05-08 11:05:03 - Starting registration process
+2025-05-08 11:05:03 - CSRF token in session: ead41a956dd477844e7e135f664b50cd1d7f39b8d9e593dff462ded5005c30b1
+2025-05-08 11:05:03 - CSRF token from POST: ead41a956dd477844e7e135f664b50cd1d7f39b8d9e593dff462ded5005c30b1
+2025-05-08 11:05:03 - CSRF token validated successfully
+2025-05-08 11:05:03 - reCAPTCHA response received: 03AFcWeA4dQLWkd1W9JgGS54gBLwY_CfBtbYiqsvi9KdJE6c1PLNhV2B2Q5dgpPLzJoQvSTv9y7jLalIA9_TkvjLb3hh_eJzssItmNOUb4FqrV3sILUoWJ908OMZau6S4GnPBiKNJ2ok29WzSHZiQ650oZsIZINU-FJx8JnWfAHFQGeuSb8Rqb1-Y2zGWfxnAexfeGbh00MaKh-_V6ic5b3qWhXRuD6o0ShV4SlT4L51VJS3Jbfs62ov_Dc5qTCQJobBt8yNb5EMrFF9gzXFygeoIb0p66O2xMrP16BuQPs3cEOIh8e_OoZfcliAXNlsqVdi1G5mUNpHEe7IfagwU_gAJaLBwKNlV_bCT7Yg4NuCb6s-LRzxV5IJm3o2Q4KsOxjm1nSDS8xMYppiXH86drno82QDqRgB-FaZdNcqf-D-oEPzBL2SsBgbmstagko9Lh-45MJjtSaChZBCl_SAmbl3weyP5b4thMJH7iZAXZlpuQNK-bNN1pTsS8_7KgqcfYP_Wb6pR-ng6gy4Ag-WvljSgQ-UOm2uu0gIBM1qH8qItERRp-LFDWW2er8ZdbZxPrIsCwL0QhU4ZWfphglLQ4D2kIivWmVPmVyDqGRsb1fHyr8nDRIGd-I4Nkg3bzqUi8F_gheo5mht6c1OCWFhHSU6vX3kvSyVM6asM2piUtt7_Sif8_GHSLG35hXgyBTh6Sl19XzMk9NLardMt0znYGsNgKPODXrpr2i1suFjUwgbe7-wAp_7iFgicDipOQ62Jnv6UzBaIoF6hkmsuFXy6sl1G6vIOfSeynwL4dGb0T-Qpikwz23oUdK_MpWsuChgvI8JGb9kbOCpF5Tj7nfRkLfB1voPPrA3MaLmjDrLeyV-F4golP-v-16rOgXrInahHCtRToAvA6gFjTqdgQQr8B94W5J3BHI7Jr0667c15wtz0CHDsV6igDrEMHjDAhbp0Du8kbPKxVX6cqV4tB_T382ugnVPaEge_483fTTs_tciS86CeeBv8gWsMF6n4y8_cACYgG7uPvIUGkaXBZPXW0CIeN30kdDu-RGAXQ6MpmCUQ35lWHqjX9r2e8kH33IhIKyuY3qCJ-3iArlN4zvdTbaZH2vkM3zjNw1WYfq5y1fIWlSKHu52718jC0ixMcYDbyqFbpfXRUe-rcDJw45rOJwlgWipentX7bEbCo6FLQaF_d7FW--a4bSWpFKgGC39rZXQE1JVdjnTJoRu9pcp8RAQMJbu3LppH6IJy9-maF6x2j9ugTVldJs5w5c-Lj8dbTBb3XcxSyC3fFkB0JfcwSKJFDb9AlS-uo7I3-nvsODD7IwrxU5K6RdxRPirAEMDbGfZL6OzMP4xQu9X9NMy40sH6MZoFkCq3y1HCmI3zJ_DOG5o39cnhN4DfM2rfNA0jLgH-SX7eGKENsUjf134HaDwxtdYp9Hd8oWBu7sh7M8i6sbCOrj5G5pXm-2EU7ub17cI6XsHrwlkRj_QqUY1JaGGt6ELsOQZwLFYDnTSvu9FMKttiU--nfBREcF2hENt7blCet8w9MEy6zCv6w1MbgyMtogPawrmXeNIi5-PtlUmv3Zi3xP_Ph0Tdt7zq5qHEfNDeRG3caTBNqXHEIhdBYz6ZMBcdVhCEcNW6KQpuIrPWGzWDp-Q4Z3gpqUxZ2suEbPbO7I091jYEWlzFwiP17CMzk3-l3AJeZJumWJL8moTYkfBzZA701gY_cm8PUBcuPGAU_DbtutJpbaZ8zwUCuOM4czlb7aDUKhYICJdglb0R2d-pU01DmzKk0QunSA768-85VJujCt10h6SrAp09HpsbhR8pDbu0tTlCrzRJs6LK3yrTIiQP3fvFakJLxWGwIdChbjZQfRNClLOYLDjB4mA2XapSs4tiGRcP7E8E4DNREtgWAH1RxSxq4TtWwtMHQ1hLbRGWzYHPwr_KmeLzFL9YN6vwy3ZEKdJ-GoKLuFkutWmF5rP8nHy7x9fyHJnTSzQ-JHu80g_Ed4wu2ve2LbdqyY1SnXtHpxvZpBWTFNKjBn37Uu5wJvBsRxo2LHY0qwBG1y-nP4_yfCg_rAsXaxmeVG9sGrHVcgmTttRm2viSokdoa8khPvGP3xCSAg_ukC53K3Sc_P8xnBD3qGx20kiN4LCdy0peKRXAjHmB20UEAZpTAqg2AXMw
+2025-05-08 11:05:04 - reCAPTCHA server response: {"success":true,"challenge_ts":"2025-05-08T09:03:25Z","hostname":"localhost"}
+2025-05-08 11:05:04 - reCAPTCHA verified successfully
+2025-05-08 11:05:04 - Fields validated successfully
+2025-05-08 11:05:04 - Validation failed: Email already exists - email: 'jj@gmail.com'
+2025-05-08 11:05:04 - Redirecting to register.php with error: Email already exists
+2025-05-08 11:05:34 - Starting registration process
+2025-05-08 11:05:34 - CSRF token in session: ead41a956dd477844e7e135f664b50cd1d7f39b8d9e593dff462ded5005c30b1
+2025-05-08 11:05:34 - CSRF token from POST: ead41a956dd477844e7e135f664b50cd1d7f39b8d9e593dff462ded5005c30b1
+2025-05-08 11:05:34 - CSRF token validated successfully
+2025-05-08 11:05:34 - reCAPTCHA response received: 03AFcWeA5w8y4HFg8FswRY2zUrPbseKRGkMJQGqEVlyNqcLmx5ffJKkEGMosul-rHXm6EXvoKND1P8IUgBPwEsGKwWXMDKAu_mIdG9TKLJ1d7c3u0uc25pkNHFQEKgnCfYlF_GOor4uNPW5vvuJ2yGolkHlEOL70WCLdW-Zt14jViUq2DkyFYzh_iKWi3COexpstynZYpFlX0AMgGlH92HIfiQwVL0oE6Bn8dD-G8EUpvZVTzUn1ps10o9wg17r3HY6FXQa79xj5Dw32TuMdjnFX_2wEs4bDmlsvW-gbcdYVhKozrMKEo1pFSQgmjY8Aeouw_M7ieEf9rCS5lm74xBn2QwDtjAccMwMuyX-nnMtbO3CV75wgdqcj0jLBKdrwShbF9pSlDvWB6SI9r-3VRI2CPW7BLTUfa0Wsl37tWVqe8QnuMHwbOEilHWz4SamrwOwh8bZmyd1_yoyzg81REnyNEI1EVJvls4tzjvxRaMowpVFFrksuIn9fJaicuTxgFttSt4lFQpnSBIN2qcxF7bIjz96TteZAhRLwvacrsB_XulYlhoy7c3thVTyFdURkIczB0rBTgiKgSFKQRD2U8Kh6PSuhrJSU8sR96u8UtY9PJVr_b_sayAJsKbGE1kPfGdbPGTNoJal6wH5Qc8Q127Ee5LldnEokZXiwmYar38NLPXQFYd_yvWn2i1gPnUq3AETA57j3vq5RLJQLkbPG9a-_gDCQFR8cOfVjfGxzx0DmEilTkLiNTwCKM812F4J6qrCYpAmFGU5WtC7aJuASV4Ow_eXxP7wa-GCp0o-nEwsUGfkLmLUkRyU7Pe9G37QRX8wDAab3-O9GrukjJ4IUzTROXoJAz4q0S-82jByYs6gnRQMP6YBgPJY4Pnj7Xhgt8IiSCn_TWeHegF8su16_mhPupqqje9POV3iccofhIb-CmVB1h8kW_wunM6t8fY692aZ7nQFjIncXXsPYG3CAVBiKglwPiEOokE1bVhsXQxn30dB8eSwi89mU3PgwqQNuoEMW8SKTkTuJ41dZcfmvl5vXAXx7cnalL1_WOg1Lbevj4q-Mu4K5rdJw08kJqCoxRmBSb19fIk99S6Oh__VJuAD-ej7R3I0f_qevkni85gUnaYcnYwOKTRGCAOu-s4UKXCY_g4IHkdx16C6BIQEtgjedSLGuCf9EDPvnjPJHVDi72Wfo-LofnvUkrvoiEDSQgCoZM_C16qjEwGsQ-v2GJYRlPH5OV0vL_muTX0PeVKJBlcXac_iSFm15PdFVpegms8eltrUMAVtdvdq2eKyBQwDXPHY8oadrN_FP2aHhoaSBtRI-RxpZfjjW7BId8fEPmoXjTty-kCxt4YTy8IBf4PVsFa8o1xmVoqJagkCf6Sjud-_zIeSNs86KrUjxo8O_AEaVmfuneGok6BLD4pK3stO_lX_4R_4nywMtXfKiLFR6-eUXG0sKSczcYZQM6J1v2cTSihcyS2EwcpKiV41RY1LUQZyo-K4d2Ui9S0CfGH3lywxCu3aA5Vr7kGjCb4sh7PmdzDKCl5BNFSwGbB5z7ZJrBzb1c2yYqJMPOFIJ0tePhyIXYKUtsgWHdrTSyISeGkYAitvZFACUrmDfm5VsfqNIRQA-8-4KKrYR7dLY1Cw4YUbZbrHms3hcfQM90XzJ02MXWma62K0Xr2XCMGiyDMu9hiVoJkWa4BIl1kzIu8sxjATrBFkxw3xi8v5HAUphlptRl4mFPfSUrCBi2DyDorz6J_aS7vZGmHTP2d4l87qvDMGd4_f_jQB2KRtYpiYq5HyqlQcA1bZhXm6G6CRe4s_P01zNqZbdX3MadDzI8ErHE9ln8Zld5TvQHG0BXxrmoLFHevhzZ5fObXYeoWpE9-cug-tZXXXJ2bBfmOv4dzcNgeij6OjIbOrL23Oh4gwpx32Jj89MGQAtEP_VdtwJ8NnyQg7JTq2zaqkkWfyW8i1CWttG744uQzlcAFgiKBWiQnkZL0gj8y0m_jMhguilCCnaVZ27QqdrMKpWzM4_e_r9amRX6czXSuH7J8Uwx9KNaSORTMCvF4djJvflXFrWWgVIX0FaKq-_S1F3AX30cMGC8cHEcHEOJn86SSl_6crSCWXbIHzShTNuQM2_2bb1MkGAyI-USsFUj4BSqP4QUlsRWcGKrx0ic9c4I
+2025-05-08 11:05:34 - reCAPTCHA server response: {"success":true,"challenge_ts":"2025-05-08T09:05:04Z","hostname":"localhost"}
+2025-05-08 11:05:34 - reCAPTCHA verified successfully
+2025-05-08 11:05:34 - Fields validated successfully
+2025-05-08 11:05:34 - Email validated, proceeding to registration
+2025-05-08 11:05:34 - Attempting to add user: nom=ksdlsl, email=klaudia@gmail.com
+2025-05-08 11:05:34 - User added with ID: 76
+2025-05-08 11:05:34 - Transaction committed
+2025-05-08 11:05:34 - Upload dir: C:/xampp/htdocs/ProjetInnoconnect/uploads/
+2025-05-08 11:05:34 - Photo validated successfully
+2025-05-08 11:05:34 - Photo uploaded to: C:/xampp/htdocs/ProjetInnoconnect/uploads/76_1746695134.jpeg
+2025-05-08 11:05:37 - Encoding result: Processing image: C:/xampp/htdocs/ProjetInnoconnect/uploads/76_1746695134.jpeg
+Image loaded successfully
+Found 1 face(s) in the image
+Encoding generated and saved successfully
+
+2025-05-08 11:05:37 - Redirecting to register.php with error: Email already exists
+2025-05-08 11:11:28 - Starting registration process
+2025-05-08 11:11:28 - CSRF token in session: ead41a956dd477844e7e135f664b50cd1d7f39b8d9e593dff462ded5005c30b1
+2025-05-08 11:11:28 - CSRF token from POST: ead41a956dd477844e7e135f664b50cd1d7f39b8d9e593dff462ded5005c30b1
+2025-05-08 11:11:28 - CSRF token validated successfully
+2025-05-08 11:11:28 - reCAPTCHA response received: 03AFcWeA7MVbWWxd0EP4z1dONOJ86UYvl5t9BE0WhXPxO-qDsMI2LtfZRezd9-ov8qbtar1-F1qR765DzkxpM1j1yKPVCkpiOze7VzfJYn-C8AXVuinn63_nqBSfYS8wz4LAdMHvj2kTUKfCA-KCYV_I0yPuuWVwoPqPOtuzg2iuJgxs0GPYLgjcxLlWK2nG_lqX_LhmpGqtxKYnKNxqBMLsrWGz8PSXw4tM5XzQl87WnqZuXEj1IqkPRnaD7eL1sWVeIY2cEZvGUTMwCvh3mYc6eB3fNYPG1kj99ToISKUehcK-zv08nTT86HoD0eIkxh_yyFQqXpz9xCih1FxpaHOOsLyT9nzJrNus2XNlqXfw1N5J_G0gwZaKpeAecMBhfcSbdJiGYn2hNQ8RiEut0DycP3gfHmbNs2pOrPMYfziRZSeTACUibIjrH0jPpRG5YBMz1DoqZ6PniyMy6iALfr2hWZYLydouwOsTkOmpevGTjhMHwwsijbnzSJfNnXzEuf7rH09jyDv-HPgbKNM7aybvJxZNAe8GuYtnRAwYacZz9s5U8-HECQnaz6r2GwtMbpi-lrvIVImRS-gNxf1Xhru1uubEmISWkNj1VlpCTGdpj9yF1z0Li7vaz2lbRh74Fwg31t9cm6GJ0inRvZigeDrnHua4rmfAPcDLBa42ta9u042TaJD3fP5xjr8EABmktj2kysX_7PP_2-2KmSgdFSrbQqmU0SMHoTT9gJDDKGgLOz4KJ0wi-H1xNBuZgDHo4XDJHFyinFamGjLmFcAs70-8bx-dDeXK5xCz1R3YeeaalO82rLRb2w9Olp8tD0xkc86HNI5yn_LfHmQ65sitWToRZIr2ll6_YWR_rrvyYb2EWUwFUe7pNBYlxXsc2SW1PYNFkNHSrNkjx4nQSJ35dr1iv-JoOE5TTFqwtidZIJko9CfYKOo6QnvOQ15sBZt4dBSTfb2yxVrPUhK3lgKTcm-mxKyIRpXnhg_Z7la-xUCglCH3VqHvYt7-2_jVp2gXsPzhx5dSi0JwEfNjGHGsThFDFc78NsjMjOUawBFADoV_xuXwj6O8yrJd22DfZroU7SodpqEsYFS_Pjb0PO__apiCIVaDe-RtvRkKe2hSNjMdEkPDQsc7T0qd5X9Z-R4anjzqp5-6XjjlQf7A_0nFUu_XkwWNhtmKpuQx0ukOgpfasnLoXrJHKtS06ndo5MoUopgHrIiOpfVPgaQBShvhhJ0DFE4LIlBfgcPhAWPAtKjLEx-gnlA3lAHd1EwUxdifrFsunkMYq3oVlaPxjLgMKDTzLwD-Et054mxh4t-cUEXL0Sz_2Bs7PwLfTz6tLwBCx1W6VaSDDEAje7mN8YoGVpRJVr3ZtxngsS7As0zW_-nU_AlGIbxwfgQluJ5ll3GkSMtEd1Yh2e_rISU4GVQ2dIC0QK3G4kmpY47_QnArRfgt0wcyvoMlZuLgMfkHCkQw_Pyu9tGvrdPoo9w6-ZOx0Dt7SGLFZiZkR_L7SGe8sm0j7lqDDSC0NPnBTXdfP_1ojN4rlAUpeXT95L7DNtznn8TuveRCSUnshzITHFgChUqsNCORam7IQZWIUk3Ka-BXN4jdC7H8UNbDD4nzcj9cv-4E2FWo07tZRU89uO_RS7P7eYPnLNLRXztZthMZGP31cpZO4e83_II6kG4iO3ibtEgbGwnokSX8MsKLFPcJahcyxHjPXCWHx6u4efqXhO5wl07UZxIeVWST7FOvr-2au3GgH6GN2y17zrPbCgycMe7s5d5cvT5IlS08vGWkjjKe7vF7zBeHSJr-NQ1iubULLE-eL9k_bMjABVdTbQ5aGF106VhwaaIANOsNAcd5EAg6fFAUmYviRUF9rTNxiI1PmxLGXWbMSvxQI-pC8pykdodByvbRDoz5cRBS_ZyTLe4jijlRI3Gz2dLnXu09DuarsLUNqf4zan1C3n-RPwuccSOePJlVBwb8QG_XuEiGEwYacYpxolgmvNdktbT8VcQtTACoDbTyDi8gY1ynvcl5936tos_lwqMknQuqaPfu5TmwrQgWsUgkfJCfi9KI9dCpFUytsAAa2eE3uLutZDp8R6G7gRpbkeotH3XzIOzn1gdLtR1T9h6HIYqAs0PWkjZ8DhRUlev2rABrg2oPqVoSYMSS5nsZU41WDKCDc
+2025-05-08 11:11:28 - reCAPTCHA server response: {"success":true,"challenge_ts":"2025-05-08T09:10:28Z","hostname":"localhost"}
+2025-05-08 11:11:28 - reCAPTCHA verified successfully
+2025-05-08 11:11:28 - Fields validated successfully
+2025-05-08 11:11:28 - Email validated, proceeding to registration
+2025-05-08 11:11:28 - Attempting to add user: nom=tester, email=testtt@gmail.com
+2025-05-08 11:11:28 - User added with ID: 77
+2025-05-08 11:11:28 - Transaction committed
+2025-05-08 11:11:28 - Upload dir: C:/xampp/htdocs/ProjetInnoconnect/uploads/
+2025-05-08 11:11:28 - Photo validated successfully
+2025-05-08 11:11:28 - Photo uploaded to: C:/xampp/htdocs/ProjetInnoconnect/uploads/77_1746695488.jpeg
+2025-05-08 11:11:32 - Encoding result: Processing image: C:/xampp/htdocs/ProjetInnoconnect/uploads/77_1746695488.jpeg
+Image loaded successfully
+Found 1 face(s) in the image
+Encoding generated and saved successfully
+
+2025-05-08 11:11:32 - Registration completed successfully, redirecting to login.php
+2025-05-08 11:16:18 - User profile loaded for ID: 72, photo_profil: 72_1746531910.jpg
+2025-05-08 11:16:18 - Attempting to display profile picture: ../../uploads/72_1746531910.jpg
+2025-05-08 11:24:42 - Starting registration process
+2025-05-08 11:24:42 - CSRF token in session: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 11:24:42 - CSRF token from POST: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 11:24:42 - CSRF token validated successfully
+2025-05-08 11:24:42 - reCAPTCHA response received: 03AFcWeA4oHAqUNd0S6DB42DQQUPL8wXQeW21nWpMkvDtNXIr7nwCcLg9WDhBlgNoYiU4bYbQQ9VJ91-NS7Vh3JadiTnQcNqT9eZl1y4Rvm5ath_MDsG2_yS3RaGzsSgZG9U-3OJeQUUwscYsAyAIgMsmfU5qEhDHVhOwwg_uSqadCiZHK8fPrzN9HJmoo9nOV9IykQfeAqedY0tdH2VEFnAUV5A67vQD3Dy5UlB3i9njFR1P2G-vk2uP7GW02I53jvIsDkzbGYP27GWcgDGYLvcb1v8GnuI5ryztShGVAmhQZrFhdF81Cm7rc9VnWNW5e4XdhFXz6-kjWHapAUnC-0xp7zIhExRRjoe0wlwpsEAxRld8Dfu8jC1Y-XxSVrdtKKAswgOmEoX5hx9_wFBRFc8omxps8RctGfSECpT_m-6Xk9cgypap6RaKd182l22c5y3qFSsgpZHuo36xoDN1SK9a4WnQUYma4cChXbl13VIRA8852X7SyRrRnww3IGKB0k6DcvaP37Tfp-p_09ZYw2gUyJROuMr6IMmXZjWfM4w56lj0dBs0F6yYNTCoxdyOpIF65a0cyCVId1191ETg0nOf1UXMrxe21ukxyx5HQWmgzPSd9h9kjx-XBYMGmT0A5Q6Dm5qp2ugot3-kJp2LqaCewO2uZ5vN9jEpr9JkxN1v1DK2Gbd1Ir7IAT_bvmEGqSP_QzIusovtNSccTXLp2bqsJGQg618M2S_WBGKMO-X-rBFS249SrdVl2GpMVTMwhXC2hdrQQJAmnA9Apwj6_as6yTrQiD6KCdjPe_8-fKYy8wM1YKEOdc_RfRKv439XKQ_jIcruM4wiTxw5eDPMkiDeLF63orwZHCp9Y0-1W3qsfQRrYnSogyiUsyW4TaMVffxsFvciBmPS7aUSrYJqam50OEyJrLjCIf5wBuo28GSkEcZZtVgSWMypC4MUKlMU0eNK-GI1oyHcudJwX1YbDHX7l9UqlgwmV2XAegQXfY4B3Eg7nNU9QeCW7_jxEE_HYWL7MFyuSC-XcxmzD7uqCwz2EHGsc7YvPecL3GZYvJXeE-u5mrHZjRtyMW-yIX6vj4fg5EjT3OHOpT2-ibqMWEKBWCV1h-RlEX7Wpftc5eE6v4bfu1KhH8Mbp2nOPE12ddBK7GfALcErbBe6BCdmrStvBRGSM3aW-RZ_F0PvoJMF0ibzw3QhBnTZP8YtsiDJdbPUVojawbN8HM1qQZyQgK6yZyzaVxAUFwJ-QSUzU8we3fGdC5YiXu4ARTGdr9gOP7XQ34TjbBkxuDwRUQJA4kowXHwn1qPh-_5lMVKSpXn79JOP2L0cx_OXaMIQ7L2ojrMNJKRstrN8Ad9-RSlrGBKoj94-u4JNJ1fUYVH4ESdL7KQ9zvL3WV5mYGKi3wdsCUsauHRFlz_a6jXsmlItl0aQxyGku21WLH4VMY-feeBlwH7Rj8C_7d8A3ZX2qgZxRi5vJ3vTPWNnE-EsJQaIUajggsKBWIKyYanUA8cPjCEU31463BJdtx_pGPHdUUyywPX8ZgqOX81y7GHcIzJYTmVnHI2LkGaZajRQrh8Ax-lY5O78bChbqAa2OZEh4Hx6NQNswWVwUCisncy3cDVSFL9YOLIzQkLsEfK4cmEzE-3Y3pVy2ENkCT_QanBKefSNH55hHQ-IHbur0sO8Rg7_P4EP3TMdRzm7zSxS5_PePdVfBBmEGM5wdpePWXgbFXFwuqQpDI2Zq8KfHxpq9lHPyOVIBhvCWsoNZ7sQbm-sHkQTX1NI2a5q3JT__8nO-bdyukAvVYobQnT8FVGulmheLcH0A-VwBGO6bd5HzFwRRIhrp2ZIZOw8zJ2Ru8AOEqwXxeUZhOX8wpWChgxTb0MV3tJBFCin27WdOMxv9slg7EA6WwiZJ0zHrC86PS-ilzCz1b1vZx-EBU-lkC43IR_tVUSyq3YIZgna5HVihIx0_y0y8U83uIm8yedp-yZFRRfRMXz9vNLn5rnPm-8ym_ep6roiuUh1Qgai7idIAm_T8SJlgqtSQ2SNF8TtbylWOPWWB9pqM4PoSWzdTaTTbzf51YlZQFIU8Y6k0Vr4JXHrhuPREWfaa6phfhf_TNy3QRKuNvUS4kwq8ninO76qA8wAOkHRUulf206ZNuGASUYKpylNyDPA_ToU0hGItmm6J1IjUNoBSnT7dlAWx
+2025-05-08 11:24:43 - reCAPTCHA server response: {"success":true,"challenge_ts":"2025-05-08T09:23:15Z","hostname":"localhost"}
+2025-05-08 11:24:43 - reCAPTCHA verified successfully
+2025-05-08 11:24:43 - Fields validated successfully
+2025-05-08 11:24:43 - Email validated, proceeding to registration
+2025-05-08 11:24:43 - Attempting to add user: nom=bassem, email=farah@gmail.com
+2025-05-08 11:24:43 - User added with ID: 78
+2025-05-08 11:24:43 - Transaction committed
+2025-05-08 11:24:43 - Upload dir: C:/xampp/htdocs/ProjetInnoconnect/uploads/
+2025-05-08 11:24:43 - Photo validated successfully
+2025-05-08 11:24:43 - Photo uploaded to: C:/xampp/htdocs/ProjetInnoconnect/uploads/78_1746696283.jpg
+2025-05-08 11:24:46 - Encoding result: Processing image: C:/xampp/htdocs/ProjetInnoconnect/uploads/78_1746696283.jpg
+Image loaded successfully
+Found 1 face(s) in the image
+Encoding generated and saved successfully
+
+2025-05-08 11:24:46 - Registration completed successfully with welcome message: Take charge as an admin, farah! We're excited to have you on board at InnoConnect. Explore your new features and shape the future!
+2025-05-08 11:29:39 - Starting registration process
+2025-05-08 11:29:39 - CSRF token in session: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 11:29:39 - CSRF token from POST: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 11:29:39 - CSRF token validated successfully
+2025-05-08 11:29:39 - reCAPTCHA response received: 03AFcWeA6dSJGjGPTmrF4zMk7TWvUT-CSRwoevdwCQQ8keIM2Pkt6FMFYJJGOhjXYDAuESHA8Nl72WRx_O8Mhp4cmctpkuQ59cL9GMWElxNrOBGlrqYAt0pAHoLZMrAFaJ28D0uJ6ee7vm1NCHhZrae6_-UwUb7fcTshxCkrFV4hdAMvX8egu8vg81icpLRlVTikqRZnFBYmtE9KdpPkqS0VbQtdUiuEKrtu2qCxh6lK8I3UHDg4aLOUsL1Ob53dMBphXO2CRYc0MYNncdxfoP5l5QZsiaybBeQ7EdJri1aQ6BbmTA2IqzA18QSByPQSAzW9ISVJDdRUnLA_FqFyB99cEjWrzenEMF0vhiKK9OrByPQ56PHoF1wCV11QFVCx5uKmvlSG3Mb-zaFFn74Uz1UTvle3-eYaGsu4NLdpBgM9o1BSQiHljkEczeTu5Q6f7u0CSWZBELiegA_vw8El2PIkdQJ4XOA6bnhOv0k9-gP9JuXA0NcSayJYho5ZIIqs4KjShTb8L7fTBBt5nKQCoUDBPS8ZdgGU3BXmCP2DfsYeGHB2Rvj-QWG6SRyB5mEOX7LhoerbmhOGnbKopV-mnG-Y_SBRXRIoo9Mv1Yy398pjJAC7nutjFTdyMBRFiZd4Ml9UC27cG6-SW4GXSCYHTuK5YKD6n4z91UtJqq323VzPpqbLbwigkWqR85PyeWq4XDuzs0l1IU29hHi-06ItAFPAs6bliOgpSJ7iujpkukyOT2IvM3_NUgQxIIJuGxDb21FYiveVQey8jvk7lqySWgohV2sUsVwhf85kl4ZUefQxC4vRbtVuukaZ6FOpEqCQ3_1QkZFhAjqBJaLK-SeGLGwrKrh0jXqg6jQZm2791sJlh1QOVEf2fkJJBSMnAs3GxpgYD2FnkojiU5faU6e2iKWHY108gCzw35va3CP1cWEh3e4VyNLVmsoHx--EMnGGw-I_rwR4t9OGmt7qhcr0p_gq-QTAx3ooXBO2Hoe2tDHNerHgdfircv5yezlm5AS23kHfw4VRGXuPb8VMvILBMny7POd40Wpe2CLbp4Gyv9rGOVYphz57AG9s-D76Gz-MgY1_rT1QxG9M649g-Rs2iUp89dYxRbyeaG_JEgSPTxXgpOOAE093yyGPgMPVHQ6NFzn2kaIx4fucgHvD7NvrWZ3iiL2s2nvKLFno3712nNP_K5EOq8F2JZlawrQ7j31IQU6FdynwtlfHXrFwzF6YBixcFCfGdzU9hRTjvsP59A43xb2mEPC8d9bA6Le_0g-lcrXw9Kpt5YlZcNg8suwvqjQcCXOosSl-o7o1x1JtttTsvF-dnCl60IIC-exbWrc7K7d9KWbjcSlJQljAiESxh-ma22Sk5wsDlI7u2R7iFs6Lwi_w_0LaMZyEUVL7t5P1jmcmpyIx9Zp5_6DmtZbc5I_CIQ2eBv8SA05Mg9dPjoi9M7QqZHNq4sDFnMf_Mo_AnOmEWP_y4B3R6ssmMaUbPceuU1PFYbvyOTDxfvlVLbV-gBKwdleyjg_Ci5Y7w7kLB7ufGZHWyxQ3Mu686eFLoDhGDhNAlAti8NKvy8kVRlcgJhWTW_wO1QBdlRw3lVSVAthR9MJtzaEhKAp11zcyxwHOmiXpZMA2EWchG8iCBOr-CAA-XtCPMVaqdLXtArjaWEkuXG_d_EPhDNX-Fc0EtGrJeOK_6Z19DUNYiW0dlRamuYydSEQawfdOZtKhe92vphoMa-0B4LT2MHGGHI0LvO8bKcadZxUOql-ju_hkBnssRBfgTiLqvQJ9bBar06GcETNzYwOtX2y6BqXtXA1Cxgth5rFsDMjQXqcGRD-TasYAxEAKF4DW_A2We-rPjLiA3SK5MVivrStOlmbCxAkQCPuLfW6VvLu99HCyEfaC0lCc05qOwn1CmWr7H9XFTnGTEzuJClTE8O1-f3Xfkvvt0KZ_Zati3WhsEGrvjZ--ZQHeDjuHreXcbRXRUiAqNz2fktv4xxnTEHaiCeWm1EKHL-fgjNjefcUoWY9U3sIKDSQ1m-5amQMdcd--KYH0tka8uIHqvc9E8lkj94yyekLTouABr6K9G53aRKGYU7C326teoA_G3ZV5KO1CSCR4vOhwuNh7tgtzfYhSNu2TFWVmObl-4QYVVANhLfZA7_N3iQikfunbggCBFyhCT2Yhk6mlxpTpWQEU-krruS
+2025-05-08 11:29:40 - reCAPTCHA server response: {"success":true,"challenge_ts":"2025-05-08T09:28:29Z","hostname":"localhost"}
+2025-05-08 11:29:40 - reCAPTCHA verified successfully
+2025-05-08 11:29:40 - Fields validated successfully
+2025-05-08 11:29:40 - Email validated, proceeding to registration
+2025-05-08 11:29:40 - Attempting to add user: nom=fggd, email=hhh@gmail.com
+2025-05-08 11:29:40 - User added with ID: 79
+2025-05-08 11:29:40 - Transaction committed
+2025-05-08 11:29:40 - Upload dir: C:/xampp/htdocs/ProjetInnoconnect/uploads/
+2025-05-08 11:29:40 - Photo validated successfully
+2025-05-08 11:29:40 - Photo uploaded to: C:/xampp/htdocs/ProjetInnoconnect/uploads/79_1746696580.jpg
+2025-05-08 11:29:43 - Encoding result: Processing image: C:/xampp/htdocs/ProjetInnoconnect/uploads/79_1746696580.jpg
+Image loaded successfully
+Found 1 face(s) in the image
+Encoding generated and saved successfully
+
+2025-05-08 11:29:43 - Registration completed successfully with welcome message: Take charge as an admin, hhh! We're excited to have you on board at InnoConnect. Explore your new features and shape the future!
+2025-05-08 11:42:01 - Starting registration process
+2025-05-08 11:42:01 - CSRF token in session: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 11:42:01 - CSRF token from POST: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 11:42:01 - CSRF token validated successfully
+2025-05-08 11:42:01 - reCAPTCHA response received: 03AFcWeA6YPsxZtTP0Y7QxLaCbFFyIthoPHoQ0RcJXFhyL8pqT9qxLUQZpquTtv3mJTvctCWuMlz-_yBtIk0IfK9YPty0BrHT-KGp7tKmDdPIyw9j5yEj1262JpgDDaQ6Ftl60n9YSWwSD2V0clP10DrK9MTqdaNcJVDdOaSnTSGWWJD7Alod-b5erAcsBmNkCdX1qMVVmHE4om--w1xE3D89v6tU3NoeekeJ0R6KLAXgV91-PZDjkRwW9KxiayF9E_MRRrI2LygtguVEraJjJOvRN2-RwdrybZDp_R1By4QN_weQk-20NMIUn8aoH_jm8ysDKEJL2ZO3bgr0mq3OyO-D-gpOtwqKuO7kTy3XZxFxQzm1tgCLdUu_ZiCe-3i3ff5ekcJ1UoCQ6_SfAJrlLW54mSK5DDtMcQnQt5RTS0YP1yh3pU_B4H2Da2owvRwPAaENN8NMXQY_KNoOQu67RcYQgz884MesQgbn-luZZxLOew7YjMqL4-Bq-4FjO9JurUpbJMBw34cPVyDQ_Ob0wE0uf3lVJ4GHJ8gaZlXBqtE5G8r9NH8sURADn0-JTRzY11kad62c_gIiLBStYGJprVZoVSp-6kELMdoQGAN6QDRoq3O_N3XLKor26tcOx-pWMXXDeWT1RzlNpvUH4l2-eo5Ti2OfOzoR1eeutUaKlVMpPNxaz2sxmRrEMunzGEz6Yh6b3N7kDMS-SaB319PM06or4VYSULdL2wlo1KKs905pWyv3esBp1godQfmlTvLPqpRx9LbgN5IBvKWbTZpv1TP6y5d0QK4gpvjyXhJrK850prcZdP44-XT7SgDuOpnds-m7-2mFhHHuVV_vC0GL7JNZMOBL7S7YTHdcIoluEl46U7QXZYWdqKjf2kl5fU85QTb1trufNe3Y5qKJr_JBjMziiuP5NrkGZuA8QhH8lozPLhKbTcVEiK_u3FqyFDuF8yHbH6rDFdxoQnlJNPyABavzoQW1KU4udprpmobaFW1_ZPU_fpOlgJkgiqppwX24-qwyuBxmkQ5LxZ5ltjjRWAt7k8OP9KjxLEiwlzg0z-inGBNbaC77PLrpNJeGWfJslX-XqHHs6vfnMQKsaredom1KDbcW3qLNvnHRp3v9b6Oa2Iu2MaVyB4fItSgFm39xbQx4J5ZX-azdo25NRxQChFqKO41IKb-fauOEGMOEjWPia1tjWEm0fZaaS5G2G3ePSsO7R0A3-Y5rvoqIM5F5rAEH5HeyifiON-thVBc_kIxDxswUz32DN5u8qcUOySIXE8i7cdfXgXpz32s9Kd3OfBOfMn2K4yPTFvyISZEMuKEVGRf8mOV8AGKY4vPFX2RuxYBvOwCdlo5YZe-mFl4bdhJQrIe9XthHzcubR-yIDldSVV4ms7Rta1SXRv9rrJGPunieWRFXWPl-XRITKdaVIO6SaiGbHuovOKcAvfsXT1KU3xhyMgK5yIk357xc2GXPXkYUd7CRQV5JMNIC5sZFPHEd8mUnmfU77jwJW5eOm2dLfoIgmIbER8_01Hvz0AUp0CKrgrI7b1LYF1cOG-V_jmVK9um-NyZWc7g6PXg6Y7oxhQeNP9T0sbamjMYS4TkNdyRIv-Eh-dUdmaVh7K7d3ocIZkPWhvIHOBKIrHo-Vd1x-oJYEpOOENZut0e_vCDlVuwmh3HAamKA0C9zJ7UrMSa9qLjhgOmdG7GUvH3WSWcN4qGWMv-IWyj02S0fT2A7kT9jX3wXV0hxnYw4C_KjT7zO6ljXfKwJvEYq4kzaumG8A13pxvsq_PTXGCRX5P5RIDX2-aQ58dyzSA7eVIa3nG0yS6Ie6i19g8VeTszP9P-pJhej4iqOUpDg9VVdwhZ3P_yPyvP1CWx1WEqhQF0oc768oGb9Wmk-IGlfurhsrOTFYgwTT3HhpZuOs0OhzlZZ-nZ4SVrzUst1r6920RzVPDhrHlUCgn-xLaqWCAIXM5PfNh7MB9UptlCHUVtJCuM3q0F6qJu-tmbyFRXprdNhXQKPCA7-0LsRDT1iND_Ootu-9vBaIOcmPWVNnzbPQsCHwPOIbGGwT3F4_LLTLYECAu0g2p8SZLxxCYI_w_EF8ThCGQhvE0-NPTafhxA_eXlHhaWyZ4V2tnof7DyIlWaM3IJjFbUtIuQtxMfyHUr23gQTuCRyzfhGaQJc
+2025-05-08 11:42:02 - reCAPTCHA server response: {"success":true,"challenge_ts":"2025-05-08T09:37:27Z","hostname":"localhost"}
+2025-05-08 11:42:02 - reCAPTCHA verified successfully
+2025-05-08 11:42:02 - Fields validated successfully
+2025-05-08 11:42:02 - Email validated, proceeding to registration
+2025-05-08 11:42:02 - Attempting to add user: nom=bassem, email=farah@gmail.com
+2025-05-08 11:42:02 - User added with ID: 80
+2025-05-08 11:42:02 - Transaction committed
+2025-05-08 11:42:02 - Upload dir: C:/xampp/htdocs/ProjetInnoconnect/uploads/
+2025-05-08 11:42:02 - Photo validated successfully
+2025-05-08 11:42:02 - Photo uploaded to: C:/xampp/htdocs/ProjetInnoconnect/uploads/80_1746697322.jpg
+2025-05-08 11:42:05 - Encoding result: Processing image: C:/xampp/htdocs/ProjetInnoconnect/uploads/80_1746697322.jpg
+Image loaded successfully
+Found 1 face(s) in the image
+Encoding generated and saved successfully
+
+2025-05-08 11:42:05 - Registration completed successfully with welcome message: Take charge as an admin, farah! We're excited to have you on board at InnoConnect. Explore your new features and shape the future!
+2025-05-08 11:43:14 - Starting registration process
+2025-05-08 11:43:14 - CSRF token in session: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 11:43:14 - CSRF token from POST: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 11:43:14 - CSRF token validated successfully
+2025-05-08 11:43:14 - reCAPTCHA response received: 03AFcWeA4FlyWJ7bx-C1ErbGkrlD7YMZ7gjfIr695SF90CDsVZoo3dFvuRogcceJUNSK1lkKHHCD37GlOKKUr-0CM95G5udl8G6VAoPfLCPpPUPhnwszE8YLBNlWIqJAfATPfvFoHRdlgOAij96JFcSVvij5X8FL8V0c0Zs9DdMqSw0JLa5iyJ6-1REW2QZo2hGTC6v4LPAHR1t74zwd2XWfyGaEMFJtc33-UvTXMDECTIsFzKefgTT66-2u-dvhDNbzkS7_QYwVte_5BJAimBeINVcvfjVuz50bpbHUMOWsatcgmCYgS15ZlnKm0S5UtHwwg3SstFG9bdxubO3qoUccSc9iZfyPglHT4bOyAbecwWkicpVxuYV6K427vg7XBfx5kBR_twN4_2p4y1KUovHF2j0jb1ifvefdgOm_jbuEQcSz6D2nCuS6z68YAnL3WVUf25Zh7eb9GkfAM__EBFdfSvTP5-GtDMIPaAmVmvstyMTSHXdIzvZLdNMtLbz8oFf9AzqxWqukryjhKV_b3xRAMb5a0msalrc8F1O4L4UzeekIzrC3v2r7S-RKTGItnEhVfjZSAbx9jJxlzgGHxlYlLbhSiTMI8spGy2E0R8NExMe3k6ERmN079vRDSdPIzw7GvFwZfhiW0QGP7NLGHpDfKu_H4eS1t-eH_3236nDvsagMTyUJEUO-c5ztoHahCRIYD6TzdbWMZp-B9F-mToL2dBj9TMMbd4gFKGwOUFIBineWZAfoKXMuY0LoYmSKL2Xt9afQ9BF7NthQ5lU8frW9dBEFY-yd6fXMr7xHLptNbfoengtWkdK3hH2RxqVWYmU276vOubaLOyMMmpaQnHyOD1UH0pJnzCaU4iEGZyrnR3d0M-_HCHqmrgaJ5LoUovVUjHuyIy_MnrJeGXosKlRM5Vaiw2GwmxyDYHYz31QSEqUhtuNmGDPsoyTWmd5KFz7IdCyLN8fyD3irBxcqRwG0JfDnbhgTIzGJRtHMT83Twdfw5xWkMLKzbTxCergIT2WvPOXSc1TylRzxikMjMaHJGErz0Gf3zchCudr9DXxMg7laMePAAOlDr63v5DwqY9Xsjvo_0mRNVQLXU1kMYedd3uCIZurx4DrVW9fUj6otwd9MpFeAUal6rBHlZh4EUmn4iiticPpgZj4Oax8O6tOxHF4gmF7ZjOgL43tD1VjZAkrgmYEkBv7nDPSwd4j6hqvdLgHv2rRrbV0aRMRP06-FjF2gRhxmcfWECivh2Wfdy9Cc-bPvnnm9x0nExhGJDuyni0c_xpi4rLMnm5C-iroQDHrywF8XafOXKSNoVRjIcHKJWJrxWMh7IxtyLyp-ybAKsmW8VVXbvFE7x6cg4vMBJvhEFd1dKoWj-4N2xrKF1BqP-XSMXCNfbXJURcz8Z0mxAprU7DfIoixKAep2EAcVI7U9YUhWgYw6Mf77i6xwZDZGPMCMPgA9BXJ8iR1key7mrt10RuuyMGysNtFSdauuiETbmO5cpfIIRsrFhU5XVg64TCDVwTRqyw29GnsAt0wFhHDwkSbziy9ftkOrM1d13ca3UU1Sz31voUI5aC92IR6q-YceN3-D5vcmvA5m93CRmjN-zRioEbHnzIaYU6LQnvgni5L6wh0hu_vd3qYl5s8Rixxad7SOElwXxGV7cucc0bOCGZYp7cUn5cmXiAjH6aLtms-_nwfCl-sSV-g8Grv8iX6htY_7jgs22MkDmEmiXcPFxgKP4IPSGeN2inCJ8pvdHmpmIitphO6wkoGFSLlq5HkNlshPnetoZgFD-1KXCB4Zf1pPP5BbybsfXpTPPYwL4XJDRhJzwbesRD4AoJrLZKH7DltuMUTgd31lzXxSkAixoiOldmjffnFKJYe2ZbbGopYcnUdDTRikTA5I-F_99wlZi1BQAMvaLcdvEPwduC1RsqvnDFsVWh0orhhgch_YHjelSY-o9gRsNn1VtGnh_0szPTLt_LCaUkptpIZy3TInZiwFkgDk5jEOq2MlkotHAy9nc1FOvKS5Io2V2uC6buWZ5aM5ujC-d2ME4dTmet_ryHLnozrHxo3AVuCY-CMmXiAdtItPseOhxXpJplItWIZm6o_dCEmC7syFZAbP9hJndv7RvNf5zPVFQVdz5DWt8-01Ccr22cqKudWHu78tILHhO0VN0
+2025-05-08 11:43:16 - reCAPTCHA server response: {"success":true,"challenge_ts":"2025-05-08T09:42:41Z","hostname":"localhost"}
+2025-05-08 11:43:16 - reCAPTCHA verified successfully
+2025-05-08 11:43:16 - Fields validated successfully
+2025-05-08 11:43:16 - Email validated, proceeding to registration
+2025-05-08 11:43:16 - Attempting to add user: nom=moalla, email=melek@gmail.com
+2025-05-08 11:43:16 - User added with ID: 81
+2025-05-08 11:43:16 - Transaction committed
+2025-05-08 11:43:16 - Upload dir: C:/xampp/htdocs/ProjetInnoconnect/uploads/
+2025-05-08 11:43:16 - Photo validated successfully
+2025-05-08 11:43:16 - Photo uploaded to: C:/xampp/htdocs/ProjetInnoconnect/uploads/81_1746697396.jpeg
+2025-05-08 11:43:19 - Encoding result: Processing image: C:/xampp/htdocs/ProjetInnoconnect/uploads/81_1746697396.jpeg
+Image loaded successfully
+Found 1 face(s) in the image
+Encoding generated and saved successfully
+
+2025-05-08 11:43:19 - Registration completed successfully with welcome message: Welcome to the investment world, melek! We're excited to have you on board at InnoConnect. Explore your new features and shape the future!
+2025-05-08 13:19:58 - Starting registration process
+2025-05-08 13:19:58 - CSRF token in session: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 13:19:58 - CSRF token from POST: 0f6fbbb818fcbab674cf6543d4b38e1ccd30a2fa281d7d8ef8aa6aefb00ef7db
+2025-05-08 13:19:58 - CSRF token validated successfully
+2025-05-08 13:19:58 - reCAPTCHA response received: 03AFcWeA7VQr_bK16v53mC2pcFeLcnQ0bggZFAPJ0auhFDruujPDOCPbvnueB23KHj91fE5VwYtwSWdJ0JDieWTNyeckcqVejYBBKviF2aArT_hzAd2eLdgUu2C1nIFeabqfT-MN7pq8cN7MfUI0OLXMrHN7Moz5jygkVhEnBP1U35vWaG_P9X-6iDHCdYCGGlaWf1Ngm8k3IiCCV5v-pkg7V58M1YtJwreNfH4px9c_QpxobJQ8RIVZeEy6KzeTUn0s47IofB4A6Z6oMsoBAFOjk4uLbu4B8NgdMXkftYkafFVQeBqWJGfLTmrIm7KeUrqJFIuWbTQ7WCMwoqmOHqY5kgKDGGZJBw_54MIngD50-yJyUmE3EQXAL2sY77kc_CIXDQTPuba7ALB3-f3ceVHYq0bytXkxFqdrqPLJtuPPhCtnnLR7xYCDtRvtY7iMIPfjU-1u17xZqm6Ur2OzCgU4dCx1Op6nC1bkYDsj-rr2sKCoi-bcOn8xqAdN9L60MtbnimkK0ZxEJ0YNF8VzLjuS4Kd6LFEebbFJf8OwHTMTR7xDUcPkXDxYdm-MT1I5amWtnJCXJoqz0n5bj8YJZIDLEMc8yxwl90hLbh0ySX_ariy8AFQXoh69uY6j_gVkMHyPMUZr3cPSi2AE8l3U3XDq77rZzTh8IwbIzOG-kURkssYWfwgRC6F5OXMDEy8-tJrN8anmAG6JkLPINgoxVc-I2vyln2dMZp0LCn8HIdmZ54_pYt3h7EF3ekas4IGPxGamEGC5_qyqiLog2OAsNctOH9kOtMp2E6w2ZjjiPQgCyj1fYQjsguHKSqBrmVpI4RFGos-0iNt1G1zPyZoBrUzJCcVUIncO0Ce6EJ6X6wyw2ogLJJyvyRd6vWTlb4tTz68WJu6UtxpIT9V88QAu7zfqv-9l5trNUnTKLgEf5O3Nnt1bcXB2yQY1mwtIycUy6r_Ud0lqZGz2MXB45FCjQSbkccZd6HUK99UvQuytOSSJG94R-If9D8HeJAd0i-yvd9WhpLR1ONXX67LHgmjEAKs3Y9CtSeoYDrgA2T4wuxu2xrH-j4PpLrsqsQUzrmA4fpMZMeqAwPQ2o1WkDZAmhKqLMN0Z5POkEEi9pxP_tpspg-5eis8VG97S2GU0QgrFAsfoOczrloOhDc6ox3LTaL1L-1UucVkxK6HYUsZgq3bpurGdVEuniATR2SclMMpuyOcGUBJD8KYBU2ZpmpOzR_MbRNB7b2PGWdpivpUbrvL5i45fE7E7pOifavc1IkXznIAvrJenDivzMryNuV00-4v5eJUJPgC3zjFZrFK7YNMyotnUNGw9WV0IDDSPdJbyTtk1qidzLjr0QwKB2OgaPYhiSHcQetiftJHF_vdrZCshZPPO7XeKiZLUgLSb07JyBTTWwrj4hvk93_KoIIT1sZ6zEcActSMsPhw0RAsCjOx04RbrfKt8ERlQ0SeIRfeA5R4mkFAA6nHh3yMVz0xk02IRk-WzTgif84ZDexZk4gDrPd04sO3L1hLWIYfwfwzbVJCeULli5_uE2jBSxORxqGLAcnZuEsnz0U8QNarJNPLwgfr1UCY8IExAPfIfnbRKOvnPQ0UJtE7ERIUOk06dV-XuR4bUGi0yVafdghGF4PdSzs4dzmyqEyKxhYi-7-JatFGqkxD2A2nE_IgcacmXZyatP68MlY-RQrnO8WEDXC8kAdFpxaxxyNVuQl9VnCkvpb1TX4ODsGI0EHUMMv2G7NRMK2MZerfBCGFjn9OrtHXmmS8CWcKwVOK61ak4bJmnW2-jYTiRVnB0rZAUS_xlPJeVUIeyvIurfCh5rM4i8jFKW9hsBKflXxOntcRoiYE-iE5zVLGxCG8PENeYWb6jIT6e9P2K2Ht-qcX6F5HjWa-g06e1unck3-GLzrzew0TGkhBoV3AIFoPasq5yCATPfOjeIVzy8rTX0BRss9TF1ObNvKFH7hlpJcHQNWJytR7aR0qd4bltVtnxvFWuDRL3WkV10fRDDO_K51P2NtcDIHfiDZxuBYkD8oQUN3vjiCspPyLTYgYzhu3UIJ
+2025-05-08 13:19:59 - reCAPTCHA server response: {"success":true,"challenge_ts":"2025-05-08T11:06:58Z","hostname":"localhost"}
+2025-05-08 13:19:59 - reCAPTCHA verified successfully
+2025-05-08 13:19:59 - Fields validated successfully
+2025-05-08 13:19:59 - Email validated, proceeding to registration
+2025-05-08 13:19:59 - Attempting to add user: nom=bassem, email=feriel@esprit.tn
+2025-05-08 13:19:59 - User added with ID: 82
+2025-05-08 13:19:59 - Transaction committed
+2025-05-08 13:19:59 - Upload dir: C:/xampp/htdocs/ProjetInnoconnect/uploads/
+2025-05-08 13:19:59 - Photo validated successfully
+2025-05-08 13:19:59 - Photo uploaded to: C:/xampp/htdocs/ProjetInnoconnect/uploads/82_1746703199.jpg
+2025-05-08 13:20:03 - Encoding result: Processing image: C:/xampp/htdocs/ProjetInnoconnect/uploads/82_1746703199.jpg
+Image loaded successfully
+Found 1 face(s) in the image
+Encoding generated and saved successfully
+
+2025-05-08 13:20:03 - Registration completed successfully with welcome message: Take charge as an admin, feriel! We're excited to have you on board at InnoConnect. Explore your new features and shape the future!
+2025-05-08 13:20:51 - User profile loaded for ID: 82, photo_profil: 82_1746703199.jpg
+2025-05-08 13:20:51 - Attempting to display profile picture: ../../uploads/82_1746703199.jpg
+2025-05-08 13:21:15 - Delete request received for ID: 20
+2025-05-08 13:21:15 - User deleted successfully: ID 20
