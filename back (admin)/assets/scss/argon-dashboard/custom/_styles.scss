@@ -1,0 +1,33 @@
+.card-futuristic {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37), 0 0 16px 2px var(--bs-primary, #5e72e4);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 1.5rem;
+  border: 1.5px solid rgba(94, 114, 228, 0.25); /* Use template's primary color */
+  transition: box-shadow 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+  overflow: hidden;
+}
+.card-futuristic:hover {
+  box-shadow: 0 12px 48px 0 rgba(94, 114, 228, 0.45), 0 0 32px 4px var(--bs-primary, #5e72e4);
+  transform: translateY(-6px) scale(1.03);
+  border-color: var(--bs-primary, #5e72e4);
+}
+.card-futuristic::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -40%;
+  width: 180%;
+  height: 180%;
+  background: linear-gradient(120deg, rgba(94,114,228,0.12) 0%, rgba(255,255,255,0.08) 100%);
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 2rem;
+  filter: blur(8px);
+}
+.card-futuristic .card-body, .card-futuristic .numbers, .card-futuristic .icon {
+  position: relative;
+  z-index: 1;
+}
