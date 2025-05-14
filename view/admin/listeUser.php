@@ -1,15 +1,15 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/config.php';
-include $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/Controller/utilisateurC.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/espace_comm/espace communotaire/config/config.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/espace_comm/espace communotaire/Controller/utilisateurC.php';
 
 // Include TCPDF library
-require_once $_SERVER['DOCUMENT_ROOT'] . '/ProjetInnoconnect/tcpdf/tcpdf.php';
+//require_once $_SERVER['DOCUMENT_ROOT'] . '/espace_comm/espace communotaire/tcpdf/tcpdf.php';
 
 session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['id_utilisateur'])) {
-    header("Location: ../frontOffice/login.php");
+    header("Location: /espace_comm/espace communotaire/view/login.php");
     exit;
 }
 
@@ -20,7 +20,7 @@ $userC = new userC();
 $userType = $userC->getUserType($userId);
 
 if ($userType !== 'administrateur') {
-    header("Location: ../frontOffice/login.php");
+    header("Location: /espace_comm/espace communotaire/view/login.php");
     exit;
 }
 
@@ -302,7 +302,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../frontOffice/profile.php">
+                    <a class="nav-link" href="/espace_comm/espace communotaire/view/profile.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
                         </div>
@@ -310,7 +310,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'pdf') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../frontOffice/logout.php">
+                    <a class="nav-link" href="/espace_comm/espace communotaire/view/logout.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-key-25 text-dark text-sm opacity-10"></i>
                         </div>

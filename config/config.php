@@ -1,27 +1,29 @@
 <?php
-class Config {
-    private static $conn = null;
 
-    public static function getConnexion() {
-        if (self::$conn === null) {
+class config
+{
+    private static $pdo = null;
+
+    public static function getConnexion()
+    {
+        if (!isset(self::$pdo)) {
             try {
-                self::$conn = new PDO(
-                    "mysql:host=localhost;dbname=innoconnect;charset=utf8",
-                    "root",
-                    "",
+                self::$pdo = new PDO(
+                    'mysql:host=localhost;dbname=innoconnect',
+                    'root',
+                    '',
                     [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::ATTR_EMULATE_PREPARES => false
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                     ]
                 );
-            } catch (PDOException $e) {
-                die("Échec de la connexion : " . $e->getMessage());
+            } catch (Exception $e) {
+                die('Erreur: ' . $e->getMessage());
             }
         }
-        return self::$conn;
+        return self::$pdo;
     }
 }
-
 function getUserType($userId, $conn) {
     try {
         $stmt = $conn->prepare("SELECT type FROM utilisateur WHERE id_utilisateur = ?");

@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                 <li><a href="index.html">Home</a></li>
                 <li><a href="profile.php" class="active">My Profile</a></li>
                 <?php if ($_SESSION['user_type'] === 'administrateur'): ?>
-                    <li><a href="../../dashboard.php">Dashboard</a></li>
+                    <li><a href="/espace_comm/espace communotaire/view/admin/admin_dashboard.php">Dashboard</a></li>
                 <?php endif; ?>
                 <li><a href="logout.php">Logout</a></li>
             </ul>

@@ -93,7 +93,7 @@ $notifications = [
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/projetInnoconnect/View/backOffice/listeUser.php">
+          <a class="nav-link" href="/espace_comm/espace communotaire/view/admin/listeUser.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-single-02 text-primary text-sm opacity-10"></i>
             </div>
@@ -117,7 +117,7 @@ $notifications = [
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="financing_management.php">
+          <a class="nav-link" href="FinancementView.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-app text-primary text-sm opacity-10"></i>
             </div>
